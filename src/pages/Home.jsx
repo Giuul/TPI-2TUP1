@@ -1,9 +1,10 @@
 import React from 'react'
-import ClearisNavbar from '../Components/navbar'
+import ClearisNavbar from '../components/ClearisNavbar.jsx';
+
 
 const Home = () => {
   return (
-    <ClearisNavbar />
+    <ClearisNavbar/>
   )
 }
 
