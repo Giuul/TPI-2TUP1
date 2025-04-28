@@ -10,13 +10,13 @@ const ClearisNavbar = () => {
       <Container>
         <Navbar.Brand href="#home"><img src="src/assets/img/logo-clearis.png" alt="" /></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse class="d-flex" id="basic-navbar-nav">
-          <Nav className="main-font">
-            <Nav.Link href="#home">INICIO</Nav.Link>
-            <Nav.Link href="#link">NOSOTROS</Nav.Link>
-            <Nav.Link href="#link">SERVICIOS</Nav.Link>
-            <Nav.Link href="#link">CONTACTO</Nav.Link>
-            <Nav.Link href="#link">LOGIN</Nav.Link>
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto main-font">
+            <Nav.Link href="/">INICIO</Nav.Link>
+            <Nav.Link href="/nosotros">NOSOTROS</Nav.Link>
+            <Nav.Link href="/servicios">SERVICIOS</Nav.Link>
+            <Nav.Link href="/contacto">CONTACTO</Nav.Link>
+            <Nav.Link href="/login">LOGIN</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
