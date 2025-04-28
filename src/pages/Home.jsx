@@ -1,10 +1,14 @@
 import React from 'react'
-import ClearisNavbar from '../components/ClearisNavbar.jsx';
-
+import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar.jsx';
+import Body from '../components/Body/Body.jsx';
 
 const Home = () => {
   return (
-    <ClearisNavbar/>
+    <div>
+      <ClearisNavbar/>
+      <Body/>
+    </div>
+ 
   )
 }
 
