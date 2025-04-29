@@ -8,7 +8,7 @@ const ClearisNavbar = () => {
     <>
       <Navbar expand="lg" className="bg-body-tertiary navbar-clearis">
       <Container>
-        <Navbar.Brand href="#home"><img src="src/assets/img/logo-clearis.png" alt="" /></Navbar.Brand>
+        <Navbar.Brand href="/"><img src="src/assets/img/logo-clearis.png" alt="" /></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto main-font">
