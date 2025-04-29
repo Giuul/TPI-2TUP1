@@ -5,7 +5,6 @@ body {
 }
 
 .main-font {
-    font-family: "Julius Sans One", sans-serif;
     font-weight: 400;
     font-style: normal;
 }
@@ -19,7 +18,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    flex-direction: column; /* Agregar para que los elementos se apilen */
+    flex-direction: column; 
 }
 
 .bodyClearis img {
