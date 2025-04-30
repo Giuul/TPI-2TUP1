@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const RegisterForm = ({ onSubmit }) => {
+const RegisterForm = ({ onSubmit, errores, refs }) => {
 
     const [formData, setFormData] = useState({
         email: "",
@@ -35,49 +35,63 @@ const RegisterForm = ({ onSubmit }) => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
+                        ref={refs.email}
                     />
+                    {errores.mail && <p className="error-text">{ errores.mail}</p>}
                     <label>NOMBRE</label>
                     <input
                         type="name"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
+                        ref={refs.name}
                     />
+                    {errores.name && <p className="error-text">{ errores.name }</p>}
                     <label>APELLIDO</label>
                     <input
                         type="lastname"
                         name="lastname"
                         value={formData.lastname}
                         onChange={handleChange}
+                        ref={refs.lastname}
                     />
+                    {errores.lastname && <p className="error-text">{ errores.lastname }</p>}
                     <label>TELEFONO</label>
                     <input
                         type="tel"
                         name="tel"
                         value={formData.tel}
                         onChange={handleChange}
+                        ref={refs.tel}
                     />
+                    {errores.tel && <p className="error-text">{ errores.tel }</p>}
                     <label>DIRECCION</label>
                     <input
                         type="address"
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
+                        ref={refs.address}
                     />
+                    {errores.address && <p className="error-text">{ errores.address }</p>}
                     <label>CONTRASEÑA</label>
                     <input
                         type="password"
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
+                        ref={refs.password}
                     />
+                    {errores.password && <p className="error-text">{ errores.password }</p>}
                     <label>REPETIR CONTRASEÑA</label>
                     <input
                         type="repPassword"
                         name="repPassword"
                         value={formData.repPassword}
                         onChange={handleChange}
+                        ref={refs.repPassword}
                     />
+                    {errores.rePassword && <p className="error-text">{ errores.repPassword }</p>}
                     <button type="submit">CREAR CUENTA</button>
                 </form>
             </div>

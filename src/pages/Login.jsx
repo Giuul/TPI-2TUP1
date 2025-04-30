@@ -2,6 +2,7 @@
 import LoginForm from '../components/Form/LoginForm';
 import Validations from '../components/Validations/Validations';
 import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar';
+import { useNavigate } from 'react-router-dom';
 import { useRef, useState } from 'react';
 
 
@@ -11,6 +12,7 @@ function Login() {
   const passwordRef = useRef(null);
   const [errores,setErrores] = useState({});
   const [exito,setExito] = useState(false);
+  const navigate = useNavigate();
 
   const manejarEnvio = (FormData) => {
     const errores = Validations( { datos: FormData });
@@ -27,7 +29,7 @@ function Login() {
     } else {
       setErrores({});
       setExito(true);
-      //setTimeout(() => navigate("/perfil"), 2000); redirigir a la pagina ya logeado
+      setTimeout(() => navigate("/"), 2000); 
     };
   };
 
