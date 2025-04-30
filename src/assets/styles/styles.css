@@ -170,16 +170,22 @@ body {
     background-color: #d8a17a;
     color: white;
     padding: 20px 40px;
-    margin: 20px auto;
+    margin: 100px auto;
     width: fit-content;
     border-radius: 8px;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     font-size: 24px;
     text-align: center;
     font-family: "Julius Sans One", sans-serif;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.error-text {
+    color: red;
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
