@@ -15,4 +15,4 @@ const Validations = ( { datos }) => {
     
     return errores;
 };
-export default Validations
+export default Validations;
