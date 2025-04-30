@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const LoginForm = ({ onSubmit }) => {
+const LoginForm = ({ onSubmit, errores, refs }) => {
 
     const [formData, setFormData] = useState({
         email: "",
@@ -29,14 +29,18 @@ const LoginForm = ({ onSubmit }) => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    ref={refs.email}
                 />
+                {errores.email && <p style={ {color:"red"}}>{ errores.email }</p>}
                 <label>CONTRASEÑA</label>
                 <input
                     type="password"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
+                    ref={refs.password}
                 />
+                {errores.password && <p style={ {color : "red"}}>{ errores.password }</p>}
                 <button type="submit">INGRESAR</button>
                 <a href="/register" className="crear-cuenta">CREAR CUENTA</a>
             </form>
