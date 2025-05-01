@@ -3,9 +3,9 @@ import RegisterForm from '../components/Form/RegisterForm'
 import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar';
 import ValidationsRegister from '../components/Validations/ValidationsRegister';
 import { useRef, useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const Register = () => {
-
+    const navigate = useNavigate();
     const emailRef = useRef(null);
     const nameRef = useRef(null);
     const lastnameRef = useRef(null);
@@ -18,6 +18,7 @@ const Register = () => {
 
   const manejarEnvio = (FormData) => {
     const errores = ValidationsRegister( { datos: FormData });
+    
   
 
     if (Object.keys(errores).length > 0) {
@@ -41,7 +42,7 @@ const Register = () => {
     } else {
       setErrores({});
       setExito(true);
-      setTimeout(() => navigate("/registro"), 2000); 
+      setTimeout(() => navigate("/"), 2000); 
     };
   };
 
