@@ -37,7 +37,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         onChange={handleChange}
                         ref={refs.email}
                     />
-                    {errores.mail && <p className="error-text">{ errores.mail}</p>}
+                    {errores.email && <p className="error-text">{ errores.mail}</p>}
                     <label>NOMBRE</label>
                     <input
                         type="name"
@@ -91,7 +91,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         onChange={handleChange}
                         ref={refs.repPassword}
                     />
-                    {errores.rePassword && <p className="error-text">{ errores.repPassword }</p>}
+                    {errores.repPassword && <p className="error-text">{ errores.repPassword }</p>}
                     <button type="submit">CREAR CUENTA</button>
                 </form>
             </div>
