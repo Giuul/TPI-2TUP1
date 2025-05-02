@@ -126,7 +126,6 @@ body {
     align-items: center;
     height: 120vh;
     background-color: #ffffff;
-    margin-top: 500px;
 }
 
 .register-form {
@@ -189,3 +188,4 @@ body {
     margin-top: -10px;
     margin-bottom: 10px;
 }
+
