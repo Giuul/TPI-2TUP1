@@ -29,7 +29,7 @@ function Login() {
     } else {
       setErrores({});
       setExito(true);
-      setTimeout(() => navigate("/"), 2000); 
+      setTimeout(() => navigate("/register"), 2000); 
     };
   };
 

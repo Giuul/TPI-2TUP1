@@ -31,13 +31,13 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                 <form className="register-form" onSubmit={handleSubmit}>
                     <label>CORREO ELECTRONICO</label>
                     <input
-                        type="email"
+                        type="text"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
                         ref={refs.email}
                     />
-                    {errores.mail && <p className="error-text">{ errores.mail}</p>}
+                    {errores.email && <p className="error-text">{errores.email}</p>}
                     <label>NOMBRE</label>
                     <input
                         type="name"
@@ -46,7 +46,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         onChange={handleChange}
                         ref={refs.name}
                     />
-                    {errores.name && <p className="error-text">{ errores.name }</p>}
+                    {errores.name && <p className="error-text">{errores.name}</p>}
                     <label>APELLIDO</label>
                     <input
                         type="lastname"
@@ -55,7 +55,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         onChange={handleChange}
                         ref={refs.lastname}
                     />
-                    {errores.lastname && <p className="error-text">{ errores.lastname }</p>}
+                    {errores.lastname && <p className="error-text">{errores.lastname}</p>}
                     <label>TELEFONO</label>
                     <input
                         type="tel"
@@ -64,7 +64,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         onChange={handleChange}
                         ref={refs.tel}
                     />
-                    {errores.tel && <p className="error-text">{ errores.tel }</p>}
+                    {errores.tel && <p className="error-text">{errores.tel}</p>}
                     <label>DIRECCION</label>
                     <input
                         type="address"
@@ -73,7 +73,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         onChange={handleChange}
                         ref={refs.address}
                     />
-                    {errores.address && <p className="error-text">{ errores.address }</p>}
+                    {errores.address && <p className="error-text">{errores.address}</p>}
                     <label>CONTRASEÑA</label>
                     <input
                         type="password"
@@ -82,16 +82,16 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         onChange={handleChange}
                         ref={refs.password}
                     />
-                    {errores.password && <p className="error-text">{ errores.password }</p>}
+                    {errores.password && <p className="error-text">{errores.password}</p>}
                     <label>REPETIR CONTRASEÑA</label>
                     <input
-                        type="repPassword"
+                        type="password"
                         name="repPassword"
                         value={formData.repPassword}
                         onChange={handleChange}
                         ref={refs.repPassword}
                     />
-                    {errores.rePassword && <p className="error-text">{ errores.repPassword }</p>}
+                    {errores.repPassword && <p className="error-text">{errores.repPassword}</p>}
                     <button type="submit">CREAR CUENTA</button>
                 </form>
             </div>
