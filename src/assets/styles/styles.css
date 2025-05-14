@@ -2,6 +2,9 @@
 
 body {
     font-family: "Julius Sans One", sans-serif;
+    background-color: #f7f7f7; 
+    color: #333; 
+    line-height: 1.6; 
 }
 
 .main-font {
@@ -38,14 +41,18 @@ body {
 }
 
 .who-we-are h1 {
-    font-weight: bold;
     font-size: 50px;
+    font-weight: 700; 
+    color: #d8a17a; 
+    margin-bottom: 20px; 
 }
 
 .who-we-are p {
-    margin-top: 5px;
     width: 70%;
-    line-height: 1.6;
+    font-size: 18px;
+    font-weight: 400;
+    color: #666;
+    margin-bottom: 20px;
 
 }
 
@@ -72,45 +79,63 @@ body {
     justify-content: center;
     align-items: center;
     height: 80vh;
-    background-color: #ffffff;
+    background-color: #f3f4f6;
 }
 
 .login-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 300px;
+    width: 350px;
     padding: 40px;
     background-color: #fff;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
     color: #333;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.login-form:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.1);
 }
 
 .login-form label {
     font-size: 14px;
     font-weight: 500;
+    color: #555;
 }
 
 .login-form input {
-    padding: 10px;
-    border: none;
-    box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.login-form input:focus {
+    border: 1px solid #d8a17a;
+    outline: none;
+    box-shadow: 0px 0px 8px rgba(216, 161, 122, 0.5);
 }
 
 .login-form button {
     background-color: #d8a17a;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 12px;
     font-size: 16px;
     cursor: pointer;
-    box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.3s ease-in-out;
 }
 
 .login-form button:hover {
     background-color: #b87e5d;
+    transform: translateY(-3px);
 }
 
 .crear-cuenta {
@@ -118,6 +143,11 @@ body {
     font-size: 14px;
     color: #d8a17a;
     text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.crear-cuenta:hover {
+    color: #b87e5d;
 }
 
 .register-container {
@@ -125,30 +155,43 @@ body {
     justify-content: center;
     align-items: center;
     height: 120vh;
-    background-color: #ffffff;
+    background-color: #f3f4f6;
+    margin-top: 250px;
 }
 
 .register-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 500px;
+    width: 350px;
     padding: 40px;
     background-color: #fff;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
     color: #333;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
+
 
 .register-form label {
     font-size: 14px;
     font-weight: 500;
+    color: #555;
 }
 
 .register-form input {
-    padding: 10px;
-    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
     box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
     font-size: 14px;
+}
+
+.register-form input:focus {
+    border: 1px solid #d8a17a;
+    outline: none;
+    box-shadow: 0px 0px 8px rgba(216, 161, 122, 0.5);
 }
 
 .register-form button {
@@ -157,6 +200,7 @@ body {
     border: none;
     padding: 10px;
     font-size: 16px;
+    border-radius: 8px;
     cursor: pointer;
     box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s;
@@ -164,6 +208,7 @@ body {
 
 .register-form button:hover {
     background-color: #b87e5d;
+    transform: translateY(-3px);
 }
 
 .login-success-message {
@@ -188,4 +233,3 @@ body {
     margin-top: -10px;
     margin-bottom: 10px;
 }
-
