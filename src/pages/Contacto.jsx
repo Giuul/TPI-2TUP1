@@ -1,5 +1,5 @@
-import React from 'react'
-import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar'
+import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
+import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar';
 
 const Contacto = () => {
   return (
@@ -25,6 +25,7 @@ const Contacto = () => {
           ></iframe>
         </div>
       </div>
+      <ClearisFooter/>
     </div>
   )
 }
