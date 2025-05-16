@@ -13,4 +13,51 @@
 .img-servicios{
     width: 100%;
 }
+
+
+/*CONTACTO*/
+.who-we-are {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 150px;
+    margin-bottom: 150px;
+    font-size: 26px;
+}
+
+.who-we-are h1 {
+    font-size: 50px;
+    font-weight: 700; 
+    color: #d8a17a; 
+    margin-bottom: 50px; 
+}
+
+.who-we-are p {
+    width: 70%;
+    font-size: 18px;
+    font-weight: 400;
+    color: #666;
+    margin-bottom: 20px;
+
+}
+
+
+.contactDiv {
+    display: flex;
+    font-size: 20px;
+    font-weight: 600;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.map {
+    padding: 15vh;
+}
+
+.pDateContact {
+    text-align: justify;
+    margin: 30px;
+}
   

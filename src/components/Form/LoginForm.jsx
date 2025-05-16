@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import "./forms.css";
 
 const LoginForm = ({ onSubmit, errores, refs }) => {
 

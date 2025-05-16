@@ -1,5 +1,6 @@
 import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
 import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar';
+import "./pages.css";
 
 const Contacto = () => {
   return (
