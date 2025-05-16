@@ -1,4 +1,4 @@
-import React from 'react'
+import ClearisFooter from '../components/ClearisFooter/ClearisFooter'
 import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar'
 
 const Nosotros = () => {
@@ -13,6 +13,7 @@ const Nosotros = () => {
         <p>Nuestro objetivo es ofrecer una experiencia transformadora para cada persona 
        que nos elige, brindando tratamientos seguros, eficaces y adaptados a cada tipo de piel.</p>
       </div>
+      <ClearisFooter/>
     </div>
   )
 }

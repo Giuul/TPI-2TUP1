@@ -36,7 +36,8 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    margin-top: 100px;
+    margin-top: 150px;
+    margin-bottom: 150px;
     font-size: 26px;
 }
 
@@ -44,7 +45,7 @@ body {
     font-size: 50px;
     font-weight: 700; 
     color: #d8a17a; 
-    margin-bottom: 20px; 
+    margin-bottom: 50px; 
 }
 
 .who-we-are p {
