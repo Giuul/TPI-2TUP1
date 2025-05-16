@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+
+
+
+.bodyClearis {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.bodyClearis img {
+    width: 40%;
+    height: auto;
+    text-align: center;
+}
