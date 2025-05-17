@@ -1,21 +1,21 @@
-/*SERVICIOS*/
-.contenedorServicios{
+.contenedorServicios {
     display: flex;
     justify-content: space-around;
 }
-.contenedorIndividual{
+
+.contenedorIndividual {
     width: 33%;
     margin: 20px;
     display: flex;
     align-items: center;
     flex-direction: column;
 }
-.img-servicios{
+
+.img-servicios {
     width: 100%;
 }
 
 
-/*CONTACTO*/
 .who-we-are {
     display: flex;
     flex-direction: column;
@@ -29,9 +29,9 @@
 
 .who-we-are h1 {
     font-size: 50px;
-    font-weight: 700; 
-    color: #d8a17a; 
-    margin-bottom: 50px; 
+    font-weight: 700;
+    color: #d8a17a;
+    margin-bottom: 50px;
 }
 
 .who-we-are p {
@@ -60,4 +60,3 @@
     text-align: justify;
     margin: 30px;
 }
-  
