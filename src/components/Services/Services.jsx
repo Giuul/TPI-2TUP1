@@ -1,5 +1,5 @@
 import React from 'react';
-import './Services.css'; // Puedes crear un archivo CSS para este componente
+import './services.css';
 
 const Service = ({ img, title }) => {
   return (
