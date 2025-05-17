@@ -7,7 +7,6 @@ import Servicios from './pages/Servicios.jsx'
 import Contacto from './pages/Contacto.jsx'
 import Login from './pages/Login.jsx'
 import Register from "./pages/Register.jsx"
-import Agenda from "./pages/Agenda.jsx"
 
 function App() {
 
@@ -21,8 +20,6 @@ function App() {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/agenda" element={<Agenda />} />
-
       </Routes>
     </BrowserRouter>
 
