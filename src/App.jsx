@@ -10,7 +10,7 @@ import Register from "./pages/Register.jsx"
 import MisTurnos from "./pages/MisTurnos.jsx"
 import Agenda from "./pages/Agenda.jsx"
 import ProgramarTurnos from "./pages/ProgramarTurnos.jsx"
-
+import MiPerfil from "./pages/MiPerfil.jsx"
 
 function App() {
 
@@ -27,6 +27,7 @@ function App() {
         <Route path="/misturnos" element={<MisTurnos />} />
         <Route path="/agenda" element={<Agenda />} />
         <Route path="/programar-turnos" element={<ProgramarTurnos />} />
+        <Route path="/miPerfil" element={<MiPerfil/>}/>
       </Routes>
     </BrowserRouter>
 
