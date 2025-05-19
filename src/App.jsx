@@ -8,6 +8,9 @@ import Contacto from './pages/Contacto.jsx'
 import Login from './pages/Login.jsx'
 import Register from "./pages/Register.jsx"
 import MisTurnos from "./pages/MisTurnos.jsx"
+import Agenda from "./pages/Agenda.jsx"
+import ProgramarTurnos from "./pages/ProgramarTurnos.jsx"
+
 
 function App() {
 
@@ -22,6 +25,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/misturnos" element={<MisTurnos />} />
+        <Route path="/agenda" element={<Agenda />} />
+        <Route path="/programar-turnos" element={<ProgramarTurnos />} />
       </Routes>
     </BrowserRouter>
 
