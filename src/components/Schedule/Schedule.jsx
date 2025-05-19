@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './schedule.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { useNavigate } from 'react-router-dom';
 
 const Schedule = () => {
+    const navigate = useNavigate();
     const [dniBusqueda, setDniBusqueda] = useState('');
     const [datos, setDatos] = useState([
         {
@@ -61,8 +63,12 @@ const Schedule = () => {
             <h1>AGENDA</h1>
 
             <div className="botones">
-                <button className="btn-principal">CREAR USUARIO</button>
-                <button className="btn-principal">PROGRAMAR TURNO</button>
+                <button className="btn-principal" onClick={() => navigate('/Register')}>
+                    CREAR USUARIO
+                </button>
+                <button className="btn-principal" onClick={() => navigate('/programar-turnos')}>
+                    PROGRAMAR TURNO
+                </button>
 
                 <div className="buscar">
                     <label>BUSCAR POR DNI</label>
