@@ -1,0 +1,15 @@
+.contenedorIndividual:hover {
+  transform: translateY(-5px); 
+}
+.description {
+  opacity: 0; 
+  height: 0; 
+  overflow: hidden; 
+  transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out; 
+  margin-top: 0; 
+}
+.contenedorIndividual:hover .description {
+  opacity: 1; 
+  height: auto; 
+  margin-top: 10px; 
+}
