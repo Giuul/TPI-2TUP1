@@ -5,7 +5,6 @@ import ClearisFooter from '../components/ClearisFooter/ClearisFooter.jsx';
 const Home = () => {
   return (
     <div>
-      <ClearisNavbar/> 
       <Body/>
       <ClearisFooter/>
     </div>

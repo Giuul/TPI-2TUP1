@@ -7,7 +7,6 @@ const MisTurnos = () => {
 
   return (
     <div>
-      <ClearisNavbar />
       <div className="mis-turnos-container">
         <h1>Mis Turnos</h1>
         <Turnos /> 

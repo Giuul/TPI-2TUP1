@@ -5,7 +5,6 @@ import "./pages.css";
 const Contacto = () => {
   return (
     <div>
-      <ClearisNavbar />
       <div className='contactDiv'>
         <div className='dateContact'>
           <p className='pDateContact'>ESPAÑA 1400, ROSARIO, SANTA FE</p>

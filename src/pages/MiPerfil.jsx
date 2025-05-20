@@ -5,7 +5,6 @@ import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar'
 const MiPerfil = () => {
   return (
     <div>
-        <ClearisNavbar/>
         <Profile/>
     </div>
   );

@@ -4,7 +4,6 @@ import ClearisNavbar from "../components/ClearisNavbar/ClearisNavbar.jsx";
 const ProgramarTurnos = () => {
   return (
     <div>
-      <ClearisNavbar/>
       <AppointmentsSelection />
     </div>
   );
