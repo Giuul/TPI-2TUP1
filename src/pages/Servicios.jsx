@@ -10,11 +10,10 @@ import Service from '../components/Services/Services';
 const Servicios = () => {
   return (
     <div>
-      <ClearisNavbar />
       <div className='contenedorServicios'>
-        <Service img={ClearisBrazos} title="BRAZOS" desc={"Redescubre una piel suave y radiante en tu rostro con nuestro tratamiento de depilación facial. Eliminamos delicadamente el vello no deseado de zonas como el labio superior, las cejas, el mentón y las mejillas, revelando una tez limpia y luminosa. Disfruta de una sensación de frescura y confianza duradera."}/>
+        <Service img={ClearisBrazos} title="BRAZOS" desc={"Logra unos brazos suaves y sin vello con nuestro tratamiento de depilación especializada. Desde los hombros hasta las muñecas, eliminamos el vello de forma eficaz y duradera, brindándote una sensación de confort y libertad en cada movimiento."}/>
         <Service img={ClearisPiernas} title="PIERNAS" desc={"Libera tus piernas del vello con nuestro tratamiento de depilación corporal. Ya sea completa o por zonas, te ofrecemos una piel suave y sedosa por más tiempo. Olvídate de la rutina diaria y presume de unas piernas impecables y listas para cualquier ocasión."}/>
-        <Service img={ClearisFacial} title="FACIAL" desc={"Logra unos brazos suaves y sin vello con nuestro tratamiento de depilación especializada. Desde los hombros hasta las muñecas, eliminamos el vello de forma eficaz y duradera, brindándote una sensación de confort y libertad en cada movimiento."}/>
+        <Service img={ClearisFacial} title="FACIAL" desc={"Redescubre una piel suave y radiante en tu rostro con nuestro tratamiento de depilación facial. Eliminamos delicadamente el vello no deseado de zonas como el labio superior, las cejas, el mentón y las mejillas, revelando una tez limpia y luminosa. Disfruta de una sensación de frescura y confianza duradera."}/>
       </div>
       <ClearisFooter />
     </div>

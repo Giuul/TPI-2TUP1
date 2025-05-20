@@ -50,7 +50,6 @@ const Register = () => {
 
   return (
     <div>
-      <ClearisNavbar />
       {exito && (
         <div className="login-success-message">
           ¡Ingreso exitoso!

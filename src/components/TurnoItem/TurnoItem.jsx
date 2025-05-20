@@ -1,5 +1,6 @@
 import React from 'react';
 import './turnoitem.css'
+import './../../pages/pages.css'
 
 const TurnoItem = ({ id, servicios, fecha, hora, duracion, onEliminar }) => {
   return (
@@ -8,7 +9,10 @@ const TurnoItem = ({ id, servicios, fecha, hora, duracion, onEliminar }) => {
       <p>{fecha}</p>
       <p>{hora}</p>
       <p>{duracion}</p>
-      <button onClick={() => onEliminar(id)}>Eliminar</button>
+      <button className="btn-eliminar" onClick={() => onEliminar(id)}> 
+        <i className="bi bi-trash"></i>
+        Eliminar
+      </button>
     </div>
   );
 };
