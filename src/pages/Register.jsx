@@ -1,6 +1,5 @@
 import React from 'react'
 import RegisterForm from '../components/Form/RegisterForm'
-import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar';
 import ValidationsRegister from '../components/Validations/ValidationsRegister';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

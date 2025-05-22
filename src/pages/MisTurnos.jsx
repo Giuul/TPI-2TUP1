@@ -1,6 +1,5 @@
 import React from 'react';
-import Turnos from '../components/Turnos/Turnos'; // Importamos el componente contenedor de turnos
-import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar';
+import Turnos from '../components/Turnos/Turnos'; 
 import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
 
 const MisTurnos = () => {

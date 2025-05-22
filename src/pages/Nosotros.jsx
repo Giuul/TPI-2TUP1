@@ -1,5 +1,4 @@
 import ClearisFooter from '../components/ClearisFooter/ClearisFooter'
-import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar'
 
 const Nosotros = () => {
   return (
