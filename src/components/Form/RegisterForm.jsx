@@ -4,6 +4,7 @@ import "./forms.css";
 const RegisterForm = ({ onSubmit, errores, refs }) => {
 
     const [formData, setFormData] = useState({
+        dni: "",
         email: "",
         name: "",
         lastname: "",
@@ -30,6 +31,15 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
         <div>
             <div className="register-container">
                 <form className="register-form" onSubmit={handleSubmit}>
+                    <label>DNI</label>
+                    <input
+                        type="text" 
+                        name="dni"
+                        value={formData.dni}
+                        onChange={handleChange}
+                        ref={refs.dni} 
+                    />
+                    {errores.dni && <p className="error-text">{errores.dni}</p>} 
                     <label>CORREO ELECTRONICO</label>
                     <input
                         type="text"
@@ -41,7 +51,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                     {errores.email && <p className="error-text">{errores.email}</p>}
                     <label>NOMBRE</label>
                     <input
-                        type="name"
+                        type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
@@ -50,7 +60,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                     {errores.name && <p className="error-text">{errores.name}</p>}
                     <label>APELLIDO</label>
                     <input
-                        type="lastname"
+                        type="text"
                         name="lastname"
                         value={formData.lastname}
                         onChange={handleChange}
@@ -68,7 +78,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                     {errores.tel && <p className="error-text">{errores.tel}</p>}
                     <label>DIRECCION</label>
                     <input
-                        type="address"
+                        type="text"
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
