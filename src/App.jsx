@@ -15,7 +15,8 @@ import Agenda from "./pages/Agenda.jsx";
 import ProgramarTurnos from "./pages/ProgramarTurnos.jsx";
 import MiPerfil from "./pages/MiPerfil.jsx";
 import ClearisNavbar from './components/ClearisNavbar/ClearisNavbar'; 
-
+import Users from './components/Users/Users.jsx';
+import Userspage from './pages/Userspage.jsx'
 function App() {
  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -49,6 +50,7 @@ function App() {
         <Route path="/agenda" element={<Agenda />} />
         <Route path="/programar-turnos" element={<ProgramarTurnos />} />
         <Route path="/miPerfil" element={<MiPerfil username={username} />} />
+        <Route path="/users" element={<Userspage />}></Route>
       </Routes>
     </>  
   );
