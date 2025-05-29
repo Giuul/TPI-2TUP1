@@ -1,66 +1,95 @@
-import React, { useState } from 'react';
-import './schedule.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './schedule.css';
 
 const Schedule = () => {
     const navigate = useNavigate();
     const [dniBusqueda, setDniBusqueda] = useState('');
-    const [datos, setDatos] = useState([
-        {
-            dni: '37598663',
-            nombre: 'MELISA URQUIZA',
-            fecha: '24 DE ABRIL DE 2025',
-            hora: '03 PM',
-        },
-        {
-            dni: '45831677',
-            nombre: 'VALERIA MENDEZ',
-            fecha: '28 DE ABRIL DE 2025',
-            hora: '07 PM',
-        },
-        {
-            dni: '30255846',
-            nombre: 'IVANA DIAZ',
-            fecha: '03 DE MAYO DE 2025',
-            hora: '11 AM',
-        },
-    ]);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const [editarIndex, setEditarIndex] = useState(null);
-    const [formData, setFormData] = useState({ dni: '', nombre: '', fecha: '', hora: '' });
+    const [editarUserId, setEditarUserId] = useState(null); 
+    const [formData, setFormData] = useState({ id: '', name: '', lastname: '', email: '', tel: '', address: '' });
 
+   
+    const fetchUsers = async () => {
+        try {
+            setLoading(true); 
+            const response = await axios.get('http://localhost:3000/users');
+            setUsers(response.data);
+            setError(null); 
+        } catch (err) {
+            setError('Error al cargar los usuarios. Por favor, intenta de nuevo más tarde.');
+            console.error("Error fetching users:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const datosFiltrados = datos.filter(dato =>
-        dato.dni.includes(dniBusqueda)
+    useEffect(() => {
+        fetchUsers(); 
+    }, []);
+
+    const usersFiltrados = users.filter(user =>
+        user.id.toString().includes(dniBusqueda)
     );
 
-    const eliminarTurno = (index) => {
-        const nuevosDatos = [...datos];
-        nuevosDatos.splice(index, 1);
-        setDatos(nuevosDatos);
+    
+    const eliminarTurno = async (userId) => {
+        if (window.confirm(`¿Estás seguro de que quieres eliminar al usuario con DNI ${userId}?`)) {
+            try {
+                await axios.delete(`http://localhost:3000/users/${userId}`);
+                alert('Usuario eliminado exitosamente.');
+                fetchUsers(); 
+            } catch (err) {
+                console.error("Error al eliminar usuario:", err);
+                setError('Error al eliminar el usuario. Por favor, intenta de nuevo.');
+                
+            }
+        }
     };
 
-    const abrirEditor = (dato, index) => {
-        setEditarIndex(index);
-        setFormData({ ...dato });
+    
+    const abrirEditor = (user) => { 
+        setEditarUserId(user.id); 
+        setFormData({ ...user }); 
     };
 
-    const guardarCambios = () => {
-        const nuevosDatos = [...datos];
-        nuevosDatos[editarIndex] = { ...formData };
-        setDatos(nuevosDatos);
-        cerrarEditor();
+    
+    const guardarCambios = async () => {
+        try {
+            const response = await axios.put(`http://localhost:3000/users/${editarUserId}`, formData);
+            alert(response.data.message || 'Usuario actualizado exitosamente.');
+            cerrarEditor(); 
+            fetchUsers(); 
+        } catch (err) {
+            console.error("Error al guardar cambios:", err);
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(`Error al guardar cambios: ${err.response.data.message}`);
+            } else {
+                setError('Error al guardar cambios. Por favor, intenta de nuevo.');
+            }
+        }
     };
 
     const cerrarEditor = () => {
-        setEditarIndex(null);
-        setFormData({ dni: '', nombre: '', fecha: '', hora: '' });
+        setEditarUserId(null); 
+        setFormData({ id: '', name: '', lastname: '', email: '', tel: '', address: '' });
     };
+
+    if (loading) {
+        return <div className="schedule-page">Cargando usuarios...</div>;
+    }
+
+    if (error) {
+        return <div className="schedule-page error-message">{error}</div>;
+    }
 
     return (
         <div className="schedule-page">
-            <h1>AGENDA</h1>
+            <h1>USUARIOS REGISTRADOS</h1>
 
             <div className="botones">
                 <button className="btn-principal" onClick={() => navigate('/Register')}>
@@ -81,52 +110,82 @@ const Schedule = () => {
                 </div>
             </div>
 
-            <div className="schedule-lista">
-                {datosFiltrados.length > 0 ? (
-                    datosFiltrados.map((dato, index) => (
-                        <div key={index} className="fila-schedule">
-                            <span>{dato.dni}</span>
-                            <span>{dato.nombre}</span>
-                            <span>{dato.fecha}</span>
-                            <span>{dato.hora}</span>
-                            <span>
-                                <button className="btn-editar" onClick={() => abrirEditor(dato, index)}>
-                                    <i className="bi bi-pencil"></i> Editar
-                                </button>
-                                <button className="btn-eliminar" onClick={() => eliminarTurno(index)}>
-                                    <i className="bi bi-trash"></i> Eliminar
-                                </button>
-                            </span>
-                        </div>
-                    ))
-                ) : (
-                    <p>No se encontraron resultados.</p>
-                )}
+            <div className="table-container">
+                <table className="users-table">
+                    <thead>
+                        <tr>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Dirección</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {usersFiltrados.length > 0 ? (
+                            usersFiltrados.map((user) => (
+                                <tr key={user.id}>
+                                    <td>{user.id}</td>
+                                    <td>{user.name}</td>
+                                    <td>{user.lastname}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.tel}</td>
+                                    <td>{user.address}</td>
+                                    <td className="actions-cell">
+                                        <button className="btn-editar" onClick={() => abrirEditor(user)}>
+                                            <i className="bi bi-pencil"></i> Editar
+                                        </button>
+                                        <button className="btn-eliminar" onClick={() => eliminarTurno(user.id)}>
+                                            <i className="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="7">No se encontraron usuarios.</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
 
-            {editarIndex !== null && (
+            {editarUserId !== null && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>Editar Turno</h3>
+                        <h3>Editar Usuario (DNI: {formData.id})</h3> 
                         <label>DNI</label>
                         <input
-                            value={formData.dni}
-                            onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
+                            value={formData.id}
+                            onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                            disabled 
                         />
                         <label>Nombre</label>
                         <input
-                            value={formData.nombre}
-                            onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         />
-                        <label>Fecha</label>
+                        <label>Apellido</label>
                         <input
-                            value={formData.fecha}
-                            onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
+                            value={formData.lastname}
+                            onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
                         />
-                        <label>Hora</label>
+                        <label>Email</label>
                         <input
-                            value={formData.hora}
-                            onChange={(e) => setFormData({ ...formData, hora: e.target.value })}
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        />
+                        <label>Teléfono</label>
+                        <input
+                            value={formData.tel}
+                            onChange={(e) => setFormData({ ...formData, tel: e.target.value })}
+                        />
+                        <label>Dirección</label>
+                        <input
+                            value={formData.address}
+                            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         />
 
                         <div className="modal-buttons">
