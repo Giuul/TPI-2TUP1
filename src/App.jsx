@@ -15,7 +15,6 @@ import Agenda from "./pages/Agenda.jsx";
 import ProgramarTurnos from "./pages/ProgramarTurnos.jsx";
 import MiPerfil from "./pages/MiPerfil.jsx";
 import ClearisNavbar from './components/ClearisNavbar/ClearisNavbar';
-import LoginContainer from './components/Form/LoginContainer.jsx';
 
 function App() {
 
@@ -50,6 +49,7 @@ function App() {
         <Route path="/agenda" element={<Agenda />} />
         <Route path="/programar-turnos" element={<ProgramarTurnos />} />
         <Route path="/miPerfil" element={<MiPerfil username={username} />} />
+        <Route path="/users" element={<Userspage />}></Route>
       </Routes>
     </>
   );

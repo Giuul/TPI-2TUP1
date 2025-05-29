@@ -1,15 +1,60 @@
+.contenedorIndividual {
+  position: relative;
+  width: 500px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
 .contenedorIndividual:hover {
-  transform: translateY(-5px); 
+  transform: translateY(-5px);
 }
+
+.image-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%;
+  display: block;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.contenedorIndividual:hover .image-container img {
+  opacity: 0;
+  transform: scale(1.1);
+}
+
 .description {
-  opacity: 0; 
-  height: 0; 
-  overflow: hidden; 
-  transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out; 
-  margin-top: 0; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f6f7f9; 
+  color: #333; 
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+  font-weight: 500;
+  font-size: 1rem;
 }
+
 .contenedorIndividual:hover .description {
-  opacity: 1; 
-  height: auto; 
-  margin-top: 10px; 
+  opacity: 1;
+  pointer-events: auto;
+}
+
+h4 {
+  margin-top: 10px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
 }
