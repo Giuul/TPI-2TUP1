@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../src/assets/styles/styles.css';
@@ -14,16 +14,15 @@ import MisTurnos from "./pages/MisTurnos.jsx";
 import Agenda from "./pages/Agenda.jsx";
 import ProgramarTurnos from "./pages/ProgramarTurnos.jsx";
 import MiPerfil from "./pages/MiPerfil.jsx";
-import ClearisNavbar from './components/ClearisNavbar/ClearisNavbar'; 
-import Users from './components/Users/Users.jsx';
-import Userspage from './pages/Userspage.jsx'
+import ClearisNavbar from './components/ClearisNavbar/ClearisNavbar';
+
 function App() {
- 
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
- 
+
   const handleLogin = (user) => {
     setIsLoggedIn(true);
     setUsername(user);
@@ -32,8 +31,8 @@ function App() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername('');
-    alert('Has cerrado sesión.'); 
-    navigate('/login'); 
+    alert('Has cerrado sesión.');
+    navigate('/login');
   };
 
   return (
@@ -52,7 +51,7 @@ function App() {
         <Route path="/miPerfil" element={<MiPerfil username={username} />} />
         <Route path="/users" element={<Userspage />}></Route>
       </Routes>
-    </>  
+    </>
   );
 }
 

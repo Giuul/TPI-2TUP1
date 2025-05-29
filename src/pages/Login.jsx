@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoginForm from '../components/Form/LoginForm'; 
-import Validations from '../components/Validations/Validations'; 
+import LoginForm from '../components/Form/LoginForm';
+import Validations from '../components/Validations/Validations';
+import LoginContainer from '../components/Form/LoginContainer';
 
 function Login({ onLogin }) {
   const emailRef = useRef(null);
@@ -10,8 +11,8 @@ function Login({ onLogin }) {
   const [exito, setExito] = useState(false);
   const navigate = useNavigate();
 
-  const manejarEnvio = (formData) => { 
-    const validationErrors = Validations({ datos: formData }); 
+  const manejarEnvio = (formData) => {
+    const validationErrors = Validations({ datos: formData });
 
     if (Object.keys(validationErrors).length > 0) {
       if (validationErrors.email && emailRef.current) {
@@ -22,16 +23,16 @@ function Login({ onLogin }) {
       setErrores(validationErrors);
       setExito(false);
     } else {
-      setErrores({}); 
+      setErrores({});
 
       // SIMULACION DE AUTENTICACION HASTA ARMAR BACK
-      
+
       if (formData.email === 'test@example.com' && formData.password === 'password5') {
         // SI SE LOGUEA BIEN
-        setExito(true); 
-        onLogin(formData.email); 
+        setExito(true);
+        onLogin(formData.email);
 
-        setTimeout(() => navigate("/"), 1000); 
+        setTimeout(() => navigate("/"), 1000);
       } else {
         // SI SE LOGUEA MAL
         setErrores({ credenciales: 'Email o contraseña incorrectos.' });
@@ -40,9 +41,13 @@ function Login({ onLogin }) {
     }
   };
 
+  const Login = ({ onLogin }) => {
+    return <LoginContainer onLogin={onLogin} />;
+  };
+
   return (
     <div className="login-page-container">
-      
+
       {exito ? (
         <div className="login-success-message">
           ¡Ingreso exitoso! Redirigiendo...
