@@ -13,6 +13,7 @@ import Register from "./pages/Register.jsx";
 import MisTurnos from "./pages/MisTurnos.jsx";
 import Agenda from "./pages/Agenda.jsx";
 import ProgramarTurnos from "./pages/ProgramarTurnos.jsx";
+import Userspage from './pages/Userspage';
 import MiPerfil from "./pages/MiPerfil.jsx";
 import ClearisNavbar from './components/ClearisNavbar/ClearisNavbar';
 

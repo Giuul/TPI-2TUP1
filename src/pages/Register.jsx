@@ -71,7 +71,7 @@ const Register = () => {
         if (response.ok) {
           console.log("Usuario creado exitosamente:", data);
           setExito(true);
-          setTimeout(() => navigate("/"), 2000);
+          setTimeout(() => navigate("/"), 3000);
         } else {
           console.error("Error al crear usuario:", data.message || "Error desconocido");
           setErrores({ general: data.message || "No se pudo crear el usuario." });
