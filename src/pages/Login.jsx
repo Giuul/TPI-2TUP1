@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../components/Form/LoginForm';
-import Validations from '../components/Validations/Validations';
-import LoginContainer from '../components/Form/LoginContainer';
+import ValidationsLogin from '../components/Validations/validationsLogin';
 
 function Login({ onLogin }) {
   const emailRef = useRef(null);
@@ -11,8 +10,8 @@ function Login({ onLogin }) {
   const [exito, setExito] = useState(false);
   const navigate = useNavigate();
 
-  const manejarEnvio = (formData) => {
-    const validationErrors = Validations({ datos: formData });
+  const manejarEnvio = async (formData) => {
+    const validationErrors = ValidationsLogin({ datos: formData });
 
     if (Object.keys(validationErrors).length > 0) {
       if (validationErrors.email && emailRef.current) {
@@ -24,30 +23,35 @@ function Login({ onLogin }) {
       setExito(false);
     } else {
       setErrores({});
+      try {
+        const response = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
 
-      // SIMULACION DE AUTENTICACION HASTA ARMAR BACK
+        const data = await response.json();
 
-      if (formData.email === 'test@example.com' && formData.password === 'password5') {
-        // SI SE LOGUEA BIEN
+        if (!response.ok) {
+          setErrores({ credenciales: data.message || 'Error de autenticación' });
+          setExito(false);
+          return;
+        }
+
+        localStorage.setItem('token', data.token);
         setExito(true);
         onLogin(formData.email);
 
-        setTimeout(() => navigate("/"), 1000);
-      } else {
-        // SI SE LOGUEA MAL
-        setErrores({ credenciales: 'Email o contraseña incorrectos.' });
+        setTimeout(() => navigate('/'), 3000);
+      } catch (error) {
+        setErrores({ credenciales: 'Error de conexión con el servidor' });
         setExito(false);
       }
     }
   };
 
-  const Login = ({ onLogin }) => {
-    return <LoginContainer onLogin={onLogin} />;
-  };
-
   return (
     <div className="login-page-container">
-
       {exito ? (
         <div className="login-success-message">
           ¡Ingreso exitoso! Redirigiendo...
@@ -59,9 +63,6 @@ function Login({ onLogin }) {
             errores={errores}
             refs={{ email: emailRef, password: passwordRef }}
           />
-          {errores.credenciales && (
-            <p className="text-red-500 text-center mt-2">{errores.credenciales}</p>
-          )}
         </div>
       )}
     </div>
