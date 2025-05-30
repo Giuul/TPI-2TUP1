@@ -32,8 +32,7 @@ const LoginContainer = ({ onLogin }) => {
 
             if (!res.ok) {
                 setErrores({
-                    email: data.message.toLowerCase().includes('email') ? data.message : '',
-                    password: data.message.toLowerCase().includes('contraseña') ? data.message : 'Error al iniciar sesión'
+                    credenciales: data.message || 'Usuario o contraseña incorrectos'
                 });
                 return;
             }
