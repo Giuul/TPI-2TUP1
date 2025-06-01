@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import "./clearisNavbar.css";
+import { Link } from 'react-router-dom';
 
 const ClearisNavbar = ({ isLoggedIn, username, onLogout }) => {
 
@@ -23,12 +24,12 @@ const ClearisNavbar = ({ isLoggedIn, username, onLogout }) => {
               
               {isLoggedIn ? (
                 
-                <NavDropdown title={`${username}`} id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/miPerfil">Perfil</NavDropdown.Item> 
+                  <NavDropdown title={`${username}`} id="basic-nav-dropdown">
+                  <NavDropdown.Item as={Link} to="/miPerfil">Perfil</NavDropdown.Item> 
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="/programar-turnos">Sacar Turno</NavDropdown.Item> 
+                  <NavDropdown.Item as={Link} to="/programar-turnos">Sacar Turno</NavDropdown.Item> 
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="/misturnos">Mis Turnos</NavDropdown.Item> 
+                  <NavDropdown.Item as={Link} to="/misturnos">Mis Turnos</NavDropdown.Item> 
                   <NavDropdown.Divider />
                   <NavDropdown.Item onClick={onLogout}>Cerrar Sesión</NavDropdown.Item>
                 </NavDropdown>

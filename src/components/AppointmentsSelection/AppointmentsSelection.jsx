@@ -4,81 +4,156 @@ import 'react-calendar/dist/Calendar.css';
 import './AppointmentsSelection.css';
 import { useNavigate } from 'react-router-dom';
 
+
+const formatTimeToBackend = (timeString) => {
+    const [time, period] = timeString.split(' ');
+    let [hours, minutes] = time.split(':');
+    hours = parseInt(hours);
+
+    if (period && period.toLowerCase() === 'p.m.' && hours < 12) {
+        hours += 12;
+    } else if (period && period.toLowerCase() === 'a.m.' && hours === 12) {
+        hours = 0;
+    }
+    return `${String(hours).padStart(2, '0')}:${minutes}`;
+};
+
 const horarios = [
-  '3:00 p. m.', '3:30 p. m.', '4:00 p. m.', '4:30 p. m.',
-  '5:00 p. m.', '5:30 p. m.', '6:00 p. m.', '6:30 p. m.'
+    '3:00 p. m.', '3:30 p. m.', '4:00 p. m.', '4:30 p. m.',
+    '5:00 p. m.', '5:30 p. m.', '6:00 p. m.', '6:30 p. m.'
 ];
 
 const AppointmentsSelection = () => {
-  const [fecha, setFecha] = useState(new Date());
-  const [horario, setHorario] = useState('');
-  const [mensajeConfirmacion, setMensajeConfirmacion] = useState('');
-  const navigate = useNavigate();
-  const mañana = new Date();
-  mañana.setDate(mañana.getDate()+1);
+    const [fecha, setFecha] = useState(new Date());
+    const [horarioSeleccionado, setHorarioSeleccionado] = useState('');
+    const [mensajeConfirmacion, setMensajeConfirmacion] = useState('');
+    const [errorMensaje, setErrorMensaje] = useState('');
+    const navigate = useNavigate();
 
-  const confirmarTurno = () => {
-    if (!horario) return;
-     const mensaje = `Turno confirmado para el ${fecha.toLocaleDateString('es-AR', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      })} a las ${horario}`;
-      setMensajeConfirmacion(mensaje);
-      setTimeout(() => {setMensajeConfirmacion('');
-                        navigate('/');}, 2000);
-  };
+    const mañana = new Date();
+    mañana.setDate(mañana.getDate() + 1);
 
-  return (
-    <div className="turno-container">
-      <h1 className="turno-title">PROGRAMAR TURNO</h1>
-      {mensajeConfirmacion && (
-        <div className="modal-overlay">
-         <div className="modal-content">
-           <p>{mensajeConfirmacion}</p>
-            <button className="modal-close" onClick={() => setMensajeConfirmacion('')}>
-              CERRAR
-            </button>
-         </div>
+    const confirmarTurno = async () => {
+
+        if (!horarioSeleccionado) {
+            setErrorMensaje('Por favor, seleccioná un horario para confirmar tu turno.');
+            return;
+        }
+
+        setErrorMensaje('');
+
+        const diaFormatted = fecha.toISOString().split('T')[0];
+        const horaFormatted = formatTimeToBackend(horarioSeleccionado);
+
+        const authToken = localStorage.getItem('authtoken'); 
+
+        if (!authToken) {
+            setErrorMensaje('No estás autenticado. Por favor, inicia sesión para agendar un turno.');
+            
+            return;
+        }
+
+        const idservicio = 1; 
+
+       
+
+        try {
+            
+            const response = await fetch('http://localhost:3000/turnos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`,
+                },
+                body: JSON.stringify({
+                    dia: diaFormatted,
+                    hora: horaFormatted,
+                    idservicio: idservicio,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json(); 
+                console.error("9. Error de respuesta del servidor:", response.status, errorData); // Debug
+                setErrorMensaje(errorData.mensaje || 'Error desconocido al agendar el turno. Por favor, intenta de nuevo.');
+
+                if (response.status === 401 || response.status === 403) {
+                     localStorage.removeItem('authtoken');
+                }
+                return; 
+            }
+
+            const turnoCreado = await response.json(); 
+            console.log('10. Turno creado con éxito:', turnoCreado); 
+
+            setMensajeConfirmacion('¡Turno agendado con éxito!');
+            setHorarioSeleccionado(''); 
+            setTimeout(() => navigate('/misturnos'), 2000); 
+
+        } catch (error) {
+            console.error("11. Error CATCHED (problema de red/fetch) al confirmar turno:", error); // Debug
+            setErrorMensaje(`No se pudo agendar el turno: ${error.message || 'Error de conexión.'}`);
+        }
+    };
+
+    return (
+        <div className="turno-container">
+            <h1 className="turno-title">PROGRAMAR TURNO</h1>
+            {mensajeConfirmacion && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <p>{mensajeConfirmacion}</p>
+                        <button className="modal-close" onClick={() => setMensajeConfirmacion('')}>
+                            CERRAR
+                        </button>
+                    </div>
+                </div>
+            )}
+            {errorMensaje && (
+                <div className="error-message">
+                    <p>{errorMensaje}</p>
+                    <button className="modal-close" onClick={() => setErrorMensaje('')}>
+                        CERRAR
+                    </button>
+                </div>
+            )}
+            <div className="turno-content">
+                <div className="calendar-section">
+                    <Calendar onChange={setFecha} value={fecha} locale="es-AR" minDate={mañana} />
+                </div>
+                <div className="time-slots-section">
+                    {horarios.map((horaTurno, index) => (
+                        <button
+                            key={index}
+                            className={`time-slot-btn ${horarioSeleccionado === horaTurno ? 'selected' : ''}`}
+                            onClick={() => setHorarioSeleccionado(horaTurno)}
+                        >
+                            {horaTurno}
+                        </button>
+                    ))}
+                </div>
+                <div className="details-section">
+                    <p className="label">DETALLES DEL TURNO</p>
+                    <p className="value">
+                        {fecha.toLocaleDateString('es-AR', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        })}
+                    </p>
+                    <p className="value">{horarioSeleccionado}</p>
+                    {!horarioSeleccionado && (<p style={{ color: '#bb8c68', marginTop: '10px' }}>Seleccioná un horario para poder confirmar tu turno. </p>)}
+                    <button
+                        className="confirm-btn"
+                        onClick={confirmarTurno}
+                        disabled={!horarioSeleccionado}
+                    >
+                        CONFIRMAR
+                    </button>
+                </div>
+            </div>
         </div>
-      )}
-      <div className="turno-content">
-        <div className="calendar-section">
-          <Calendar onChange={setFecha} value={fecha} locale="es-AR" minDate={mañana}/>
-        </div>
-        <div className="time-slots-section">
-          {horarios.map((horaTurno, index) => (
-            <button
-              key={index}
-              className={`time-slot-btn ${horario === horaTurno ? 'selected' : ''}`}
-              onClick={() => setHorario(horaTurno)}
-            >
-              {horaTurno}
-            </button>
-          ))}
-        </div>
-        <div className="details-section">
-          <p className="label">DETALLES DEL TURNO</p>
-          <p className="value">
-            {fecha.toLocaleDateString('es-AR', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric'
-            })}
-          </p>
-          <p className="value">{horario}</p>
-          {!horario && (<p style={{ color: '#bb8c68', marginTop: '10px' }}>Seleccioná un horario para poder confirmar tu turno. </p>)}
-          <button
-            className="confirm-btn"
-            onClick={confirmarTurno}
-            disabled={!horario}
-          >
-            CONFIRMAR
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default AppointmentsSelection;
