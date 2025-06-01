@@ -4,7 +4,7 @@
   margin-top: 100px;
   background: white;
   padding: 40px 60px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   font-family: 'Julius Sans One', sans-serif;
   color: #bb8c68;
 }
@@ -192,4 +192,12 @@
 
 .modal-close:hover {
   background-color: #a6734c;
+}
+
+.service-selection {
+  color: #a6734c;
+  margin: 10px;
+  border-color: #bb8c68;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+  outline: none;
 }

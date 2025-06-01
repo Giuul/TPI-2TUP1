@@ -1,5 +1,5 @@
 import React from 'react';
-import Turnos from '../components/Turnos/Turnos'; 
+import Turnos from '../components/Turnos/Turnos';
 import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
 
 const MisTurnos = () => {
@@ -7,8 +7,7 @@ const MisTurnos = () => {
   return (
     <div>
       <div className="mis-turnos-container">
-        <h1>Mis Turnos</h1>
-        <Turnos /> 
+        <Turnos />
       </div>
       <ClearisFooter />
     </div>

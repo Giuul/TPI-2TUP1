@@ -1,17 +1,33 @@
-.turnoitem{
-    display: flex;
-    justify-content: space-around;
-    padding: 10px;
-    margin: 15px;
-    margin-left: 60px;
-    margin-right: 60px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+tr {
+    background-color: #f9f9f9;
+    text-align: center;
+    border-radius: 6px;
+    display: block;
+    margin: 20px;
 }
-p{
-    margin-bottom: .1rem;
-    line-height: 2;
+
+td {
+    padding: 20px 10px;
+    font-size: 14px;
+    color: #3e3e3e;
+}
+
+.actions-cell {
+    text-align: center;
+}
+
+.btn-eliminar {
+    background: none;
+    border: none;
+    color: #d39b77;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.btn-eliminar:hover {
+    text-decoration: underline;
 }

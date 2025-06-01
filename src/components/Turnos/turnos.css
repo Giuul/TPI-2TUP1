@@ -1,0 +1,16 @@
+.turnos-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 6px;
+}
+
+.turnos-title {
+    text-align: center;
+    font-size: 30px;
+    color: #d39b77;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    font-weight: 400;
+}

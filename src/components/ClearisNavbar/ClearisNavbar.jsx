@@ -21,15 +21,15 @@ const ClearisNavbar = ({ isLoggedIn, username, onLogout }) => {
               <Nav.Link href="/nosotros">NOSOTROS</Nav.Link>
               <Nav.Link href="/servicios">SERVICIOS</Nav.Link>
               <Nav.Link href="/contacto">CONTACTO</Nav.Link>
-              
+
               {isLoggedIn ? (
-                
-                  <NavDropdown title={`${username}`} id="basic-nav-dropdown">
-                  <NavDropdown.Item as={Link} to="/miPerfil">Perfil</NavDropdown.Item> 
+
+                <NavDropdown title={`${username}`} id="basic-nav-dropdown">
+                  <NavDropdown.Item as={Link} to="/miPerfil">Perfil</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item as={Link} to="/programar-turnos">Sacar Turno</NavDropdown.Item> 
+                  <NavDropdown.Item as={Link} to="/programar-turnos">Sacar Turno</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item as={Link} to="/misturnos">Mis Turnos</NavDropdown.Item> 
+                  <NavDropdown.Item as={Link} to="/misturnos">Mis Turnos</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item onClick={onLogout}>Cerrar Sesión</NavDropdown.Item>
                 </NavDropdown>

@@ -12,4 +12,4 @@ const Agenda = () => {
     )
 }
 
-export default Agenda
+export default Agenda;
