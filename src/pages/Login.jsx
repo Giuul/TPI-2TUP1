@@ -38,7 +38,7 @@ function Login({ onLogin }) {
           return;
         }
 
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('authtoken', data.token);
         setExito(true);
         onLogin(formData.email);
 
