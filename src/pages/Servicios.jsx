@@ -5,7 +5,7 @@ import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
 import ClearisPiernas from '../assets/img/ClearisPiernas.png';
 import ClearisFacial from '../assets/img/ClearisFacial.png';
 import ClearisBrazos from '../assets/img/ClearisBrazos.png';
-import Service from '../components/Services/Services'; 
+import Service from '../components/Services/Services';
 
 
 const Servicios = () => {
@@ -19,9 +19,9 @@ const Servicios = () => {
   }, []);
 
   const imageMap = {
-  "PIERNAS": ClearisPiernas,
-  "FACIAL": ClearisFacial,
-  "BRAZOS": ClearisBrazos,
+    "PIERNAS": ClearisPiernas,
+    "FACIAL": ClearisFacial,
+    "BRAZOS": ClearisBrazos,
   };
 
   return (

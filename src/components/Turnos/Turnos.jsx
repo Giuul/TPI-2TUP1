@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TurnoItem from '../TurnoItem/TurnoItem';
+import "./turnos.css";
 
 const Turnos = ({ onTurnoEliminado }) => {
   const [listaDeTurnos, setListaDeTurnos] = useState([]);
@@ -53,7 +54,8 @@ const Turnos = ({ onTurnoEliminado }) => {
   }
 
   return (
-    <div>
+    <div className="turnos-container">
+      <h2 className="turnos-title">MIS TURNOS</h2>
       {listaDeTurnos.map(turno => (
         <TurnoItem
           key={turno.id}
@@ -64,6 +66,6 @@ const Turnos = ({ onTurnoEliminado }) => {
       {listaDeTurnos.length === 0 && <p>No tienes turnos programados.</p>}
     </div>
   );
-};
+}
 
 export default Turnos;

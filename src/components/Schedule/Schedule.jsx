@@ -10,16 +10,16 @@ const Schedule = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [editarUserId, setEditarUserId] = useState(null); 
+    const [editarUserId, setEditarUserId] = useState(null);
     const [formData, setFormData] = useState({ id: '', name: '', lastname: '', email: '', tel: '', address: '' });
 
-   
+
     const fetchUsers = async () => {
         try {
-            setLoading(true); 
+            setLoading(true);
             const response = await axios.get('http://localhost:3000/users');
             setUsers(response.data);
-            setError(null); 
+            setError(null);
         } catch (err) {
             setError('Error al cargar los usuarios. Por favor, intenta de nuevo más tarde.');
             console.error("Error fetching users:", err);
@@ -29,41 +29,41 @@ const Schedule = () => {
     };
 
     useEffect(() => {
-        fetchUsers(); 
+        fetchUsers();
     }, []);
 
     const usersFiltrados = users.filter(user =>
         user.id.toString().includes(dniBusqueda)
     );
 
-    
+
     const eliminarTurno = async (userId) => {
         if (window.confirm(`¿Estás seguro de que quieres eliminar al usuario con DNI ${userId}?`)) {
             try {
                 await axios.delete(`http://localhost:3000/users/${userId}`);
                 alert('Usuario eliminado exitosamente.');
-                fetchUsers(); 
+                fetchUsers();
             } catch (err) {
                 console.error("Error al eliminar usuario:", err);
                 setError('Error al eliminar el usuario. Por favor, intenta de nuevo.');
-                
+
             }
         }
     };
 
-    
-    const abrirEditor = (user) => { 
-        setEditarUserId(user.id); 
-        setFormData({ ...user }); 
+
+    const abrirEditor = (user) => {
+        setEditarUserId(user.id);
+        setFormData({ ...user });
     };
 
-    
+
     const guardarCambios = async () => {
         try {
             const response = await axios.put(`http://localhost:3000/users/${editarUserId}`, formData);
             alert(response.data.message || 'Usuario actualizado exitosamente.');
-            cerrarEditor(); 
-            fetchUsers(); 
+            cerrarEditor();
+            fetchUsers();
         } catch (err) {
             console.error("Error al guardar cambios:", err);
             if (err.response && err.response.data && err.response.data.message) {
@@ -75,7 +75,7 @@ const Schedule = () => {
     };
 
     const cerrarEditor = () => {
-        setEditarUserId(null); 
+        setEditarUserId(null);
         setFormData({ id: '', name: '', lastname: '', email: '', tel: '', address: '' });
     };
 
@@ -92,7 +92,7 @@ const Schedule = () => {
             <h1>USUARIOS REGISTRADOS</h1>
 
             <div className="botones">
-                <button className="btn-principal" onClick={() => navigate('/Register')}>
+                <button className="btn-principal" onClick={() => navigate('/register')}>
                     CREAR USUARIO
                 </button>
                 <button className="btn-principal" onClick={() => navigate('/programar-turnos')}>
@@ -155,12 +155,12 @@ const Schedule = () => {
             {editarUserId !== null && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>Editar Usuario (DNI: {formData.id})</h3> 
+                        <h3>Editar Usuario (DNI: {formData.id})</h3>
                         <label>DNI</label>
                         <input
                             value={formData.id}
                             onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                            disabled 
+                            disabled
                         />
                         <label>Nombre</label>
                         <input

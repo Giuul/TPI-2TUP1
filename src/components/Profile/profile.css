@@ -1,9 +1,8 @@
-
 .perfil-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 80vh;
   background-color: #f6f7f9;
   padding: 20px;
 }
@@ -61,8 +60,8 @@
 
 
 .perfil-buttons button {
-  flex: 1px; 
-  padding: 6px 8px; 
+  flex: 1px;
+  padding: 6px 8px;
   background-color: #e0ab84;
   border: none;
   color: white;
