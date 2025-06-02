@@ -39,8 +39,13 @@ function Login({ onLogin }) {
         }
 
         localStorage.setItem('authtoken', data.token);
+
+        // Aseguramos que el role esté en minúsculas
+        const lowerCaseRole = data.role.toLowerCase();
         setExito(true);
-        onLogin(formData.email);
+
+        // Guardamos correctamente el rol
+        onLogin(formData.email, lowerCaseRole);
 
         setTimeout(() => navigate('/'), 3000);
       } catch (error) {

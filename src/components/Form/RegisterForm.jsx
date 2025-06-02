@@ -11,20 +11,25 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
         tel: "",
         address: "",
         password: "",
-        repPassword: ""
+        repPassword: "",
+        isAdmin: false,  
     });
 
-
     const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [name]: type === "checkbox" ? checked : value,
         });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(formData);
+        const dataToSend = {
+            ...formData,
+            role: formData.isAdmin ? "admin" : "user",
+        };
+        onSubmit(dataToSend);
     };
 
     return (
@@ -40,6 +45,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         ref={refs.dni} 
                     />
                     {errores.dni && <p className="error-text">{errores.dni}</p>} 
+
                     <label>CORREO ELECTRONICO</label>
                     <input
                         type="text"
@@ -49,6 +55,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         ref={refs.email}
                     />
                     {errores.email && <p className="error-text">{errores.email}</p>}
+
                     <label>NOMBRE</label>
                     <input
                         type="text"
@@ -58,6 +65,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         ref={refs.name}
                     />
                     {errores.name && <p className="error-text">{errores.name}</p>}
+
                     <label>APELLIDO</label>
                     <input
                         type="text"
@@ -67,6 +75,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         ref={refs.lastname}
                     />
                     {errores.lastname && <p className="error-text">{errores.lastname}</p>}
+
                     <label>TELEFONO</label>
                     <input
                         type="tel"
@@ -76,6 +85,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         ref={refs.tel}
                     />
                     {errores.tel && <p className="error-text">{errores.tel}</p>}
+
                     <label>DIRECCION</label>
                     <input
                         type="text"
@@ -85,6 +95,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         ref={refs.address}
                     />
                     {errores.address && <p className="error-text">{errores.address}</p>}
+
                     <label>CONTRASEÑA</label>
                     <input
                         type="password"
@@ -94,6 +105,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         ref={refs.password}
                     />
                     {errores.password && <p className="error-text">{errores.password}</p>}
+
                     <label>REPETIR CONTRASEÑA</label>
                     <input
                         type="password"
@@ -103,6 +115,18 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         ref={refs.repPassword}
                     />
                     {errores.repPassword && <p className="error-text">{errores.repPassword}</p>}
+
+    
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="isAdmin"
+                            checked={formData.isAdmin}
+                            onChange={handleChange}
+                        />
+                        ¿Es administrador?
+                    </label>
+
                     {errores.general && <p className="error-text general-error">{errores.general}</p>}
                     <button type="submit">CREAR CUENTA</button>
                 </form>
