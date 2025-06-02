@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import "./forms.css";
 
@@ -12,24 +13,25 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
         address: "",
         password: "",
         repPassword: "",
-        isAdmin: false,  
+        role: "user", 
     });
+
+    
+    const [currentUserRole, setCurrentUserRole] = useState('superadmin'); 
+
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+
         setFormData({
             ...formData,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: type === "checkbox" ? (checked ? "admin" : "user") : value,
         });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const dataToSend = {
-            ...formData,
-            role: formData.isAdmin ? "admin" : "user",
-        };
-        onSubmit(dataToSend);
+        onSubmit(formData);
     };
 
     return (
@@ -38,13 +40,13 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                 <form className="register-form" onSubmit={handleSubmit}>
                     <label>DNI</label>
                     <input
-                        type="text" 
+                        type="text"
                         name="dni"
                         value={formData.dni}
                         onChange={handleChange}
-                        ref={refs.dni} 
+                        ref={refs.dni}
                     />
-                    {errores.dni && <p className="error-text">{errores.dni}</p>} 
+                    {errores.dni && <p className="error-text">{errores.dni}</p>}
 
                     <label>CORREO ELECTRONICO</label>
                     <input
@@ -116,16 +118,18 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                     />
                     {errores.repPassword && <p className="error-text">{errores.repPassword}</p>}
 
-    
-                    <label>
-                        <input
-                            type="checkbox"
-                            name="isAdmin"
-                            checked={formData.isAdmin}
-                            onChange={handleChange}
-                        />
-                        ¿Es administrador?
-                    </label>
+                   
+                    {currentUserRole === 'superadmin' && (
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="role" 
+                                checked={formData.role === "admin"} 
+                                onChange={handleChange} 
+                            />
+                            ¿Es administrador?
+                        </label>
+                    )}
 
                     {errores.general && <p className="error-text general-error">{errores.general}</p>}
                     <button type="submit">CREAR CUENTA</button>
@@ -136,3 +140,4 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
 };
 
 export default RegisterForm;
+
