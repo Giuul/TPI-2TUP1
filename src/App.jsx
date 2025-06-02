@@ -20,32 +20,44 @@ import { jwtDecode } from 'jwt-decode';
 
 function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
-  const [userRole, setUserRole] = useState(''); 
-  const [userId, setUserId] = useState('');  
+ 
+  const initialIsLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const initialUsername = localStorage.getItem('username') || '';
+  const initialUserRole = localStorage.getItem('role') || '';
+  const initialUserId = localStorage.getItem('userId') || '';
+
+  const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
+  const [username, setUsername] = useState(initialUsername);
+  const [userRole, setUserRole] = useState(initialUserRole);
+  const [userId, setUserId] = useState(initialUserId);
+
   const navigate = useNavigate();
 
- useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-        try {
-            const decodedToken = jwtDecode(token);
-            const currentTime = Date.now() / 1000;
-            if (decodedToken.exp < currentTime) {
-                handleLogout();
-            } else {
-                setIsLoggedIn(true);
-                setUsername(localStorage.getItem('username'));
-                setUserRole(localStorage.getItem('role') || decodedToken.role);
-                setUserId(localStorage.getItem('userId') || decodedToken.id);
-            }
-        } catch (e) {
-            console.error("Token inválido o expirado:", e);
-            handleLogout();
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp < currentTime) {
+          handleLogout();
+        } else {
+          setIsLoggedIn(true);
+          setUsername(localStorage.getItem('username') || decodedToken.username);
+          setUserRole(localStorage.getItem('role') || decodedToken.role);
+          setUserId(localStorage.getItem('userId') || decodedToken.id);
         }
+      } catch (e) {
+        console.error("Token inválido o expirado:", e);
+        handleLogout();
+      }
+    } else {
+      setIsLoggedIn(false);
+      setUsername('');
+      setUserRole('');
+      setUserId('');
     }
-}, []);
+  }, []);
 
    const handleLogin = (loginData) => {
     setIsLoggedIn(true);
