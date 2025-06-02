@@ -1,5 +1,5 @@
-import React from 'react'
-import RegisterForm from '../components/Form/RegisterForm'
+import React from 'react';
+import RegisterForm from '../components/Form/RegisterForm';
 import ValidationsRegister from '../components/Validations/ValidationsRegister';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -56,6 +56,7 @@ const Register = () => {
           address: formData.address, 
           password: formData.password, 
           repPassword: formData.repPassword,
+          role: formData.role || "user",  // rol enviado al backend
         };
         console.log("Datos que se envían al backend:", JSON.stringify(datosParaBackend, null, 2));
         const response = await fetch(urlBackend, {
