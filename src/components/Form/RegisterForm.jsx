@@ -103,6 +103,7 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         ref={refs.repPassword}
                     />
                     {errores.repPassword && <p className="error-text">{errores.repPassword}</p>}
+                    {errores.general && <p className="error-text general-error">{errores.general}</p>}
                     <button type="submit">CREAR CUENTA</button>
                 </form>
             </div>
