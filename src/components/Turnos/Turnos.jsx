@@ -22,7 +22,7 @@ const Turnos = ({ onTurnoEliminado }) => {
           servicios: turno.servicio?.nombre || 'Sin servicio',
           fecha: turno.dia,
           hora: turno.hora,
-          duracion: turno.servicio?.descripcion || 'Duración no especificada',
+          duracion:  turno.servicio?.duracion !== undefined  ? formatDuration(turno.servicio.duracion) : 'Duración no especificada',
         }));
 
         setListaDeTurnos(turnosTransformados);
