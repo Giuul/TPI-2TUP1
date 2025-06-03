@@ -16,16 +16,13 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
         role: "user", 
     });
 
-    
-    const [currentUserRole, setCurrentUserRole] = useState('superadmin'); 
 
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
+        const { name, value, type } = e.target;
 
         setFormData({
             ...formData,
-            [name]: type === "checkbox" ? (checked ? "admin" : "user") : value,
         });
     };
 
@@ -117,20 +114,6 @@ const RegisterForm = ({ onSubmit, errores, refs }) => {
                         ref={refs.repPassword}
                     />
                     {errores.repPassword && <p className="error-text">{errores.repPassword}</p>}
-
-                   
-                    {currentUserRole === 'superadmin' && (
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="role" 
-                                checked={formData.role === "admin"} 
-                                onChange={handleChange} 
-                            />
-                            ¿Es administrador?
-                        </label>
-                    )}
-
                     {errores.general && <p className="error-text general-error">{errores.general}</p>}
                     <button type="submit">CREAR CUENTA</button>
                 </form>
