@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './users.css';
 
+
+
 const Users = () => {
     const navigate = useNavigate();
     const [dniBusqueda, setDniBusqueda] = useState('');
@@ -10,16 +12,22 @@ const Users = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [editarUserId, setEditarUserId] = useState(null); 
-    const [formData, setFormData] = useState({ id: '', name: '', lastname: '', email: '', tel: '', address: '' });
+    const [editarUserId, setEditarUserId] = useState(null);
+    const [formData, setFormData] = useState({ id: '', name: '', lastname: '', email: '', tel: '', address: '', role: 'user' });
 
    
+    const [currentUserRole, setCurrentUserRole] = useState('superadmin'); 
     const fetchUsers = async () => {
         try {
-            setLoading(true); 
-            const response = await axios.get('http://localhost:3000/users');
-            setUsers(response.data);
-            setError(null); 
+            setLoading(true);
+           const token = localStorage.getItem('token'); 
+        const response = await axios.get('http://localhost:3000/users', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        setUsers(response.data);
+        setError(null);
         } catch (err) {
             setError('Error al cargar los usuarios. Por favor, intenta de nuevo más tarde.');
             console.error("Error fetching users:", err);
@@ -29,41 +37,53 @@ const Users = () => {
     };
 
     useEffect(() => {
-        fetchUsers(); 
+        fetchUsers();
     }, []);
 
     const usersFiltrados = users.filter(user =>
         user.id.toString().includes(dniBusqueda)
     );
 
-    
-    const eliminarTurno = async (userId) => {
+      const eliminarTurno = async (userId) => {
         if (window.confirm(`¿Estás seguro de que quieres eliminar al usuario con DNI ${userId}?`)) {
             try {
-                await axios.delete(`http://localhost:3000/users/${userId}`);
+                const token = localStorage.getItem('token'); 
+                await axios.delete(`http://localhost:3000/users/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}` 
+                    }
+                });
                 alert('Usuario eliminado exitosamente.');
-                fetchUsers(); 
+                fetchUsers();
             } catch (err) {
                 console.error("Error al eliminar usuario:", err);
                 setError('Error al eliminar el usuario. Por favor, intenta de nuevo.');
-                
             }
         }
     };
 
     
-    const abrirEditor = (user) => { 
-        setEditarUserId(user.id); 
-        setFormData({ ...user }); 
+    const abrirEditor = (user) => {
+        setEditarUserId(user.id);
+        setFormData({ ...user });
     };
 
-    
     const guardarCambios = async () => {
         try {
-            const response = await axios.put(`http://localhost:3000/users/${editarUserId}`, formData);
+            const token = localStorage.getItem('token'); 
+           
+            const response = await axios.put(
+                `http://localhost:3000/users/${editarUserId}`, 
+                formData, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}` 
+                    }
+                }
+            );
             alert(response.data.message || 'Usuario actualizado exitosamente.');
-            cerrarEditor(); 
-            fetchUsers(); 
+            cerrarEditor();
+            fetchUsers();
         } catch (err) {
             console.error("Error al guardar cambios:", err);
             if (err.response && err.response.data && err.response.data.message) {
@@ -73,10 +93,9 @@ const Users = () => {
             }
         }
     };
-
     const cerrarEditor = () => {
-        setEditarUserId(null); 
-        setFormData({ id: '', name: '', lastname: '', email: '', tel: '', address: '' });
+        setEditarUserId(null);
+        setFormData({ id: '', name: '', lastname: '', email: '', tel: '', address: '', role: 'user' });
     };
 
     if (loading) {
@@ -114,26 +133,28 @@ const Users = () => {
                 <table className="users-table">
                     <thead>
                         <tr>
-                            <th>DNI</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Email</th>
-                            <th>Teléfono</th>
-                            <th>Dirección</th>
-                            <th>Acciones</th>
+                            <th style={{ width: '10%' }}>DNI</th> 
+                            <th style={{ width: '12%' }}>Nombre</th>
+                            <th style={{ width: '12%' }}>Apellido</th>
+                            <th style={{ width: '18%' }}>Email</th> 
+                            <th style={{ width: '10%' }}>Teléfono</th>
+                            <th style={{ width: '18%' }}>Dirección</th> 
+                            <th style={{ width: '8%' }}>Rol</th> 
+                            <th style={{ width: '12%' }}>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {usersFiltrados.length > 0 ? (
                             usersFiltrados.map((user) => (
                                 <tr key={user.id}>
-                                    <td>{user.id}</td>
+                                    <td >{user.id}</td>
                                     <td>{user.name}</td>
                                     <td>{user.lastname}</td>
                                     <td>{user.email}</td>
                                     <td>{user.tel}</td>
                                     <td>{user.address}</td>
-                                    <td className="actions-cell">
+                                    <td>{user.role}</td> 
+                                    <td>
                                         <button className="btn-editar" onClick={() => abrirEditor(user)}>
                                             <i className="bi bi-pencil"></i> Editar
                                         </button>
@@ -145,7 +166,8 @@ const Users = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="7">No se encontraron usuarios.</td>
+                                
+                                <td colSpan="8">No se encontraron usuarios.</td>
                             </tr>
                         )}
                     </tbody>
@@ -155,12 +177,12 @@ const Users = () => {
             {editarUserId !== null && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>Editar Usuario (DNI: {formData.id})</h3> 
+                        <h3>Editar Usuario (DNI: {formData.id})</h3>
                         <label>DNI</label>
                         <input
                             value={formData.id}
                             onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                            disabled 
+                            disabled
                         />
                         <label>Nombre</label>
                         <input
@@ -187,6 +209,21 @@ const Users = () => {
                             value={formData.address}
                             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         />
+
+                        
+                        {currentUserRole === 'superadmin' && (
+                            <label className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    name="role"
+                                    
+                                    checked={formData.role === 'admin'}
+                                    
+                                    onChange={(e) => setFormData({ ...formData, role: e.target.checked ? 'admin' : 'user' })}
+                                />
+                                Convertir a administrador
+                            </label>
+                        )}
 
                         <div className="modal-buttons">
                             <button onClick={guardarCambios} className="btn-principal">Guardar</button>
