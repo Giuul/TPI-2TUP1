@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './users.css';
 
+
+
 const Users = () => {
     const navigate = useNavigate();
     const [dniBusqueda, setDniBusqueda] = useState('');
@@ -18,9 +20,14 @@ const Users = () => {
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:3000/users');
-            setUsers(response.data);
-            setError(null);
+           const token = localStorage.getItem('token'); 
+        const response = await axios.get('http://localhost:3000/users', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        setUsers(response.data);
+        setError(null);
         } catch (err) {
             setError('Error al cargar los usuarios. Por favor, intenta de nuevo más tarde.');
             console.error("Error fetching users:", err);
@@ -37,10 +44,15 @@ const Users = () => {
         user.id.toString().includes(dniBusqueda)
     );
 
-    const eliminarTurno = async (userId) => {
+      const eliminarTurno = async (userId) => {
         if (window.confirm(`¿Estás seguro de que quieres eliminar al usuario con DNI ${userId}?`)) {
             try {
-                await axios.delete(`http://localhost:3000/users/${userId}`);
+                const token = localStorage.getItem('token'); 
+                await axios.delete(`http://localhost:3000/users/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}` 
+                    }
+                });
                 alert('Usuario eliminado exitosamente.');
                 fetchUsers();
             } catch (err) {
@@ -58,8 +70,17 @@ const Users = () => {
 
     const guardarCambios = async () => {
         try {
-        
-            const response = await axios.put(`http://localhost:3000/users/${editarUserId}`, formData);
+            const token = localStorage.getItem('token'); 
+           
+            const response = await axios.put(
+                `http://localhost:3000/users/${editarUserId}`, 
+                formData, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}` 
+                    }
+                }
+            );
             alert(response.data.message || 'Usuario actualizado exitosamente.');
             cerrarEditor();
             fetchUsers();
@@ -72,7 +93,6 @@ const Users = () => {
             }
         }
     };
-
     const cerrarEditor = () => {
         setEditarUserId(null);
         setFormData({ id: '', name: '', lastname: '', email: '', tel: '', address: '', role: 'user' });
@@ -113,28 +133,28 @@ const Users = () => {
                 <table className="users-table">
                     <thead>
                         <tr>
-                            <th>DNI</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Email</th>
-                            <th>Teléfono</th>
-                            <th>Dirección</th>
-                            <th>Rol</th> 
-                            <th>Acciones</th>
+                            <th style={{ width: '10%' }}>DNI</th> 
+                            <th style={{ width: '12%' }}>Nombre</th>
+                            <th style={{ width: '12%' }}>Apellido</th>
+                            <th style={{ width: '18%' }}>Email</th> 
+                            <th style={{ width: '10%' }}>Teléfono</th>
+                            <th style={{ width: '18%' }}>Dirección</th> 
+                            <th style={{ width: '8%' }}>Rol</th> 
+                            <th style={{ width: '12%' }}>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {usersFiltrados.length > 0 ? (
                             usersFiltrados.map((user) => (
                                 <tr key={user.id}>
-                                    <td>{user.id}</td>
+                                    <td >{user.id}</td>
                                     <td>{user.name}</td>
                                     <td>{user.lastname}</td>
                                     <td>{user.email}</td>
                                     <td>{user.tel}</td>
                                     <td>{user.address}</td>
                                     <td>{user.role}</td> 
-                                    <td className="actions-cell">
+                                    <td>
                                         <button className="btn-editar" onClick={() => abrirEditor(user)}>
                                             <i className="bi bi-pencil"></i> Editar
                                         </button>
