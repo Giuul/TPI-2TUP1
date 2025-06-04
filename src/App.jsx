@@ -21,7 +21,7 @@ import { jwtDecode } from 'jwt-decode';
 
 function App() {
 
- 
+
   const initialIsLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   const initialUsername = localStorage.getItem('username') || '';
   const initialUserRole = localStorage.getItem('role') || '';
@@ -60,20 +60,20 @@ function App() {
     }
   }, []);
 
-   const handleLogin = (loginData) => {
+  const handleLogin = (loginData) => {
     setIsLoggedIn(true);
-    setUsername(loginData.username); 
+    setUsername(loginData.username);
     setUserRole(loginData.role);
     setUserId(loginData.userId);
 
     localStorage.setItem('token', loginData.token);
-    localStorage.setItem('username', loginData.username); 
+    localStorage.setItem('username', loginData.username);
     localStorage.setItem('role', loginData.role);
     localStorage.setItem('userId', loginData.userId);
     localStorage.setItem('isLoggedIn', 'true');
-};
+  };
 
-    const handleLogout = () => {
+  const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername('');
     setUserRole('');
@@ -91,32 +91,30 @@ function App() {
       <ClearisNavbar isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} userRole={userRole} />
       <Routes>
         <Route path="/" element={<Home />} />
-          <Route path="/nosotros" element={<Nosotros />} />
-          <Route path="/servicios" element={<Servicios />} />
-          <Route path="/contacto" element={<Contacto />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/register" element={<Register />} />
-          {/*USUARIO*/}
-            <Route path="/misturnos" element={
-            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin']}> <MisTurnos /> </ProtectedRoute>}
+        <Route path="/nosotros" element={<Nosotros />} />
+        <Route path="/servicios" element={<Servicios />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/programar-turnos" element={<ProgramarTurnos />} />
+        <Route path="/misturnos" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin']}> <MisTurnos /> </ProtectedRoute>}
         />
         <Route path="/miPerfil" element={
-            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin']}>
-                <MiPerfil username={username} userId={userId} userRole={userRole}/> {/* <-- Estas props son cruciales */}
-            </ProtectedRoute>}
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin']}>
+            <MiPerfil username={username} userId={userId} userRole={userRole} onAccountDelete={handleLogout} />
+          </ProtectedRoute>}
         />
-
-        {/* ADMINISTRADOR Y SUPERADMINISTRADOR */}
-            <Route path="/misturnos" element={
-            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin']}> <Agenda /> </ProtectedRoute>}
+        <Route path="/misturnos" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin']}> <Agenda /> </ProtectedRoute>}
         />
         <Route path="/users" element={
-            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin']}>
-            <Userspage currentUserRole={userRole} currentUserId={userId} /> 
-            </ProtectedRoute>}
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin']}>
+            <Userspage currentUserRole={userRole} currentUserId={userId} />
+          </ProtectedRoute>}
         />
-        <Route path="/programar-turnos-admin" element={ 
-            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin', 'user']}> <ProgramarTurnosAdmin /> </ProtectedRoute>}
+        <Route path="/programar-turnos-admin" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin', 'user']}> <ProgramarTurnosAdmin /> </ProtectedRoute>}
         />
       </Routes>
     </>

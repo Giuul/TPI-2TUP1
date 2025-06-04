@@ -1,10 +1,15 @@
 import React from 'react'
-import Profile  from '../components/Profile/Profile'
+import Profile from '../components/Profile/Profile'
 
-const MiPerfil = () => {
+const MiPerfil = ({ username, userId, userRole, onAccountDelete }) => {
   return (
     <div>
-        <Profile/>
+      <Profile
+        username={username}
+        userId={userId}
+        userRole={userRole}
+        onAccountDelete={onAccountDelete}
+      />
     </div>
   );
 };
