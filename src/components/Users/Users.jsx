@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './users.css';
 
-
-
 const Users = () => {
     const navigate = useNavigate();
     const [dniBusqueda, setDniBusqueda] = useState('');
@@ -14,20 +12,21 @@ const Users = () => {
 
     const [editarUserId, setEditarUserId] = useState(null);
     const [formData, setFormData] = useState({ id: '', name: '', lastname: '', email: '', tel: '', address: '', role: 'user' });
+    const [rolSeleccionado, setRolSeleccionado] = useState('user');
 
-   
-    const [currentUserRole, setCurrentUserRole] = useState('superadmin'); 
+    const [currentUserRole, setCurrentUserRole] = useState('superadmin');
+
     const fetchUsers = async () => {
         try {
             setLoading(true);
-           const token = localStorage.getItem('token'); 
-        const response = await axios.get('http://localhost:3000/users', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        setUsers(response.data);
-        setError(null);
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://localhost:3000/users', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setUsers(response.data);
+            setError(null);
         } catch (err) {
             setError('Error al cargar los usuarios. Por favor, intenta de nuevo más tarde.');
             console.error("Error fetching users:", err);
@@ -44,13 +43,13 @@ const Users = () => {
         user.id.toString().includes(dniBusqueda)
     );
 
-      const eliminarTurno = async (userId) => {
+    const eliminarTurno = async (userId) => {
         if (window.confirm(`¿Estás seguro de que quieres eliminar al usuario con DNI ${userId}?`)) {
             try {
-                const token = localStorage.getItem('token'); 
+                const token = localStorage.getItem('token');
                 await axios.delete(`http://localhost:3000/users/${userId}`, {
                     headers: {
-                        Authorization: `Bearer ${token}` 
+                        Authorization: `Bearer ${token}`
                     }
                 });
                 alert('Usuario eliminado exitosamente.');
@@ -62,49 +61,50 @@ const Users = () => {
         }
     };
 
-    
     const abrirEditor = (user) => {
         setEditarUserId(user.id);
         setFormData({ ...user });
+        setRolSeleccionado(user.role); // nuevo
     };
 
     const guardarCambios = async () => {
         try {
-            const token = localStorage.getItem('token'); 
-           
+            const token = localStorage.getItem('token');
+
+            // Crear nueva copia del formData con el rol actualizado
+            const updatedUserData = { ...formData, role: rolSeleccionado };
+
             const response = await axios.put(
-                `http://localhost:3000/users/${editarUserId}`, 
-                formData, 
+                `http://localhost:3000/users/${editarUserId}`,
+                updatedUserData,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}` 
+                        Authorization: `Bearer ${token}`
                     }
                 }
             );
+
             alert(response.data.message || 'Usuario actualizado exitosamente.');
             cerrarEditor();
             fetchUsers();
         } catch (err) {
             console.error("Error al guardar cambios:", err);
-            if (err.response && err.response.data && err.response.data.message) {
+            if (err.response?.data?.message) {
                 setError(`Error al guardar cambios: ${err.response.data.message}`);
             } else {
                 setError('Error al guardar cambios. Por favor, intenta de nuevo.');
             }
         }
     };
+
     const cerrarEditor = () => {
         setEditarUserId(null);
         setFormData({ id: '', name: '', lastname: '', email: '', tel: '', address: '', role: 'user' });
+        setRolSeleccionado('user');
     };
 
-    if (loading) {
-        return <div className="schedule-page">Cargando usuarios...</div>;
-    }
-
-    if (error) {
-        return <div className="schedule-page error-message">{error}</div>;
-    }
+    if (loading) return <div className="schedule-page">Cargando usuarios...</div>;
+    if (error) return <div className="schedule-page error-message">{error}</div>;
 
     return (
         <div className="schedule-page">
@@ -133,13 +133,13 @@ const Users = () => {
                 <table className="users-table">
                     <thead>
                         <tr>
-                            <th style={{ width: '10%' }}>DNI</th> 
+                            <th style={{ width: '10%' }}>DNI</th>
                             <th style={{ width: '12%' }}>Nombre</th>
                             <th style={{ width: '12%' }}>Apellido</th>
-                            <th style={{ width: '18%' }}>Email</th> 
+                            <th style={{ width: '18%' }}>Email</th>
                             <th style={{ width: '10%' }}>Teléfono</th>
-                            <th style={{ width: '18%' }}>Dirección</th> 
-                            <th style={{ width: '8%' }}>Rol</th> 
+                            <th style={{ width: '18%' }}>Dirección</th>
+                            <th style={{ width: '8%' }}>Rol</th>
                             <th style={{ width: '12%' }}>Acciones</th>
                         </tr>
                     </thead>
@@ -147,13 +147,13 @@ const Users = () => {
                         {usersFiltrados.length > 0 ? (
                             usersFiltrados.map((user) => (
                                 <tr key={user.id}>
-                                    <td >{user.id}</td>
+                                    <td>{user.id}</td>
                                     <td>{user.name}</td>
                                     <td>{user.lastname}</td>
                                     <td>{user.email}</td>
                                     <td>{user.tel}</td>
                                     <td>{user.address}</td>
-                                    <td>{user.role}</td> 
+                                    <td>{user.role}</td>
                                     <td>
                                         <button className="btn-editar" onClick={() => abrirEditor(user)}>
                                             <i className="bi bi-pencil"></i> Editar
@@ -166,7 +166,6 @@ const Users = () => {
                             ))
                         ) : (
                             <tr>
-                                
                                 <td colSpan="8">No se encontraron usuarios.</td>
                             </tr>
                         )}
@@ -177,51 +176,50 @@ const Users = () => {
             {editarUserId !== null && (
                 <div className="modal">
                     <div className="modal-content">
-                        <h3>Editar Usuario  (DNI: {formData.id})</h3>
+                        <h3>Editar Usuario (DNI: {formData.id})</h3>
                         <label>DNI</label>
-                        <input
-                            value={formData.id}
-                            onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                            disabled
-                        />
+                        <input value={formData.id} disabled />
+
                         <label>Nombre</label>
                         <input
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         />
+
                         <label>Apellido</label>
                         <input
                             value={formData.lastname}
                             onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
                         />
+
                         <label>Email</label>
                         <input
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         />
+
                         <label>Teléfono</label>
                         <input
                             value={formData.tel}
                             onChange={(e) => setFormData({ ...formData, tel: e.target.value })}
                         />
+
                         <label>Dirección</label>
                         <input
                             value={formData.address}
                             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         />
 
-                        
                         {currentUserRole === 'superadmin' && (
                             <label className="checkbox-label">
                                 <input
                                     type="checkbox"
-                                    name="role"
-                                    
-                                    checked={formData.role === 'admin'}
-                                    
-                                    onChange={(e) => setFormData({ ...formData, role: e.target.checked ? 'admin' : 'user' })}
+                                    checked={rolSeleccionado === 'admin'}
+                                    onChange={(e) => setRolSeleccionado(e.target.checked ? 'admin' : 'user')}
                                 />
-                                Convertir a administrador
+                                {formData.role === 'admin'
+                                    ? 'Quitar rol de administrador'
+                                    : 'Convertir a administrador'}
                             </label>
                         )}
 
