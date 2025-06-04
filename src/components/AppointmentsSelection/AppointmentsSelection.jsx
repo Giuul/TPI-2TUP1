@@ -68,7 +68,7 @@ const AppointmentsSelection = () => {
 
         try {
 
-            const response = await fetch('http://localhost:3000/turnos', {
+            const response = await fetch('http://localhost:3000/misturnos', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const AppointmentsSelection = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error("9. Error de respuesta del servidor:", response.status, errorData);
+                console.error("Error de respuesta del servidor:", response.status, errorData);
                 setErrorMensaje(errorData.mensaje || 'Error desconocido al agendar el turno. Por favor, intenta de nuevo.');
 
                 if (response.status === 401 || response.status === 403) {
@@ -93,14 +93,14 @@ const AppointmentsSelection = () => {
             }
 
             const turnoCreado = await response.json();
-            console.log('10. Turno creado con éxito:', turnoCreado);
+            console.log('Turno creado con éxito:', turnoCreado);
 
             setMensajeConfirmacion('¡Turno agendado con éxito!');
             setHorarioSeleccionado('');
             setTimeout(() => navigate('/misturnos'), 2000);
 
         } catch (error) {
-            console.error("11. Error CATCHED (problema de red/fetch) al confirmar turno:", error);
+            console.error("Error CATCHED (problema de red/fetch) al confirmar turno:", error);
             setErrorMensaje(`No se pudo agendar el turno: ${error.message || 'Error de conexión.'}`);
         }
     };

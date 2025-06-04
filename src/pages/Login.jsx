@@ -5,6 +5,7 @@ import axios from 'axios';
 
 const Login = ({ onLogin }) => {
     const navigate = useNavigate();
+    const token = localStorage.getItem('authtoken');
 
     const [validationErrors, setValidationErrors] = useState({});
     const [apiError, setApiError] = useState('');
@@ -49,12 +50,16 @@ const Login = ({ onLogin }) => {
             });
 
             if (response.data && response.data.token && response.data.user) {
+
+                localStorage.setItem('authtoken', response.data.token);
+                localStorage.setItem('currentUserId', response.data.user.id);
+
                 onLogin({
                     token: response.data.token,
-                    username: `${response.data.user.name} ${response.data.user.lastname}`, 
+                    username: `${response.data.user.name} ${response.data.user.lastname}`,
                     role: response.data.user.role,
                     userId: response.data.user.id,
-                    email: response.data.user.email 
+                    email: response.data.user.email
                 });
 
                 navigate('/');

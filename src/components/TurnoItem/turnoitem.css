@@ -1,33 +1,47 @@
 tr {
-    background-color: #f9f9f9;
-    text-align: center;
-    border-radius: 6px;
-    display: block;
-    margin: 20px;
+    background-color: #f7f0eb;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease;
 }
 
-td {
-    padding: 20px 10px;
-    font-size: 14px;
-    color: #3e3e3e;
+tr:hover {
+    background-color: #f5ede5;
 }
 
 .actions-cell {
-    text-align: center;
+    text-align: right;
+    width: 150px;
 }
 
 .btn-eliminar {
-    background: none;
-    border: none;
+    background-color: transparent;
     color: #d39b77;
-    font-size: 14px;
+    border: 1px solid #d39b77;
+    padding: 8px 15px;
+    border-radius: 4px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .btn-eliminar:hover {
-    text-decoration: underline;
+    background-color: #d39b77;
+    color: white;
+    border-color: #d39b77;
+}
+
+.btn-eliminar:active {
+    background-color: #c08b6a;
+    border-color: #c08b6a;
+}
+
+.btn-eliminar .bi-trash {
+    display: none;
+}
+
+.btn-eliminar .bi-trash {
+    display: inline-block;
+    font-size: 1.1em;
 }

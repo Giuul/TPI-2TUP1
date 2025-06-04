@@ -13,6 +13,7 @@ const TurnoItem = ({ id, servicios, fecha, hora, duracion, onEliminar }) => {
             console.error("Error: Fecha inválida recibida en TurnoItem:", fecha);
             fechaFormateada = 'Fecha inválida';
         }
+
     }
 
     return (
@@ -22,7 +23,11 @@ const TurnoItem = ({ id, servicios, fecha, hora, duracion, onEliminar }) => {
             <td>{hora}</td>
             <td>{duracion}</td>
             <td className="actions-cell">
-                <button className="btn-eliminar" onClick={() => onEliminar(id)}>
+                <button className="btn-eliminar" onClick={() => {
+                    if (window.confirm("¿Estás seguro que querés eliminar este turno?")) {
+                        onEliminar(id);
+                    }
+                }}>
                     <i className="bi bi-trash"></i>
                     Eliminar
                 </button>
