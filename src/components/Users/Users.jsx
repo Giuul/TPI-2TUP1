@@ -64,14 +64,13 @@ const Users = () => {
     const abrirEditor = (user) => {
         setEditarUserId(user.id);
         setFormData({ ...user });
-        setRolSeleccionado(user.role); // nuevo
+        setRolSeleccionado(user.role); 
     };
 
     const guardarCambios = async () => {
         try {
             const token = localStorage.getItem('token');
 
-            // Crear nueva copia del formData con el rol actualizado
             const updatedUserData = { ...formData, role: rolSeleccionado };
 
             const response = await axios.put(
@@ -114,7 +113,7 @@ const Users = () => {
                 <button className="btn-principal" onClick={() => navigate('/Register')}>
                     CREAR USUARIO
                 </button>
-                <button className="btn-principal" onClick={() => navigate('/programar-turnos')}>
+                <button className="btn-principal" onClick={() => navigate('/programar-turnos-admin')}>
                     PROGRAMAR TURNO
                 </button>
 

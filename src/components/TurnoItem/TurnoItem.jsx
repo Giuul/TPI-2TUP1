@@ -1,7 +1,7 @@
 import React from 'react';
 import './turnoItem.css';
 
-const TurnoItem = ({ id, servicios, fecha, hora, duracion, onEliminar }) => {
+const TurnoItem = ({ id, servicios, fecha, hora, duracion, usuarioDisplay, onEliminar, isAdminView}) => {
     let fechaFormateada = 'Fecha no disponible';
     if (fecha) {
 
@@ -18,6 +18,7 @@ const TurnoItem = ({ id, servicios, fecha, hora, duracion, onEliminar }) => {
 
     return (
         <tr>
+            {usuarioDisplay && <td>{usuarioDisplay}</td>}
             <td>{servicios}</td>
             <td>{fechaFormateada}</td>
             <td>{hora}</td>

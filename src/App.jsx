@@ -12,6 +12,7 @@ import Register from "./pages/Register.jsx";
 import MisTurnos from "./pages/MisTurnos.jsx";
 import Agenda from "./pages/Agenda.jsx"
 import ProgramarTurnos from "./pages/ProgramarTurnos.jsx";
+import ProgramarTurnosAdmin from './pages/ProgramarTurnosAdmin.jsx';
 import MiPerfil from "./pages/MiPerfil.jsx";
 import ClearisNavbar from './components/ClearisNavbar/ClearisNavbar';
 import Userspage from './pages/Userspage.jsx';
@@ -87,7 +88,7 @@ function App() {
 
   return (
     <>
-      <ClearisNavbar isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
+      <ClearisNavbar isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} userRole={userRole} />
       <Routes>
         <Route path="/" element={<Home />} />
           <Route path="/nosotros" element={<Nosotros />} />
@@ -100,11 +101,13 @@ function App() {
             <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin']}> <MisTurnos /> </ProtectedRoute>}
         />
         <Route path="/miPerfil" element={
-            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin']}> <MiPerfil username={username} userId={userId} userRole={userRole}/> </ProtectedRoute>}
+            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin']}>
+                <MiPerfil username={username} userId={userId} userRole={userRole}/> {/* <-- Estas props son cruciales */}
+            </ProtectedRoute>}
         />
 
         {/* ADMINISTRADOR Y SUPERADMINISTRADOR */}
-            <Route path="/agenda" element={
+            <Route path="/misturnos" element={
             <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin']}> <Agenda /> </ProtectedRoute>}
         />
         <Route path="/users" element={
@@ -112,8 +115,8 @@ function App() {
             <Userspage currentUserRole={userRole} currentUserId={userId} /> 
             </ProtectedRoute>}
         />
-        <Route path="/programar-turnos" element={ 
-            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin', 'user']}> <ProgramarTurnos /> </ProtectedRoute>}
+        <Route path="/programar-turnos-admin" element={ 
+            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin', 'user']}> <ProgramarTurnosAdmin /> </ProtectedRoute>}
         />
       </Routes>
     </>
