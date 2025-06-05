@@ -153,7 +153,7 @@ const Users = () => {
                                     <td>{user.tel}</td>
                                     <td>{user.address}</td>
                                     <td>{user.role}</td>
-                                    <td>
+                                    <td className="actions-cell">
                                         <button className="btn-editar" onClick={() => abrirEditor(user)}>
                                             <i className="bi bi-pencil"></i> Editar
                                         </button>

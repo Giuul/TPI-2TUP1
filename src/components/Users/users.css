@@ -63,7 +63,8 @@ h1 {
 
 .users-table th,
 .users-table td {
-    width: 100%;
+    min-width: 00px;
+    max-width: 200px;
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #e1cfc3;
@@ -103,6 +104,7 @@ h1 {
     min-width: 140px; 
     text-align: center; 
 }
+
 
 .btn-editar,
 .btn-eliminar {
