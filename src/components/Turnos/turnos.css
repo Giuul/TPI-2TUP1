@@ -1,0 +1,72 @@
+.turnos-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: transparent;
+    border-radius: 6px;
+    box-shadow: none;
+}
+
+.turnos-title {
+    text-align: center;
+    font-size: 30px;
+    color: #d39b77;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.turnos-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    margin-top: 20px;
+    box-shadow: none;
+    border: none;
+}
+
+.turnos-table thead {
+    display: none;
+}
+
+.turnos-table th {
+    background-color: transparent;
+    color: inherit;
+    font-weight: normal;
+    text-transform: none;
+    font-size: inherit;
+}
+
+.turnos-table td {
+    padding: 20px 25px;
+    text-align: left;
+    border-bottom: none;
+    vertical-align: middle;
+    font-size: 16px;
+    color: #5a5a5a;
+}
+
+
+.turnos-container>p {
+    text-align: center;
+    font-size: 18px;
+    color: #777;
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.turnos-container p {
+    text-align: center;
+    font-size: 1.1em;
+    color: #555;
+    margin-top: 20px;
+}
+
+.turnos-container p.error-message {
+    color: #d9534f;
+    font-weight: bold;
+}

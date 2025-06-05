@@ -1,10 +1,8 @@
 import ClearisFooter from '../components/ClearisFooter/ClearisFooter'
-import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar'
 
 const Nosotros = () => {
   return (
     <div>
-      <ClearisNavbar />
       <div className='who-we-are'>
        <h1>¿Quiénes somos?</h1>
        <p>Clearis es un centro especializado en depilación definitiva que combina tecnología de

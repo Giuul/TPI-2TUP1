@@ -1,5 +1,6 @@
 import React from 'react'
 import homePageImg from '../../assets/img/homePageImg.png';
+import "./body.css";
 
 const Body = () => {
   return (

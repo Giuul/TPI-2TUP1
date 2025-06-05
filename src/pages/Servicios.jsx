@@ -1,34 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import "./pages.css";
-import ClearisFooter from '../components/ClearisFooter/ClearisFooter'
+import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
 import ClearisPiernas from '../assets/img/ClearisPiernas.png';
 import ClearisFacial from '../assets/img/ClearisFacial.png';
 import ClearisBrazos from '../assets/img/ClearisBrazos.png';
-import ClearisNavbar from '../components/ClearisNavbar/ClearisNavbar';
-
+import Service from '../components/Services/Services';
 
 const Servicios = () => {
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/service')
+      .then(res => res.json())
+      .then(data => setServices(data))
+      .catch(error => console.error('Error al cargar servicios:', error));
+  }, []);
+
+  const imageMap = {
+    "PIERNAS": ClearisPiernas,
+    "FACIAL": ClearisFacial,
+    "BRAZOS": ClearisBrazos,
+  };
+
   return (
-
     <div>
-      <ClearisNavbar />
       <div className='contenedorServicios'>
-        <div className='contenedorIndividual'>
-          <img className='img-servicios' src={ClearisBrazos} alt="brazos" />
-          <p>BRAZOS</p>
-        </div>
-        <div className='contenedorIndividual'>
-          <img className='img-servicios' src={ClearisPiernas} alt="piernas" />
-          <p>PIERNAS</p>
-        </div>
-        <div className='contenedorIndividual'>
-          <img className='img-servicios' src={ClearisFacial} alt="facial" />
-          <p>FACIAL</p>
-        </div>
+        {services.map(service => {
+          const key = service.nombre.trim().toUpperCase();
+          return (
+            <Service
+              key={service.id}
+              img={imageMap[key] || 'https://via.placeholder.com/150'}
+              title={service.nombre}
+              desc={service.descripcion}
+            />
+          );
+        })}
       </div>
-      <ClearisFooter/>
+      <ClearisFooter />
     </div>
-  )
-}
+  );
+};
 
-export default Servicios
+export default Servicios;
