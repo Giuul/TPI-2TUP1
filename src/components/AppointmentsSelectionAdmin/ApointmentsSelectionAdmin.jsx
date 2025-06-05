@@ -135,9 +135,9 @@ const AppointmentsSelection = () => {
     };
 
     const servicios = [
-        { id: 1, nombre: 'Brazos' },
-        { id: 2, nombre: 'Piernas' },
-        { id: 3, nombre: 'Facial' }
+        { id: 1, nombre: 'Piernas' },
+        { id: 2, nombre: 'Facial' },
+        { id: 3, nombre: 'Brazos' }
     ];
 
     return (
