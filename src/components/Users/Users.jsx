@@ -16,6 +16,12 @@ const Users = () => {
 
     const [currentUserRole, setCurrentUserRole] = useState('superadmin');
 
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+
+    const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+    const [userToDeleteId, setUserToDeleteId] = useState(null);
+
     const fetchUsers = async () => {
         try {
             setLoading(true);
@@ -43,28 +49,39 @@ const Users = () => {
         user.id.toString().includes(dniBusqueda)
     );
 
-    const eliminarTurno = async (userId) => {
-        if (window.confirm(`¿Estás seguro de que quieres eliminar al usuario con DNI ${userId}?`)) {
-            try {
-                const token = localStorage.getItem('token');
-                await axios.delete(`http://localhost:3000/users/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                alert('Usuario eliminado exitosamente.');
-                fetchUsers();
-            } catch (err) {
-                console.error("Error al eliminar usuario:", err);
-                setError('Error al eliminar el usuario. Por favor, intenta de nuevo.');
-            }
+    const eliminarTurno = (userId) => {
+        setUserToDeleteId(userId);
+        setShowConfirmDeleteModal(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`http://localhost:3000/users/${userToDeleteId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setSuccessMessage('Usuario eliminado exitosamente.');
+            setShowSuccessModal(true);
+            fetchUsers();
+            closeConfirmDeleteModal();
+        } catch (err) {
+            console.error("Error al eliminar usuario:", err);
+            setError('Error al eliminar el usuario. Por favor, intenta de nuevo.');
+            closeConfirmDeleteModal();
         }
+    };
+
+    const closeConfirmDeleteModal = () => {
+        setShowConfirmDeleteModal(false);
+        setUserToDeleteId(null);
     };
 
     const abrirEditor = (user) => {
         setEditarUserId(user.id);
         setFormData({ ...user });
-        setRolSeleccionado(user.role); 
+        setRolSeleccionado(user.role);
     };
 
     const guardarCambios = async () => {
@@ -83,7 +100,8 @@ const Users = () => {
                 }
             );
 
-            alert(response.data.message || 'Usuario actualizado exitosamente.');
+            setSuccessMessage(response.data.message || 'Usuario actualizado exitosamente.');
+            setShowSuccessModal(true);
             cerrarEditor();
             fetchUsers();
         } catch (err) {
@@ -101,6 +119,12 @@ const Users = () => {
         setFormData({ id: '', name: '', lastname: '', email: '', tel: '', address: '', role: 'user' });
         setRolSeleccionado('user');
     };
+
+    const closeSuccessModal = () => {
+        setShowSuccessModal(false);
+        setSuccessMessage('');
+    };
+
 
     if (loading) return <div className="schedule-page">Cargando usuarios...</div>;
     if (error) return <div className="schedule-page error-message">{error}</div>;
@@ -225,6 +249,40 @@ const Users = () => {
                         <div className="modal-buttons">
                             <button onClick={guardarCambios} className="btn-principal">Guardar</button>
                             <button onClick={cerrarEditor} className="btn-cancelar">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showSuccessModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h3>Éxito</h3>
+                        <p>{successMessage}</p>
+                        <div className="modal-buttons">
+                            <button onClick={closeSuccessModal} className="btn-principal">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showSuccessModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h3>Éxito</h3>
+                        <p>{successMessage}</p>
+                        <div className="modal-buttons">
+                            <button onClick={closeSuccessModal} className="btn-principal">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showConfirmDeleteModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h3>Confirmar Eliminación</h3>
+                        <p>¿Estás seguro de que quieres eliminar al usuario con DNI {userToDeleteId}?</p>
+                        <div className="modal-buttons">
+                            <button onClick={confirmDelete} className="btn-eliminar">Eliminar</button>
+                            <button onClick={closeConfirmDeleteModal} className="btn-cancelar">Cancelar</button>
                         </div>
                     </div>
                 </div>

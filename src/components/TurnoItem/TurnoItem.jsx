@@ -1,7 +1,8 @@
 import React from 'react';
 import './turnoItem.css';
+import "../Turnos/modalTurno.css";
 
-const TurnoItem = ({ id, servicios, fecha, hora, duracion, usuarioDisplay, onEliminar, isAdminView}) => {
+const TurnoItem = ({ id, servicios, fecha, hora, duracion, usuarioDisplay, onEliminar, isAdminView }) => {
     let fechaFormateada = 'Fecha no disponible';
     if (fecha) {
 
@@ -24,11 +25,10 @@ const TurnoItem = ({ id, servicios, fecha, hora, duracion, usuarioDisplay, onEli
             <td>{hora}</td>
             <td>{duracion}</td>
             <td className="actions-cell">
-                <button className="btn-eliminar" onClick={() => {
-                    if (window.confirm("¿Estás seguro que querés eliminar este turno?")) {
-                        onEliminar(id);
-                    }
-                }}>
+                <button
+                    className="btn-eliminar"
+                    onClick={() => onEliminar(id)}
+                >
                     <i className="bi bi-trash"></i>
                     Eliminar
                 </button>
