@@ -217,8 +217,8 @@ const Users = () => {
                                     onChange={(e) => setRolSeleccionado(e.target.checked ? 'admin' : 'user')}
                                 />
                                 {formData.role === 'admin'
-                                    ? 'Quitar rol de administrador'
-                                    : 'Convertir a administrador'}
+                                    ? 'Rol de administrador'
+                                    : 'Rol de administrador'}
                             </label>
                         )}
 
