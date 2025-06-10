@@ -59,10 +59,6 @@ const AppointmentsSelection = () => {
             return;
         }
 
-        if (!servicioSeleccionado) {
-            setErrorMensaje('Por favor, seleccioná un servicio.');
-            return;
-        }
 
         const idservicio = parseInt(servicioSeleccionado);
 
