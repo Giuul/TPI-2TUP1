@@ -3,7 +3,8 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../AppointmentsSelection/AppointmentsSelection.css';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; 
+import { jwtDecode } from 'jwt-decode';
+
 const formatTimeToBackend = (timeString) => {
     const [time, period] = timeString.split(' ');
     let [hours, minutes] = time.split(':');
@@ -29,32 +30,32 @@ const AppointmentsSelection = () => {
     const [mensajeConfirmacion, setMensajeConfirmacion] = useState('');
     const [errorMensaje, setErrorMensaje] = useState('');
     const [servicioSeleccionado, setServicioSeleccionado] = useState('');
-    
+
     const [dniUsuarioAgenda, setDniUsuarioAgenda] = useState('');
-    
+
     const [currentUserRole, setCurrentUserRole] = useState('');
-    const [currentUserId, setCurrentUserId] = useState(''); 
-    
-   
+    const [currentUserId, setCurrentUserId] = useState('');
+
+
     const mañana = new Date();
     mañana.setDate(mañana.getDate() + 1);
 
     useEffect(() => {
-        const token = localStorage.getItem('token'); 
+        const token = localStorage.getItem('token');
         if (token) {
             try {
                 const decodedToken = jwtDecode(token);
                 setCurrentUserRole(decodedToken.role);
-                setCurrentUserId(decodedToken.id); 
+                setCurrentUserId(decodedToken.id);
             } catch (e) {
                 console.error("Error al decodificar el token:", e);
-                
+
             }
         }
     }, []);
 
     const confirmarTurno = async () => {
-        
+
         if (!horarioSeleccionado) {
             setErrorMensaje('Por favor, seleccioná un horario para confirmar tu turno.');
             return;
@@ -65,27 +66,27 @@ const AppointmentsSelection = () => {
             return;
         }
 
-        setErrorMensaje(''); 
+        setErrorMensaje('');
 
         const diaFormatted = fecha.toISOString().split('T')[0];
         const horaFormatted = formatTimeToBackend(horarioSeleccionado);
-        const authToken = localStorage.getItem('token'); 
+        const authToken = localStorage.getItem('token');
 
         if (!authToken) {
             setErrorMensaje('No estás autenticado. Por favor, inicia sesión para agendar un turno.');
-            navigate('/login'); 
+            navigate('/login');
             return;
         }
 
         const idservicio = parseInt(servicioSeleccionado);
-        
-        let userIdToAssign = currentUserId; 
+
+        let userIdToAssign = currentUserId;
         if (currentUserRole === 'admin' || currentUserRole === 'superadmin') {
             if (!dniUsuarioAgenda) {
                 setErrorMensaje('Si sos administrador, debés ingresar el DNI del usuario para el turno.');
                 return;
             }
-            userIdToAssign = dniUsuarioAgenda; 
+            userIdToAssign = dniUsuarioAgenda;
         }
 
         try {
@@ -99,7 +100,7 @@ const AppointmentsSelection = () => {
                     dia: diaFormatted,
                     hora: horaFormatted,
                     idservicio: idservicio,
-                    userId: userIdToAssign 
+                    userId: userIdToAssign
                 }),
             });
 
@@ -109,7 +110,7 @@ const AppointmentsSelection = () => {
                 setErrorMensaje(errorData.mensaje || 'Error desconocido al agendar el turno. Por favor, intenta de nuevo.');
 
                 if (response.status === 401 || response.status === 403) {
-                    localStorage.removeItem('token'); 
+                    localStorage.removeItem('token');
                     localStorage.removeItem('username');
                     localStorage.removeItem('role');
                     localStorage.removeItem('userId');
@@ -124,10 +125,10 @@ const AppointmentsSelection = () => {
 
             setMensajeConfirmacion('¡Turno agendado con éxito!');
             setHorarioSeleccionado('');
-            setServicioSeleccionado(''); 
-            setDniUsuarioAgenda(''); 
-            setTimeout(() => navigate('/misturnos'), 2000); 
-            
+            setServicioSeleccionado('');
+            setDniUsuarioAgenda('');
+            setTimeout(() => navigate('/misturnos'), 2000);
+
         } catch (error) {
             console.error("Error CATCHED (problema de red/fetch) al confirmar turno:", error);
             setErrorMensaje(`No se pudo agendar el turno: ${error.message || 'Error de conexión.'}`);
@@ -161,14 +162,14 @@ const AppointmentsSelection = () => {
                     </button>
                 </div>
             )}
-            
+
             {(currentUserRole === 'admin' || currentUserRole === 'superadmin') && (
                 <div className="dni-input-container">
-                    <label className="label" htmlFor="dniUsuarioAgenda">DNI del Usuario para el Turno:</label>
+                    <label className="label" htmlFor="dniUsuarioAgenda">DNI DEL USUARIO PARA EL TURNO </label>
                     <input
-                        type="text" 
+                        type="text"
                         id="dniUsuarioAgenda"
-                        placeholder="Ingresá el DNI del usuario"
+                        placeholder="-- DNI USUARIO --"
                         value={dniUsuarioAgenda}
                         onChange={(e) => setDniUsuarioAgenda(e.target.value)}
                         className="dni-input"
@@ -220,7 +221,7 @@ const AppointmentsSelection = () => {
                         }
                     </p>
                     <p className="value">{horarioSeleccionado}</p>
-                    
+
                     {(currentUserRole === 'admin' || currentUserRole === 'superadmin') && dniUsuarioAgenda && (
                         <p className="value">Para DNI: {dniUsuarioAgenda}</p>
                     )}

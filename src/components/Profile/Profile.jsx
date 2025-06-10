@@ -3,7 +3,31 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import "./profile.css";
+import "./modal.css"
 
+const ConfirmationModal = ({ show, message, onConfirm, onCancel, onClose }) => {
+    if (!show) {
+        return null;
+    }
+
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <p>{message}</p>
+                <div className="modal-actions">
+                    {onConfirm && onCancel ? (
+                        <>
+                            <button onClick={onConfirm} className="modal-confirm-button">Sí</button>
+                            <button onClick={onCancel} className="modal-cancel-button">No</button>
+                        </>
+                    ) : (
+                        <button onClick={onClose} className="modal-confirm-button">Aceptar</button>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const Profile = ({ onAccountDelete }) => {
     const navigate = useNavigate();
@@ -20,6 +44,9 @@ const Profile = ({ onAccountDelete }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentUserId, setCurrentUserId] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showUpdateSuccessModal, setShowUpdateSuccessModal] = useState(false);
+    const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -92,7 +119,6 @@ const Profile = ({ onAccountDelete }) => {
         setEditMode(true);
     };
 
-
     const handleConfirmar = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -114,8 +140,9 @@ const Profile = ({ onAccountDelete }) => {
                 }
             });
 
-            alert(response.data.message || "Datos actualizados correctamente.");
+            setShowUpdateSuccessModal(true);
             setEditMode(false);
+
         } catch (err) {
             console.error("Error al guardar los datos del perfil:", err);
             if (err.response && err.response.status === 401) {
@@ -131,13 +158,33 @@ const Profile = ({ onAccountDelete }) => {
         }
     };
 
-    const handleDeleteAccount = async () => {
-        if (!window.confirm("¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.")) {
-            return;
-        }
+    const openDeleteModal = () => {
+        setShowDeleteModal(true);
+    };
 
+    const closeDeleteModal = () => {
+        setShowDeleteModal(false);
+    };
+
+    const closeUpdateSuccessModal = () => {
+        setShowUpdateSuccessModal(false);
+    };
+
+    const closeDeleteSuccessModal = () => {
+        setShowDeleteSuccessModal(false);
+        if (onAccountDelete) {
+            onAccountDelete();
+        } else {
+            localStorage.removeItem('token');
+        }
+        navigate('/login');
+    };
+
+    const handleDeleteAccount = async () => {
         setLoading(true);
         setError(null);
+        closeDeleteModal();
+
         const token = localStorage.getItem('token');
 
         if (!token || !currentUserId) {
@@ -154,17 +201,7 @@ const Profile = ({ onAccountDelete }) => {
                 }
             });
 
-            alert("Cuenta eliminada exitosamente.");
-
-            if (onAccountDelete) {
-                onAccountDelete();
-            } else {
-                localStorage.removeItem('token');
-            }
-
-            setTimeout(() => {
-                navigate('/login');
-            }, 100);
+            setShowDeleteSuccessModal(true);
 
         } catch (err) {
             console.error("Error al eliminar la cuenta:", err);
@@ -259,10 +296,26 @@ const Profile = ({ onAccountDelete }) => {
                         </button>
                     )}
                     <button
-                        type="button" onClick={handleDeleteAccount}
+                        type="button" onClick={openDeleteModal}
                     >
                         ELIMINAR CUENTA
                     </button>
+                    <ConfirmationModal
+                        show={showDeleteModal}
+                        message="¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible."
+                        onConfirm={handleDeleteAccount}
+                        onCancel={closeDeleteModal}
+                    />
+                    <ConfirmationModal
+                        show={showUpdateSuccessModal}
+                        message="¡Datos actualizados correctamente!"
+                        onClose={closeUpdateSuccessModal}
+                    />
+                    <ConfirmationModal
+                        show={showDeleteSuccessModal}
+                        message="Cuenta eliminada exitosamente."
+                        onClose={closeDeleteSuccessModal}
+                    />
                 </div>
             </form>
         </div>

@@ -56,7 +56,7 @@ const Register = () => {
           address: formData.address, 
           password: formData.password, 
           repPassword: formData.repPassword,
-          role: formData.role || "user",  // rol enviado al backend
+          role: formData.role || "user",  
         };
         console.log("Datos que se envían al backend:", JSON.stringify(datosParaBackend, null, 2));
         const response = await fetch(urlBackend, {
