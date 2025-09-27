@@ -16,6 +16,7 @@ import ProgramarTurnosAdmin from './pages/ProgramarTurnosAdmin.jsx';
 import MiPerfil from "./pages/MiPerfil.jsx";
 import ClearisNavbar from './components/ClearisNavbar/ClearisNavbar';
 import Userspage from './pages/Userspage.jsx';
+import AdminServicios from './pages/AdminServicios.jsx';
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -115,6 +116,9 @@ function App() {
         />
         <Route path="/programar-turnos-admin" element={
           <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin', 'user']}> <ProgramarTurnosAdmin /> </ProtectedRoute>}
+        />
+        <Route path="/admin-services" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin']}> <AdminServicios /> </ProtectedRoute>}
         />
       </Routes>
     </>
