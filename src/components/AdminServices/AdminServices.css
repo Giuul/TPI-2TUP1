@@ -1,0 +1,137 @@
+body {
+    font-family: 'Julius Sans One', sans-serif;
+    background-color: #fdfafa;
+    margin: 0;
+    padding: 0;
+    color: #bb8c68;
+}
+
+h2 {
+    color: #bb8c68;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    text-transform: uppercase;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+form input {
+    padding: 10px;
+    border: 1px solid #ddbca8;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    background-color: #fff7f2;
+    color: #bb8c68;
+    width: 200px;
+}
+
+form button {
+    background-color: #bb8c68;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #cc8c60;
+}
+
+.services-list {
+    list-style: none;
+    padding: 0;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.services-list li {
+    background-color: #fff7f2;
+    border: 1px solid #e0c5b2;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.service-info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 20px;
+    min-width: 0;
+}
+
+.service-info img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.service-info .col {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    color: #bb8c68;
+}
+
+.service-info .col strong {
+    font-size: 16px;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.service-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.service-actions button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    font-size: 13px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    background-color: #bb8c68;
+    transition: background-color 0.3s ease;
+}
+
+.service-actions button:hover {
+    background-color: #cc8c60;
+}
+
+.service-actions .delete-btn {
+    background-color: #bb8c68;
+}
+
+.service-actions .delete-btn:hover {
+    background-color: #cc8c60;
+}
+
+div[style*="color: red"] {
+    text-align: center;
+    color: #bb8c68 !important;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
