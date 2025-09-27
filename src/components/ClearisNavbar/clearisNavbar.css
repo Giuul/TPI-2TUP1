@@ -1,8 +1,45 @@
 
 .navbar-clearis {
-    box-shadow: -2px 2px 7px 3px #D9D9D9;
+    background-color: rgba(219, 190, 192, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
+    position: relative;
+    height: 150px; 
 }
 
-.bakred{
-    background-color: red!important;
+
+.logo-left {
+    position: absolute;
+    left: 20px; 
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+
+
+.acme-regular-navbar .nav-link,
+.acme-regular-navbar .dropdown-toggle,
+.acme-regular-navbar .dropdown-item {
+    font-family: "Acme", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px; 
+    color: #635845 !important;
+}
+
+.acme-regular-navbar .nav-link:hover,
+.acme-regular-navbar .dropdown-toggle:hover,
+.acme-regular-navbar .dropdown-item:hover {
+    color: #f8f8f8 !important; 
+}
+
+.logo-left img {
+    height: 170px;
+}
+
+
+.navbar-clearis .container {
+    padding-left: 100px; 
 }

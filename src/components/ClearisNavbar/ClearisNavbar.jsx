@@ -1,57 +1,56 @@
-import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import React from "react";
+import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import "./clearisNavbar.css";
-import { Link, NavLink } from 'react-router-dom';
+import logo from "../../assets/img/logo-clearis.png";
 
 const ClearisNavbar = ({ isLoggedIn, username, onLogout, userRole }) => {
-    return (
-        <>
-            <Navbar expand="lg" className="bg-body-tertiary navbar-clearis">
-                <Container>
+  return (
+    <Navbar expand="lg" className="navbar-clearis" fixed="top">
+      <div className="logo-left">
+        <Link to="/">
+          <img src={logo} alt="Clearis Logo" />
+        </Link>
+      </div>
 
-                    <Navbar.Brand as={Link} to="/">
-                        <img src="src/assets/img/logo-clearis.png" alt="Clearis Logo" />
-                    </Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="ms-auto main-font">
-                            <Nav.Link as={Link} to="/">INICIO</Nav.Link>
-                            <Nav.Link as={Link} to="/nosotros">NOSOTROS</Nav.Link>
-                            <Nav.Link as={Link} to="/servicios">SERVICIOS</Nav.Link>
-                            <Nav.Link as={Link} to="/contacto">CONTACTO</Nav.Link>
+      <Container>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto main-font acme-regular-navbar">
+            <Nav.Link as={Link} to="/">Inicio</Nav.Link>
+            <Nav.Link as={Link} to="/nosotros">Nosotros</Nav.Link>
+            <Nav.Link as={Link} to="/servicios">Servicios</Nav.Link>
+            <Nav.Link as={Link} to="/contacto">Contacto</Nav.Link>
 
-                            {isLoggedIn ? (
-                                <NavDropdown title={`${username}`} id="basic-nav-dropdown">
-                                    <NavDropdown.Item as={Link} to="/miPerfil">Perfil</NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    {(userRole === 'admin' || userRole === 'superadmin') ? (
-                                        <>
-                                            <NavDropdown.Item as={Link} to="/users">Usuarios</NavDropdown.Item>
-                                            <NavDropdown.Divider />
-                                            <NavDropdown.Item as={Link} to="/misturnos">Turnos</NavDropdown.Item>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <NavDropdown.Item as={Link} to="/programar-turnos">Sacar Turno</NavDropdown.Item>
-                                            <NavDropdown.Divider />
-                                            <NavDropdown.Item as={Link} to="/misturnos">Mis Turnos</NavDropdown.Item>
-                                        </>
-                                    )}
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item onClick={onLogout}>Cerrar Sesión</NavDropdown.Item>
-                                </NavDropdown>
-                            ) : (
-                                <Nav.Link as={Link} to="/login">LOGIN</Nav.Link>
-                            )}
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-        </>
-    );
+            {isLoggedIn ? (
+              <NavDropdown title={username} id="basic-nav-dropdown">
+                <NavDropdown.Item as={Link} to="/miPerfil">Perfil</NavDropdown.Item>
+                <NavDropdown.Divider />
+                {(userRole === 'admin' || userRole === 'superadmin') ? (
+                  <>
+                    <NavDropdown.Item as={Link} to="/users">Usuarios</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item as={Link} to="/misturnos">Turnos</NavDropdown.Item>
+                  </>
+                ) : (
+                  <>
+                    <NavDropdown.Item as={Link} to="/programar-turnos">Sacar Turno</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item as={Link} to="/misturnos">Mis Turnos</NavDropdown.Item>
+                  </>
+                )}
+                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={onLogout}>Cerrar Sesión</NavDropdown.Item>
+              </NavDropdown>
+            ) : (
+              <Nav.Link as={Link} to="/login">Ingresar</Nav.Link>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
 };
 
 export default ClearisNavbar;
+
