@@ -32,6 +32,8 @@ const ClearisNavbar = ({ isLoggedIn, username, onLogout, userRole }) => {
                                             <NavDropdown.Item as={Link} to="/users">Usuarios</NavDropdown.Item>
                                             <NavDropdown.Divider />
                                             <NavDropdown.Item as={Link} to="/misturnos">Turnos</NavDropdown.Item>
+                                            <NavDropdown.Divider />
+                                            <NavDropdown.Item as={Link} to="/admin-services">Servicios</NavDropdown.Item>
                                         </>
                                     ) : (
                                         <>
