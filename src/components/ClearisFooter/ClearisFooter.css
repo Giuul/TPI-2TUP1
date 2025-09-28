@@ -1,17 +1,18 @@
 .footer-clearis {
 
-  background-color: rgba(219, 190, 192, 0.3); 
-  backdrop-filter: blur(10px); 
-  color: #635845; 
+  background-color: rgba(219, 190, 192, 0.3);
+  backdrop-filter: blur(10px);
+  color: #635845;
   padding: 50px 20px;
-  font-family: 'Julius Sans One', sans-serif;
-  border-top: 1px solid rgba(200, 200, 200, 0.5); 
+  font-family: 'Mooli';
+  border-top: 1px solid rgba(200, 200, 200, 0.5);
 }
 
 .footer-clearis h4 {
-  color: #635845; 
-  font-size: 22px;
+  color: #635845;
+  font-size: 30px;
   margin-bottom: 15px;
+  text-align: left;
 }
 
 .footer-clearis ul {
@@ -30,7 +31,7 @@
 }
 
 .footer-clearis a:hover {
-  color: #ffffff; 
+  color: #ffffff;
   text-decoration: underline;
 }
 
@@ -48,7 +49,7 @@
 
 .footer-social-icons {
   display: flex;
-  gap: 10px; 
+  gap: 10px;
   margin-top: 15px;
 }
 

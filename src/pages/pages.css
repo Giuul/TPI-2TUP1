@@ -15,48 +15,37 @@
     width: 100%;
 }
 
-
-.who-we-are {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-top: 150px;
-    margin-bottom: 150px;
-    font-size: 26px;
-}
-
-.who-we-are h1 {
-    font-size: 50px;
-    font-weight: 700;
-    color: #d8a17a;
-    margin-bottom: 50px;
-}
-
-.who-we-are p {
-    width: 70%;
-    font-size: 18px;
-    font-weight: 400;
-    color: #666;
-    margin-bottom: 20px;
-
-}
-
-
 .contactDiv {
     display: flex;
-    font-size: 20px;
-    font-weight: 600;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
+    padding: 5vh 5vw;
+    font-family: "Gilda Display";
+    color: #635845;
+    gap: 40px;
+    flex-wrap: wrap;
 }
 
 .map {
-    padding: 15vh;
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+}
+
+.infoBox {
+    flex: 1;
+    min-width: 280px;
+    max-width: 500px;
+    background-color: rgba(231, 223, 223, 0.384);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .pDateContact {
-    text-align: justify;
-    margin: 30px;
+    text-align: left;
+    margin: 20px 0;
+    font-size: 18px;
+    font-weight: 500;
 }
