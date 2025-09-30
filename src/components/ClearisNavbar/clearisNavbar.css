@@ -17,6 +17,10 @@
     z-index: 1000;
 }
 
+.acme-regular-navbar {
+    margin-left: auto;     
+    padding-right: 1px;   
+}
 
 .acme-regular-navbar .nav-link,
 .acme-regular-navbar .dropdown-toggle,
@@ -24,14 +28,19 @@
     font-family: "Mooli";
     font-weight: 400;
     font-style: normal;
-    font-size: 24px;
+    font-size: 30px;
     color: #635845 !important;
+    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+    margin-left: 10px;  
+    margin-right: 10px; 
 }
 
 .acme-regular-navbar .nav-link:hover,
 .acme-regular-navbar .dropdown-toggle:hover,
 .acme-regular-navbar .dropdown-item:hover {
-    color: #63584596 !important;
+    color: #ffffff !important;   
+    transform: scale(1.08);      
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);  
 }
 
 .logo-left img {

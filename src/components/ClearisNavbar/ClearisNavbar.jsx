@@ -45,7 +45,7 @@ const ClearisNavbar = ({ isLoggedIn, username, onLogout, userRole }) => {
                                 <NavDropdown.Item onClick={onLogout}>Cerrar Sesión</NavDropdown.Item>
                             </NavDropdown>
                         ) : (
-                            <Nav.Link as={Link} to="/login">LOGIN</Nav.Link>
+                            <Nav.Link as={Link} to="/login">Ingresar</Nav.Link>
                         )}
                     </Nav>
                 </Navbar.Collapse>

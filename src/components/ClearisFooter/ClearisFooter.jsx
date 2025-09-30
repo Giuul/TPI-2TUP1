@@ -12,7 +12,7 @@ const Footer = () => {
               <i className="bi bi-stars me-2"></i>Clearis
             </h4>
             <p>Centro de depilación definitiva</p>
-            <p><strong>Contáctanos</strong><br />CLEARIS@GMAIL.COM</p>
+            <p><h6><strong>Contáctanos</strong></h6>Clearis@GMAIL.COM</p>
             <div className="footer-social-icons mt-3">
               <a href="#"><i className="bi bi-facebook"></i></a>
               <a href="#"><i className="bi bi-instagram"></i></a>

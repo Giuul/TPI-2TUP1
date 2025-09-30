@@ -1,16 +1,16 @@
 .footer-clearis {
-
   background-color: rgba(219, 190, 192, 0.3);
   backdrop-filter: blur(10px);
   color: #635845;
   padding: 50px 20px;
   font-family: 'Mooli';
   border-top: 1px solid rgba(200, 200, 200, 0.5);
+  font-size: 21px;
 }
 
 .footer-clearis h4 {
   color: #635845;
-  font-size: 30px;
+  font-size: 35px;
   margin-bottom: 15px;
   text-align: left;
 }
@@ -22,17 +22,20 @@
 
 .footer-clearis li {
   margin-bottom: 10px;
+  line-height: 1.2;
 }
 
 .footer-clearis a {
   color: #635845;
   text-decoration: none;
-  transition: color 0.3s;
+  transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
 }
 
 .footer-clearis a:hover {
   color: #ffffff;
-  text-decoration: underline;
+  transform: scale(1.05);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  text-decoration: none; 
 }
 
 .footer-columns {
@@ -54,11 +57,19 @@
 }
 
 .footer-social-icons a {
-  font-size: 1.4rem;
+  font-size: 1.7rem;
   color: #635845;
-  transition: color 0.3s;
+  transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
 }
 
 .footer-social-icons a:hover {
   color: #ffffff;
+  transform: scale(1.1);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
+
+h6 {
+  font-size: 22px;
+}
+
+
