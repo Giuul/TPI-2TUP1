@@ -18,6 +18,8 @@ import MiPerfil from "./pages/MiPerfil.jsx";
 import ClearisNavbar from './components/ClearisNavbar/ClearisNavbar';
 import Userspage from './pages/Userspage.jsx';
 import AdminServicios from './pages/AdminServicios.jsx';
+import TurnosProfesional from './pages/TurnosProfesional.jsx';
+
 import { jwtDecode } from 'jwt-decode';
 
 function App() {
@@ -107,22 +109,17 @@ function App() {
             <ProgramarTurnosAdmin />
           </ProtectedRoute>
         } />
-
-        {/* Rutas protegidas por rol */}
-        <Route path="/misturnos" element={
-          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user']}>
-            <MisTurnos />
-          </ProtectedRoute>
-        } />
-
-        <Route path="/agenda" element={
-          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin','superadmin']}>
-            <Agenda />
+        
+        {/* RUTAS PROTEGIDAS POR ROL */}
+        
+        <Route path="/profesional" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['profesional', 'admin', 'superadmin']}>
+            <TurnosProfesional />
           </ProtectedRoute>
         } />
 
         <Route path="/miPerfil" element={
-          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user','admin','superadmin']}>
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user','admin','superadmin', 'profesional']}>
             <MiPerfil username={username} userId={userId} userRole={userRole} onAccountDelete={handleLogout} />
           </ProtectedRoute>
         } />
