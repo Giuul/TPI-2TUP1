@@ -233,17 +233,19 @@ const Users = () => {
                             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         />
 
-                        {currentUserRole === 'superadmin' && (
-                            <label className="checkbox-label">
-                                <input
-                                    type="checkbox"
-                                    checked={rolSeleccionado === 'admin'}
-                                    onChange={(e) => setRolSeleccionado(e.target.checked ? 'admin' : 'user')}
-                                />
-                                {formData.role === 'admin'
-                                    ? 'Rol de administrador'
-                                    : 'Rol de administrador'}
-                            </label>
+                       {currentUserRole === 'superadmin' && (
+                            <>
+                                <label htmlFor="select-role">Rol del Usuario</label>
+                                <select
+                                    id="select-role"
+                                    value={rolSeleccionado}
+                                    onChange={(e) => setRolSeleccionado(e.target.value)}
+                                >
+                                     <option value="user">User</option>
+                                    <option value="professional">Profesional</option>
+                                    <option value="admin">Administrador</option>
+                                </select>
+                            </>
                         )}
 
                         <div className="modal-buttons">
