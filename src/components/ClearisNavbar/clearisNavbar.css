@@ -1,5 +1,5 @@
 .navbar-clearis {
-    background-color: rgba(219, 190, 192, 0.3);
+    background-color: rgba(231, 223, 223, 0.384);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -17,25 +17,34 @@
     z-index: 1000;
 }
 
+.acme-regular-navbar {
+    margin-left: auto;
+    padding-right: 1px;
+}
 
 .acme-regular-navbar .nav-link,
 .acme-regular-navbar .dropdown-toggle,
 .acme-regular-navbar .dropdown-item {
     font-family: "Mooli";
-    font-weight: 400;
+    font-weight: 300;
     font-style: normal;
-    font-size: 24px;
+    font-size: 20px;
     color: #635845 !important;
+    transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .acme-regular-navbar .nav-link:hover,
 .acme-regular-navbar .dropdown-toggle:hover,
 .acme-regular-navbar .dropdown-item:hover {
-    color: #63584596 !important;
+    color: #635845 !important;
+    transform: scale(1.08);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .logo-left img {
-    height: 170px;
+    height: 150px;
 }
 
 

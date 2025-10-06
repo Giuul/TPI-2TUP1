@@ -1,101 +1,75 @@
-body {
-    font-family: 'Julius Sans One', sans-serif;
-    background-color: #fdfafa;
-    margin: 0;
-    padding: 0;
-    color: #bb8c68;
+.admin-services {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    font-family: 'Gilda Display';
+    color: #635845;
 }
 
-h2 {
-    color: #bb8c68;
+.admin-services h2 {
     text-align: center;
-    margin-bottom: 30px;
     font-size: 28px;
+    margin-bottom: 25px;
     text-transform: uppercase;
+    color: #635845;
 }
 
-form {
+.admin-services form {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 15px;
-    justify-content: center;
     margin-bottom: 30px;
 }
 
-form input {
-    padding: 10px;
-    border: 1px solid #ddbca8;
-    border-radius: 8px;
-    outline: none;
-    font-size: 14px;
-    background-color: #fff7f2;
-    color: #bb8c68;
-    width: 200px;
-}
-
-form button {
-    background-color: #bb8c68;
-    color: white;
+.admin-services button {
+    padding: 12px;
     border: none;
-    border-radius: 8px;
-    padding: 10px 15px;
+    border-radius: 25px;
+    background: #c9bfc683;
+    color: #635845;
+    font-size: 16px;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
+    transition: 0.3s ease;
+    font-family: 'Gilda Display';
 }
 
-form button:hover {
-    background-color: #cc8c60;
+.admin-services button:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .services-list {
     list-style: none;
     padding: 0;
-    max-width: 1000px;
-    margin: 0 auto;
+    margin: 0;
 }
 
 .services-list li {
-    background-color: #fff7f2;
-    border: 1px solid #e0c5b2;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px 20px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 .service-info {
     display: flex;
     align-items: center;
-    flex: 1;
-    gap: 20px;
-    min-width: 0;
+    gap: 15px;
 }
 
 .service-info img {
     width: 60px;
     height: 60px;
     object-fit: cover;
-    border-radius: 8px;
-    margin-right: 10px;
-}
-
-.service-info .col {
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 14px;
-    color: #bb8c68;
-}
-
-.service-info .col strong {
-    font-size: 16px;
-    display: block;
-    margin-bottom: 3px;
+    border-radius: 12px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
 .service-actions {
@@ -104,34 +78,155 @@ form button:hover {
 }
 
 .service-actions button {
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.delete-btn {
+    background: #c9bfc683;
+}
+
+.delete-btn:hover {
+    background: #c9bfc683;
+}
+
+.create-btn {
+    margin-bottom: 20px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    background: #c9bfc683;
+    color: #635845;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-family: 'Gilda Display';
+}
+
+.create-btn:hover {
+    background: #c9bfc683;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 700;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 6px 12px;
-    font-size: 13px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    color: white;
-    background-color: #bb8c68;
-    transition: background-color 0.3s ease;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    gap: 20px;
 }
 
-.service-actions button:hover {
-    background-color: #cc8c60;
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: all;
 }
 
-.service-actions .delete-btn {
-    background-color: #bb8c68;
-}
-
-.service-actions .delete-btn:hover {
-    background-color: #cc8c60;
-}
-
-div[style*="color: red"] {
+.modal {
+    background: rgb(255, 255, 255);
+    padding: 30px;
+    border-radius: 20px;
+    width: 600px;
+    max-width: 90%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(6px);
     text-align: center;
-    color: #bb8c68 !important;
-    font-weight: bold;
-    margin-bottom: 20px;
+    transform: scale(0.98);
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    gap: 20px;
+}
+
+.modal.show {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.modal.hide {
+    transform: scale(0.98);
+    opacity: 0;
+}
+
+.modal-overlay.hide {
+    opacity: 0;
+}
+
+
+.modal.message-modal h3 {
+    color: #635845;
+    text-align: left;
+}
+
+.modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal input {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15),
+        -3px -3px 6px rgba(255, 255, 255, 0.7);
+    font-size: 15px;
+    font-family: 'Gilda Display';
+    color: #635845;
+    outline: none;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.modal-actions button {
+    flex: 1;
+    margin: 0 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 25px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-family: 'Gilda Display', serif;
+}
+
+.modal-actions button:first-child {
+    background: #c9bfc683;
+    color: #635845;
+}
+
+.modal-actions button:first-child:hover {
+    background: #c9bfc683;
+}
+
+.close-btn {
+    background: #c9bfc683;
+}
+
+.close-btn:hover {
+    background: #c9bfc683;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateY(0);
+    }
 }
