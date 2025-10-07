@@ -105,7 +105,7 @@ const Turnos = ({ onTurnoEliminado }) => {
                     if (userRole === 'admin' || userRole === 'superadmin') {
                         let usuarioInfo = 'Usuario no disponible';
                         if (turno.usuario) {
-                            usuarioInfo = `${turno.usuario.name || ''} ${turno.usuario.lastname || ''} (DNI: ${turno.User.id || 'N/A'})`.trim();
+                            usuarioInfo = `${turno.usuario.name || ''} ${turno.usuario.lastname || ''} (DNI: ${turno.usuario.id || 'N/A'})`.trim();
                             if (usuarioInfo === "(DNI: N/A)") usuarioInfo = `DNI: ${turno.usuario.id || 'N/A'}`;
                         } else if (turno.dniusuario) {
                             usuarioInfo = `DNI: ${turno.dniusuario}`;
