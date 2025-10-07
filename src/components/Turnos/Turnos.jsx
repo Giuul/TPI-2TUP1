@@ -104,17 +104,17 @@ const Turnos = ({ onTurnoEliminado }) => {
 
                     if (userRole === 'admin' || userRole === 'superadmin') {
                         let usuarioInfo = 'Usuario no disponible';
-                        if (turno.User) {
-                            usuarioInfo = `${turno.User.name || ''} ${turno.User.lastname || ''} (DNI: ${turno.User.id || 'N/A'})`.trim();
-                            if (usuarioInfo === "(DNI: N/A)") usuarioInfo = `DNI: ${turno.User.id || 'N/A'}`;
+                        if (turno.usuario) {
+                            usuarioInfo = `${turno.usuario.name || ''} ${turno.usuario.lastname || ''} (DNI: ${turno.User.id || 'N/A'})`.trim();
+                            if (usuarioInfo === "(DNI: N/A)") usuarioInfo = `DNI: ${turno.usuario.id || 'N/A'}`;
                         } else if (turno.dniusuario) {
                             usuarioInfo = `DNI: ${turno.dniusuario}`;
                         }
 
 
                         let profesionalInfo = 'Sin asignar';
-                        if (turno.Professional) {
-                            profesionalInfo = `${turno.Professional.name || ''} ${turno.Professional.lastname || ''}`.trim() || 'Profesional Asignado';
+                        if (turno.profesional) {
+                            profesionalInfo = `${turno.profesional.name || ''} ${turno.profesional.lastname || ''}`.trim() || 'Profesional Asignado';
                         }
 
                         return {
