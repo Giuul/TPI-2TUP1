@@ -98,8 +98,8 @@ const Turnos = ({ onTurnoEliminado }) => {
                         fecha: turno.dia,
                         hora: turno.hora,
                         duracion: turno.servicio?.duracion !== undefined ? formatDuration(turno.servicio.duracion) : 'N/A',
-                        
-                        profesionalDisplay: 'N/A', 
+
+                        profesionalDisplay: 'N/A',
                     };
 
                     if (userRole === 'admin' || userRole === 'superadmin') {
@@ -110,17 +110,17 @@ const Turnos = ({ onTurnoEliminado }) => {
                         } else if (turno.dniusuario) {
                             usuarioInfo = `DNI: ${turno.dniusuario}`;
                         }
-                        
-                        
+
+
                         let profesionalInfo = 'Sin asignar';
-                        if (turno.Professional) { 
-                             profesionalInfo = `${turno.Professional.name || ''} ${turno.Professional.lastname || ''}`.trim() || 'Profesional Asignado';
+                        if (turno.Professional) {
+                            profesionalInfo = `${turno.Professional.name || ''} ${turno.Professional.lastname || ''}`.trim() || 'Profesional Asignado';
                         }
-                        
-                        return { 
-                            ...baseTurnoData, 
+
+                        return {
+                            ...baseTurnoData,
                             usuarioDisplay: usuarioInfo,
-                            profesionalDisplay: profesionalInfo 
+                            profesionalDisplay: profesionalInfo
                         };
                     }
                     return baseTurnoData;
@@ -222,8 +222,8 @@ const Turnos = ({ onTurnoEliminado }) => {
                     <thead>
                         <tr>
                             {(currentUserRole === 'admin' || currentUserRole === 'superadmin') && <th>Usuario</th>}
-                            {(currentUserRole === 'admin' || currentUserRole === 'superadmin') && <th>Profesional</th>} 
-                            
+                            {(currentUserRole === 'admin' || currentUserRole === 'superadmin') && <th>Profesional</th>}
+
                             <th>Servicio</th>
                             <th>Fecha</th>
                             <th>Hora</th>

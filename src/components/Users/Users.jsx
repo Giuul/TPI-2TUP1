@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './users.css';
+import './Users.css';
 
 const Users = () => {
     const navigate = useNavigate();
@@ -233,7 +233,7 @@ const Users = () => {
                             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         />
 
-                       {currentUserRole === 'superadmin' && (
+                        {currentUserRole === 'superadmin' && (
                             <>
                                 <label htmlFor="select-role">Rol del Usuario</label>
                                 <select
@@ -241,7 +241,7 @@ const Users = () => {
                                     value={rolSeleccionado}
                                     onChange={(e) => setRolSeleccionado(e.target.value)}
                                 >
-                                     <option value="user">User</option>
+                                    <option value="user">User</option>
                                     <option value="professional">Profesional</option>
                                     <option value="admin">Administrador</option>
                                 </select>

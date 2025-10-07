@@ -103,15 +103,18 @@ function App() {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/misturnos" element={<MisTurnos />} />
+        <Route path="/agenda" element={<Agenda />} />
         <Route path="/programar-turnos" element={<ProgramarTurnos />} />
+
+        {/* RUTAS PROTEGIDAS POR ROL */}
+
         <Route path="/programar-turnos-admin" element={
-          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user','admin','superadmin']}>
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin']}>
             <ProgramarTurnosAdmin />
           </ProtectedRoute>
         } />
-        
-        {/* RUTAS PROTEGIDAS POR ROL */}
-        
+
         <Route path="/profesional" element={
           <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['profesional', 'admin', 'superadmin']}>
             <TurnosProfesional />
@@ -119,19 +122,19 @@ function App() {
         } />
 
         <Route path="/miPerfil" element={
-          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user','admin','superadmin', 'profesional']}>
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin', 'profesional']}>
             <MiPerfil username={username} userId={userId} userRole={userRole} onAccountDelete={handleLogout} />
           </ProtectedRoute>
         } />
 
         <Route path="/users" element={
-          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin','superadmin']}>
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin']}>
             <Userspage currentUserRole={userRole} currentUserId={userId} />
           </ProtectedRoute>
         } />
 
         <Route path="/admin-services" element={
-          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin','superadmin']}>
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin', 'superadmin']}>
             <AdminServicios />
           </ProtectedRoute>
         } />

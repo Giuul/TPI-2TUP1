@@ -22,26 +22,21 @@ const AdminServices = () => {
         }
     };
 
+    useEffect(() => {
+        fetchServices();
+    }, []);
+
     const closeModal = (setModalOpen) => {
         const overlay = document.querySelector('.modal-overlay.show');
         const modal = document.querySelector('.modal.show');
         if (modal && overlay) {
             modal.classList.add('hide');
             overlay.classList.add('hide');
-            setTimeout(() => {
-                setModalOpen(false);
-                modal.classList.remove('hide');
-                overlay.classList.remove('hide');
-            }, 400);
+            setTimeout(() => setModalOpen(false), 300);
         } else {
             setModalOpen(false);
         }
     };
-
-
-    useEffect(() => {
-        fetchServices();
-    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -68,7 +63,6 @@ const AdminServices = () => {
         setForm({ nombre: service.nombre, descripcion: service.descripcion, duracion: service.duracion, imagen: service.imagen });
         setEditingId(service.id);
         setIsFormModalOpen(true);
-        setMessage("");
     };
 
     const openDeleteModal = (id) => {
@@ -106,29 +100,10 @@ const AdminServices = () => {
                     <div className="modal show">
                         <h3>{editingId ? "Editar Servicio" : "Crear Servicio"}</h3>
                         <form onSubmit={handleSubmit}>
-                            <input
-                                placeholder="Nombre"
-                                value={form.nombre}
-                                onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-                                required
-                            />
-                            <input
-                                placeholder="Descripción"
-                                value={form.descripcion}
-                                onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
-                                required
-                            />
-                            <input
-                                type="number"
-                                placeholder="Duración (min)"
-                                value={form.duracion}
-                                onChange={(e) => setForm({ ...form, duracion: e.target.value })}
-                            />
-                            <input
-                                placeholder="URL Imagen"
-                                value={form.imagen}
-                                onChange={(e) => setForm({ ...form, imagen: e.target.value })}
-                            />
+                            <input placeholder="Nombre" value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} required />
+                            <input placeholder="Descripción" value={form.descripcion} onChange={(e) => setForm({ ...form, descripcion: e.target.value })} required />
+                            <input type="number" placeholder="Duración (min)" value={form.duracion} onChange={(e) => setForm({ ...form, duracion: e.target.value })} />
+                            <input placeholder="URL Imagen" value={form.imagen} onChange={(e) => setForm({ ...form, imagen: e.target.value })} />
                             <div className="modal-actions">
                                 <button type="submit">{editingId ? "Guardar cambios" : "Crear"}</button>
                                 <button type="button" className="close-btn" onClick={() => closeModal(setIsFormModalOpen)}>Cancelar</button>
@@ -141,7 +116,6 @@ const AdminServices = () => {
             {isMessageModalOpen && (
                 <div className="modal-overlay show">
                     <div className="modal message-modal show">
-                        <h3>¡Éxito!</h3>
                         <p>{message}</p>
                         <button className="close-btn" onClick={() => closeModal(setIsMessageModalOpen)}>Cerrar</button>
                     </div>

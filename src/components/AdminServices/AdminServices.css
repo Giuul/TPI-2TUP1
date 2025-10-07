@@ -25,11 +25,30 @@
     margin-bottom: 30px;
 }
 
+.admin-services form input,
+.admin-services form textarea {
+    border-radius: 20px;
+    border: 1px solid #63584572;
+    padding: 10px 15px;
+    outline: none;
+    font-family: 'Gilda Display';
+    color: #635845;
+    background: rgba(255, 255, 255, 0.552);
+    transition: 0.2s ease;
+}
+
+.admin-services form input:focus,
+.admin-services form textarea:focus {
+    box-shadow: 0 0 0 3px rgba(187, 140, 104, 0.2);
+    border-color: #635845;
+}
+
+
 .admin-services button {
     padding: 12px;
     border: none;
     border-radius: 25px;
-    background: #c9bfc683;
+    background: rgba(255, 255, 255, 0.25);
     color: #635845;
     font-size: 16px;
     cursor: pointer;
@@ -38,7 +57,7 @@
 }
 
 .admin-services button:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .services-list {
@@ -51,7 +70,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.25);
     padding: 15px 20px;
     border-radius: 16px;
     margin-bottom: 15px;
@@ -84,11 +103,11 @@
 }
 
 .delete-btn {
-    background: #c9bfc683;
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .delete-btn:hover {
-    background: #c9bfc683;
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .create-btn {
@@ -96,7 +115,7 @@
     padding: 12px 20px;
     border: none;
     border-radius: 25px;
-    background: #c9bfc683;
+    background: rgba(255, 255, 255, 0.495);
     color: #635845;
     font-size: 16px;
     cursor: pointer;
@@ -105,23 +124,24 @@
 }
 
 .create-btn:hover {
-    background: #c9bfc683;
+    background: rgba(255, 255, 255, 0.815);
 }
 
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 700;
+    width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.445);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     z-index: 1000;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
     gap: 20px;
 }
 
@@ -131,18 +151,19 @@
 }
 
 .modal {
-    background: rgb(255, 255, 255);
-    padding: 30px;
+    background: rgba(255, 255, 255, 0.126);
+    padding: 5px;
     border-radius: 20px;
-    width: 600px;
-    max-width: 90%;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(6px);
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.479);
     text-align: center;
-    transform: scale(0.98);
+    transform: scale(0.95);
     opacity: 0;
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
     gap: 20px;
+    color: rgba(255, 255, 255, 0.744);
 }
 
 .modal.show {
@@ -151,82 +172,30 @@
 }
 
 .modal.hide {
-    transform: scale(0.98);
+    transform: scale(0.95);
     opacity: 0;
-}
-
-.modal-overlay.hide {
-    opacity: 0;
-}
-
-
-.modal.message-modal h3 {
-    color: #635845;
-    text-align: left;
-}
-
-.modal form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.modal input {
-    padding: 12px 15px;
-    border: none;
-    border-radius: 25px;
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15),
-        -3px -3px 6px rgba(255, 255, 255, 0.7);
-    font-size: 15px;
-    font-family: 'Gilda Display';
-    color: #635845;
-    outline: none;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.modal-actions button {
-    flex: 1;
-    margin: 0 5px;
-    padding: 10px;
-    border: none;
-    border-radius: 25px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.3s ease;
-    font-family: 'Gilda Display', serif;
-}
-
-.modal-actions button:first-child {
-    background: #c9bfc683;
-    color: #635845;
-}
-
-.modal-actions button:first-child:hover {
-    background: #c9bfc683;
 }
 
 .close-btn {
-    background: #c9bfc683;
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .close-btn:hover {
-    background: #c9bfc683;
+    background: rgba(255, 255, 255, 0.25);
 }
 
-@keyframes fadeIn {
+@keyframes slideUp {
+    from {
+        transform: translateY(20px) scale(0.95);
+        opacity: 0;
+    }
+
     to {
+        transform: translateY(0) scale(1);
         opacity: 1;
     }
 }
 
-@keyframes slideIn {
-    to {
-        transform: translateY(0);
-    }
+.modal.show {
+    animation: slideUp 0.3s ease forwards;
 }

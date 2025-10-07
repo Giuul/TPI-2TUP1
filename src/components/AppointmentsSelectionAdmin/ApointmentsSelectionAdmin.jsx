@@ -37,7 +37,7 @@ const AppointmentsSelection = () => {
     const [currentUserId, setCurrentUserId] = useState('');
 
     const [professionals, setProfessionals] = useState([]);
-    const [profesionalSeleccionado, setProfesionalSeleccionado] = useState(''); 
+    const [profesionalSeleccionado, setProfesionalSeleccionado] = useState('');
 
     const mañana = new Date();
     mañana.setDate(mañana.getDate() + 1);
@@ -99,7 +99,7 @@ const AppointmentsSelection = () => {
         const idservicio = parseInt(servicioSeleccionado);
 
         let userIdToAssign = currentUserId;
-        let professionalIdToAssign = profesionalSeleccionado || null; 
+        let professionalIdToAssign = profesionalSeleccionado || null;
 
         if (currentUserRole === 'admin' || currentUserRole === 'superadmin') {
             if (!dniUsuarioAgenda) {
@@ -126,7 +126,7 @@ const AppointmentsSelection = () => {
                     hora: horaFormatted,
                     idservicio: idservicio,
                     userId: userIdToAssign,
-                    id_profesional: professionalIdToAssign 
+                    id_profesional: professionalIdToAssign
                 }),
             });
 
@@ -149,7 +149,7 @@ const AppointmentsSelection = () => {
             setHorarioSeleccionado('');
             setServicioSeleccionado('');
             setDniUsuarioAgenda('');
-            setProfesionalSeleccionado(''); 
+            setProfesionalSeleccionado('');
             setTimeout(() => navigate('/misturnos'), 2000);
 
         } catch (error) {
@@ -204,7 +204,7 @@ const AppointmentsSelection = () => {
 
                     <div className="professional-container">
                         <label className="label">ASIGNAR PROFESIONAL</label>
-                        <select 
+                        <select
                             className='service-selection'
                             value={profesionalSeleccionado}
                             onChange={(e) => setProfesionalSeleccionado(e.target.value)}
@@ -276,7 +276,7 @@ const AppointmentsSelection = () => {
                     )}
 
                     {(!horarioSeleccionado || !servicioSeleccionado || (esAdmin && (!dniUsuarioAgenda || !profesionalSeleccionado))) && (
-                        <p style={{ color: '#bb8c68', marginTop: '10px' }}>
+                        <p style={{ color: '#635845', marginTop: '10px' }}>
                             {esAdmin
                                 ? 'Seleccioná servicio, horario, DNI de usuario y Profesional.'
                                 : 'Seleccioná un servicio y un horario para poder confirmar tu turno.'
@@ -288,8 +288,8 @@ const AppointmentsSelection = () => {
                         className="confirm-btn"
                         onClick={confirmarTurno}
                         disabled={
-                            !horarioSeleccionado || 
-                            !servicioSeleccionado || 
+                            !horarioSeleccionado ||
+                            !servicioSeleccionado ||
                             (esAdmin && (!dniUsuarioAgenda || !profesionalSeleccionado))
                         }
                     >
