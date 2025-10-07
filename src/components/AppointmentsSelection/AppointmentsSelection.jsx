@@ -173,7 +173,7 @@ const AppointmentsSelection = () => {
                     </p>
                     <p className="value">{horarioSeleccionado}</p>
                     {(!horarioSeleccionado || !servicioSeleccionado) && (
-                        <p style={{ color: '#bb8c68', marginTop: '10px' }}>
+                        <p style={{ color: '#635845', marginTop: '10px' }}>
                             Seleccioná un servicio y un horario para poder confirmar tu turno.
                         </p>
                     )}

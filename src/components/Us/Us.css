@@ -1,0 +1,22 @@
+.who-we-are {
+    text-align: center;
+    margin: 150px auto;
+    max-width: 1000px;
+    padding: 50px;
+    background: rgba(231, 223, 223, 0.384);
+    border-radius: 12px;
+    font-family: 'Mooli';
+    color: #635845;
+    line-height: 1.2;
+}
+
+.who-we-are h1 {
+    font-size: 65px;
+    margin-bottom: 20px;
+    color: #635845;
+}
+
+.who-we-are p {
+    font-size: 25px;
+    margin-bottom: 15px;
+}

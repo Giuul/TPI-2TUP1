@@ -1,17 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
-
-
-
 .bodyClearis {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
+  max-width: 1000px; 
+  margin: 150px auto;
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-.bodyClearis img {
-    width: 40%;
-    height: auto;
-    text-align: center;
+.carousel-img {
+  width: 100%;
+  height: 500px;       
+  object-fit: cover;  
+  border-radius: 15px;
+}
+
+
+.slick-prev, .slick-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: block;   
+}
+
+
+.slick-prev:before, .slick-next:before {
+  color: #c38657;      
+  font-size: 35px;     
+}
+
+
+.slick-prev {
+  left: 15px;
+}
+
+.slick-next {
+  right: 15px;
 }
