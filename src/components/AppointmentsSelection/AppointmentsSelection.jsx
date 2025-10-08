@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import './AppointmentsSelection.css';
+import '../AppointmentsSelection/AppointmentsSelection.css';
 import { useNavigate } from 'react-router-dom';
-
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 const formatTimeToBackend = (timeString) => {
     const [time, period] = timeString.split(' ');
@@ -24,15 +25,52 @@ const horarios = [
 ];
 
 const AppointmentsSelection = () => {
+    const navigate = useNavigate();
     const [fecha, setFecha] = useState(new Date());
     const [horarioSeleccionado, setHorarioSeleccionado] = useState('');
     const [mensajeConfirmacion, setMensajeConfirmacion] = useState('');
     const [errorMensaje, setErrorMensaje] = useState('');
     const [servicioSeleccionado, setServicioSeleccionado] = useState('');
-    const navigate = useNavigate();
+
+    const [dniUsuarioAgenda, setDniUsuarioAgenda] = useState('');
+    const [currentUserRole, setCurrentUserRole] = useState('');
+    const [currentUserId, setCurrentUserId] = useState('');
+
+    const [professionals, setProfessionals] = useState([]);
+    const [profesionalSeleccionado, setProfesionalSeleccionado] = useState('');
 
     const mañana = new Date();
     mañana.setDate(mañana.getDate() + 1);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            let decodedToken = {};
+            try {
+                decodedToken = jwtDecode(token);
+                setCurrentUserRole(decodedToken.role);
+                setCurrentUserId(decodedToken.id);
+            } catch (e) {
+                console.error("Error al decodificar el token:", e);
+                return;
+            }
+
+            const fetchProfessionals = async () => {
+                if (decodedToken.role === 'admin' || decodedToken.role === 'superadmin' || decodedToken.role === 'user') {
+                    try {
+                        const response = await axios.get('http://localhost:3000/professionals', {
+                            headers: { Authorization: `Bearer ${token}` }
+                        });
+                        setProfessionals(response.data);
+                    } catch (err) {
+                        console.error("Error al cargar profesionales:", err);
+                        setErrorMensaje('Error al cargar la lista de profesionales.');
+                    }
+                }
+            };
+            fetchProfessionals();
+        }
+    }, []);
 
     const confirmarTurno = async () => {
 
@@ -46,24 +84,37 @@ const AppointmentsSelection = () => {
             return;
         }
 
+        if (!profesionalSeleccionado) {
+            setErrorMensaje('Por favor, seleccioná un profesional.');
+            return;
+        }
+
         setErrorMensaje('');
 
         const diaFormatted = fecha.toISOString().split('T')[0];
         const horaFormatted = formatTimeToBackend(horarioSeleccionado);
-
-        const authToken = localStorage.getItem('authtoken');
+        const authToken = localStorage.getItem('token');
 
         if (!authToken) {
             setErrorMensaje('No estás autenticado. Por favor, inicia sesión para agendar un turno.');
-
+            navigate('/login');
             return;
         }
 
-
         const idservicio = parseInt(servicioSeleccionado);
 
-        try {
+        let userIdToAssign = currentUserId;
+        let professionalIdToAssign = profesionalSeleccionado;
 
+        if (currentUserRole === 'admin' || currentUserRole === 'superadmin') {
+            if (!dniUsuarioAgenda) {
+                setErrorMensaje('Si sos administrador, debés ingresar el DNI del usuario para el turno.');
+                return;
+            }
+            userIdToAssign = dniUsuarioAgenda;
+        } 
+
+        try {
             const response = await fetch('http://localhost:3000/misturnos', {
                 method: 'POST',
                 headers: {
@@ -74,6 +125,8 @@ const AppointmentsSelection = () => {
                     dia: diaFormatted,
                     hora: horaFormatted,
                     idservicio: idservicio,
+                    userId: userIdToAssign,
+                    id_profesional: professionalIdToAssign
                 }),
             });
 
@@ -83,7 +136,8 @@ const AppointmentsSelection = () => {
                 setErrorMensaje(errorData.mensaje || 'Error desconocido al agendar el turno. Por favor, intenta de nuevo.');
 
                 if (response.status === 401 || response.status === 403) {
-                    localStorage.removeItem('authtoken');
+                    localStorage.removeItem('token');
+                    navigate('/login');
                 }
                 return;
             }
@@ -93,6 +147,9 @@ const AppointmentsSelection = () => {
 
             setMensajeConfirmacion('¡Turno agendado con éxito!');
             setHorarioSeleccionado('');
+            setServicioSeleccionado('');
+            setDniUsuarioAgenda('');
+            setProfesionalSeleccionado('');
             setTimeout(() => navigate('/misturnos'), 2000);
 
         } catch (error) {
@@ -106,6 +163,8 @@ const AppointmentsSelection = () => {
         { id: 2, nombre: 'Facial' },
         { id: 3, nombre: 'Brazos' }
     ];
+
+    const esAdmin = currentUserRole === 'admin' || currentUserRole === 'superadmin';
 
     return (
         <div className="turno-container">
@@ -128,6 +187,37 @@ const AppointmentsSelection = () => {
                     </button>
                 </div>
             )}
+
+            {esAdmin && (
+                <div className="dni-input-container">
+                    <label className="label" htmlFor="dniUsuarioAgenda">DNI DEL USUARIO PARA EL TURNO </label>
+                    <input
+                        type="text"
+                        id="dniUsuarioAgenda"
+                        placeholder="-- DNI USUARIO --"
+                        value={dniUsuarioAgenda}
+                        onChange={(e) => setDniUsuarioAgenda(e.target.value)}
+                        className="dni-input"
+                    />
+                </div>
+            )}
+
+            <div className="professional-container">
+                <label className="label">SELECCIONÁ UN PROFESIONAL</label>
+                <select
+                    className='service-selection'
+                    value={profesionalSeleccionado}
+                    onChange={(e) => setProfesionalSeleccionado(e.target.value)}
+                >
+                    <option value="">-- Seleccione un profesional --</option>
+                    {professionals.map(prof => (
+                        <option key={prof.id} value={prof.id}>
+                            {prof.name} {prof.lastname}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            
             <div className="service-container">
                 <label className="label">SELECCIONÁ UN SERVICIO</label>
                 <select className='service-selection'
@@ -172,16 +262,35 @@ const AppointmentsSelection = () => {
                         }
                     </p>
                     <p className="value">{horarioSeleccionado}</p>
-                    {(!horarioSeleccionado || !servicioSeleccionado) && (
+
+                    {esAdmin && dniUsuarioAgenda && (
+                        <p className="value">Para DNI: {dniUsuarioAgenda}</p>
+                    )}
+
+                    {profesionalSeleccionado && (
+                        <p className="value">
+                            Profesional: {professionals.find(p => p.id === profesionalSeleccionado)?.name}
+                        </p>
+                    )}
+
+                    {(!horarioSeleccionado || !servicioSeleccionado || !profesionalSeleccionado || (esAdmin && !dniUsuarioAgenda)) && (
                         <p style={{ color: '#635845', marginTop: '10px' }}>
-                            Seleccioná un servicio y un horario para poder confirmar tu turno.
+                            {esAdmin
+                                ? 'Seleccioná servicio, horario, Profesional y DNI de usuario.'
+                                : 'Seleccioná un servicio, horario y profesional para confirmar tu turno.'
+                            }
                         </p>
                     )}
 
                     <button
                         className="confirm-btn"
                         onClick={confirmarTurno}
-                        disabled={!horarioSeleccionado || !servicioSeleccionado}
+                        disabled={
+                            !horarioSeleccionado ||
+                            !servicioSeleccionado ||
+                            !profesionalSeleccionado ||
+                            (esAdmin && !dniUsuarioAgenda)
+                        }
                     >
                         CONFIRMAR
                     </button>
