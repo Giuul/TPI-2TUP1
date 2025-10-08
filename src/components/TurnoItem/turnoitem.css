@@ -25,12 +25,11 @@ td {
 .btn-eliminar {
     background-color: rgba(255, 235, 220, 0.25);
     border: 1px solid rgba(210, 180, 140, 0.4);
-    color: #8b7355;
+    color: #635845;
 }
 
 .btn-eliminar:hover {
-    background-color: rgba(255, 235, 220, 0.45);
-    color: #635845;
+    background-color: rgba(255, 235, 220, 0.01);
 }
 
 .btn-eliminar:active {

@@ -57,6 +57,13 @@
   color: #635845;
 }
 
+.react-calendar__month-view__days {
+  text-transform: lowercase;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+
 .react-calendar__tile {
   color: #635845;
   font-weight: 500;
@@ -105,14 +112,12 @@
 }
 
 .details-section {
-  flex: 0.8;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-size: 0.9rem;
-  font-weight: 600;
-  line-height: 1.5;
+  background: rgba(255, 255, 255, 0.059);
+  padding: 20px 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   border-radius: 20px;
+  backdrop-filter: blur(6px);
+  text-align: center;
 }
 
 .details-section .label {
