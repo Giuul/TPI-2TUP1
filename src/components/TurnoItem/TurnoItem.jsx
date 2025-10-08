@@ -5,7 +5,7 @@ import "../Turnos/modalTurno.css";
 const TurnoItem = ({ id, servicios, fecha, hora, duracion, usuarioDisplay, profesionalDisplay, onEliminar, isAdminView }) => {
     let fechaFormateada = 'Fecha no disponible';
     if (fecha) {
-        const parsedDate = new Date(fecha + 'T00:00:00'); 
+        const parsedDate = new Date(fecha + 'T00:00:00');
         if (!isNaN(parsedDate.getTime())) {
             fechaFormateada = parsedDate.toLocaleDateString('es-AR');
         } else {
@@ -15,12 +15,12 @@ const TurnoItem = ({ id, servicios, fecha, hora, duracion, usuarioDisplay, profe
         }
 
     }
-    
+
     return (
         <tr>
             {isAdminView && <td>{usuarioDisplay}</td>}
-            {isAdminView && <td>{profesionalDisplay}</td>} 
-            
+            {isAdminView && <td>{profesionalDisplay}</td>}
+
             <td>{servicios}</td>
             <td>{fechaFormateada}</td>
             <td>{hora}</td>
