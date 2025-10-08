@@ -12,20 +12,20 @@
 }
 
 .modal-content {
-    background: #ffffff;
+    background: #c9bfc683;
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 90%;
     max-width: 800px;
-    font-family: Julius Sans One;
+    font-family: 'Gilda display';
 }
 
 .modal-content p {
     margin-bottom: 20px;
     font-size: 1.1em;
-    color: #000000;
+    color: #635845;
     line-height: 1.5;
 }
 
@@ -49,21 +49,21 @@
 }
 
 .modal-confirm-button {
-    background-color: #e07a4a;
-    color: white;
+    background-color: #c9bfc683;
+    color: #635845;
 }
 
 .modal-confirm-button:hover {
-    background-color: #e07a4a;
+    background-color: #c9bfc683;
     transform: translateY(-2px);
 }
 
 .modal-cancel-button {
-    background-color: #e07a4a;
-    color: white;
+    background-color: #c9bfc683;
+    color: #635845;
 }
 
 .modal-cancel-button:hover {
-    background-color: #e07a4a;
+    background-color: #c9bfc683;
     transform: translateY(-2px);
 }
