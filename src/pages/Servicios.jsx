@@ -14,19 +14,23 @@ const Servicios = () => {
   }, []);
 
   return (
- <div>
+    <div>
       <div className='contenedorServicios'>
         {services.map(service => {
+          // Asegurarnos de que la imagen sea un string
+          const base64Image = typeof service.imagen === 'string' ? service.imagen : null;
+
+          // Detectar tipo de imagen
           let imageType = 'jpeg';
-          if (service.imagen?.startsWith('iVBOR')) imageType = 'png'; 
+          if (base64Image?.startsWith('iVBOR')) imageType = 'png';
 
           return (
             <Service
               key={service.id}
               img={
-                service.imagen
-                  ? `data:image/${imageType};base64,${service.imagen}`
-                  : 'https://via.placeholder.com/150'
+                base64Image
+                  ? `data:image/${imageType};base64,${base64Image}`
+                  : '/img/placeholder.png' // fallback local
               }
               title={service.nombre}
               desc={service.descripcion}
