@@ -33,6 +33,41 @@
   object-fit: cover;
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
+.contenedorServicios {
+  display: flex;
+  justify-content: space-around;
+}
+
+.contenedorIndividual {
+  width: 33%;
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.img-servicios {
+  width: 100%;
+}
+
+.contenedorIndividual:hover {
+  transform: translateY(-5px);
+}
+
+.image-container {
+  position: relative;
+  width: 370px;   
+  height: 450px;
+  overflow: hidden;
+  border-radius: 1000px; 
+}
+
+.image-container img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
 
 .contenedorIndividual:hover .image-container img {
   opacity: 0;
