@@ -13,6 +13,24 @@
 
 .img-servicios {
   width: 100%;
+  filter: brightness(0.9);
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.img-servicios:hover {
+  transform: scale(1.03);
+  filter: brightness(1);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 10px;
+  width: 80%;
+  text-align: center;
+  background: rgba(231, 223, 223, 0.384);
+  padding: 1rem;
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
 }
 
 .contenedorIndividual:hover {
@@ -21,45 +39,12 @@
 
 .image-container {
   position: relative;
-  width: 370px;   
+  width: 370px;
   height: 450px;
   overflow: hidden;
-  border-radius: 1000px; 
-}
-
-.image-container img {
-  width: 100%;
-  display: block;
-  object-fit: cover;
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.contenedorServicios {
-  display: flex;
-  justify-content: space-around;
-}
-
-.contenedorIndividual {
-  width: 33%;
-  margin: 20px;
-  display: flex;
+  border-radius: 1000px;
+  justify-content: center;
   align-items: center;
-  flex-direction: column;
-}
-
-.img-servicios {
-  width: 100%;
-}
-
-.contenedorIndividual:hover {
-  transform: translateY(-5px);
-}
-
-.image-container {
-  position: relative;
-  width: 370px;   
-  height: 450px;
-  overflow: hidden;
-  border-radius: 1000px; 
 }
 
 .image-container img {
@@ -86,13 +71,30 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 30px;
   text-align: center;
   transition: opacity 0.7s ease;
   pointer-events: none;
   font-weight: 300;
   font-size: 20px;
   border-radius: 1000px;
+}
+
+.btn-turno {
+  background-color: rgba(231, 223, 223, 0.57);
+  color: #666;
+  border: none;
+  padding: 15px 35px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Gilda Display';
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.btn-turno:hover {
+  background-color: rgb(231, 223, 223);
+  transform: scale(1.05);
 }
 
 .contenedorIndividual:hover .description {
