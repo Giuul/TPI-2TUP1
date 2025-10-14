@@ -1,31 +1,24 @@
-import React from 'react';
-import './turnoItem.css';
-import "../Turnos/modalTurno.css";
+import React from "react";
+import "./turnoItem.css";
 
-const TurnoItem = ({ 
-    id, 
-    servicios, 
-    fecha, 
-    hora, 
-    duracion, 
-    usuarioDisplay, 
-    profesionalDisplay, 
-    onEliminar, 
+const TurnoItem = ({
+    id,
+    servicios,
+    fecha,
+    hora,
+    duracion,
+    usuarioDisplay,
+    profesionalDisplay,
+    onEliminar,
+    onEditar,
     isAdminView,
     isProfesionalView,
     onVerHistorial,
-    dniusuario 
+    dniusuario,
 }) => {
-    let fechaFormateada = 'Fecha no disponible';
-    if (fecha) { 
-        const parsedDate = new Date(fecha + 'T00:00:00'); 
-        if (!isNaN(parsedDate.getTime())) {
-            fechaFormateada = parsedDate.toLocaleDateString('es-AR');
-        } else {
-            console.error("Error: Fecha inválida recibida en TurnoItem:", fecha);
-            fechaFormateada = 'Fecha inválida';
-        }
-    }
+    let fechaFormateada = fecha
+        ? new Date(fecha + "T00:00:00").toLocaleDateString("es-AR")
+        : "Fecha no disponible";
 
     return (
         <tr>
@@ -37,24 +30,26 @@ const TurnoItem = ({
             <td>{hora}</td>
             <td>{duracion}</td>
             <td className="actions-cell">
-                
                 {isProfesionalView && dniusuario && (
                     <button
-                        className="btn-historial" 
+                        className="btn-historial"
                         onClick={() => onVerHistorial(dniusuario)}
-                        title="Ver Historial Clínico del Paciente"
                     >
-                        <i className="bi bi-file-earmark-medical"></i>
-                        Ver Historial
+                        <i className="bi bi-file-earmark-medical"></i> Ver Historial
                     </button>
                 )}
-                
-                <button
-                    className="btn-eliminar"
-                    onClick={() => onEliminar(id)}
-                >
-                    <i className="bi bi-trash"></i>
-                    Eliminar
+
+                {isAdminView && (
+                    <button
+                        className="btn-editar"
+                        onClick={() => onEditar({ id, fecha, hora })}
+                    >
+                        <i className="bi bi-pencil-square"></i> Editar
+                    </button>
+                )}
+
+                <button className="btn-eliminar" onClick={() => onEliminar(id)}>
+                    <i className="bi bi-trash"></i> Eliminar
                 </button>
             </td>
         </tr>

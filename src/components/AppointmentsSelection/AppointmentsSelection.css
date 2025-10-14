@@ -189,13 +189,14 @@
 .modal-close {
   margin-top: 20px;
   padding: 8px 20px;
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.899);
+  color: #635845;
   color: 635845;
   border: none;
   border-radius: 3px;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 1s ease;
+  transition: background-color 0.5s ease;
 }
 
 .modal-close:hover {
@@ -253,4 +254,13 @@
   border-color: #635845;
   box-shadow: 0 0 0 3px rgba(187, 140, 104, 0.2);
   outline: none;
+}
+
+.error-message {
+  color: #635845 !important;
+  background-color: rgba(255, 255, 255, 0.448) !important;
+  border-color: #635845 !important;
+  border-radius: 20px !important;
+  padding: 5px 10px !important;
+  font-size: 20px !important;
 }
