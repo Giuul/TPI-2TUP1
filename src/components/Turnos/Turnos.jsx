@@ -1,137 +1,93 @@
-import React, { useState, useEffect } from 'react';
-import TurnoItem from '../TurnoItem/TurnoItem';
-import { jwtDecode } from 'jwt-decode';
+import React, { useState, useEffect } from "react";
+import TurnoItem from "../TurnoItem/TurnoItem";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import ModalPortal from "../Turnos/ModalPortal";
 import "./turnos.css";
-import { useNavigate } from 'react-router-dom';
 
-const ConfirmationModal = ({ show, message, onConfirm, onCancel, onClose }) => {
-    if (!show) {
-        return null;
-    }
-
-    return (
-        <div className="modal-overlay">
-            <div className="modal-content">
-                <p>{message}</p>
-                <div className="modal-actions">
-                    {onConfirm && onCancel ? (
-                        <>
-                            <button onClick={onConfirm} className="modal-confirm-button">Sí</button>
-                            <button onClick={onCancel} className="modal-cancel-button">No</button>
-                        </>
-                    ) : (
-                        <button onClick={onClose} className="modal-confirm-button">Aceptar</button>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const Turnos = ({ onTurnoEliminado }) => {
+const Turnos = () => {
     const [listaDeTurnos, setListaDeTurnos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentUserRole, setCurrentUserRole] = useState('user');
+    const [currentUserRole, setCurrentUserRole] = useState("user");
 
     const [showTurnoDeleteModal, setShowTurnoDeleteModal] = useState(false);
     const [turnoToDeleteId, setTurnoToDeleteId] = useState(null);
 
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [turnoToEdit, setTurnoToEdit] = useState(null);
+    const [editFecha, setEditFecha] = useState("");
+    const [editHora, setEditHora] = useState("");
+
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [successMessage, setSuccessMessage] = useState('');
-    
+    const [successMessage, setSuccessMessage] = useState("");
+    const [editError, setEditError] = useState("");
+
     const navigate = useNavigate();
 
-    const formatDuration = (duracion) => `${duracion} minutos`;
-    
-    const handleViewHistorial = (dniUsuario) => {
-        if (dniUsuario) {
-            navigate(`/historialclinico/${dniUsuario}`);
-        } else {
-            setSuccessMessage("No se encontró el DNI del usuario para ver el historial.");
-            setShowSuccessModal(true);
-        }
-    };
-
     useEffect(() => {
-        const fetchTurnosYDeterminarRol = async () => {
+        const fetchTurnos = async () => {
             setLoading(true);
             setError(null);
 
-            let userRole = 'user';
-            const token = localStorage.getItem('authtoken');
+            const token = localStorage.getItem("authtoken");
+            let userRole = "user";
 
-            if (token) {
-                try {
-                    const decodedToken = jwtDecode(token);
-                    userRole = decodedToken.role || 'user';
-                } catch (e) {
-                    console.error("Error al decodificar el token:", e);
-                    setError("Error al verificar la sesión. Intenta iniciar sesión de nuevo.");
-                    setLoading(false);
-                    return;
-                }
-            } else {
-                setError("No estás autenticado. Por favor, inicia sesión.");
+            if (!token) {
+                setError("No estás autenticado.");
                 setLoading(false);
                 return;
             }
-            setCurrentUserRole(userRole);
-
-            let url;
-            if (userRole === 'admin' || userRole === 'superadmin') {
-                url = 'http://localhost:3000/admin/turnos';
-            } else {
-                url = 'http://localhost:3000/misturnos';
-            }
 
             try {
-                const response = await fetch(url, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                const decodedToken = jwtDecode(token);
+                userRole = decodedToken.role || "user";
+            } catch {
+                setError("Error al verificar la sesión.");
+                setLoading(false);
+                return;
+            }
+
+            setCurrentUserRole(userRole);
+
+            const url =
+                userRole === "admin" || userRole === "superadmin"
+                    ? "http://localhost:3000/admin/turnos"
+                    : "http://localhost:3000/misturnos";
+
+            try {
+                const res = await fetch(url, {
+                    headers: { Authorization: `Bearer ${token}` },
                 });
+                if (!res.ok) throw new Error("Error al obtener los turnos");
 
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({ message: 'Error desconocido del servidor' }));
-                    throw new Error(errorData.message || `Error al obtener los turnos (Status: ${response.status})`);
-                }
-
-                const data = await response.json();
+                const data = await res.json();
 
                 const turnosTransformados = data.map((turno) => {
-                    const baseTurnoData = {
+                    const base = {
                         id: turno.id,
-                        dniusuario: turno.dniusuario, 
-                        servicios: turno.servicio?.nombre || 'Servicio no especificado',
+                        dniusuario: turno.dniusuario,
+                        servicios: turno.servicio?.nombre || "Servicio no especificado",
                         fecha: turno.dia,
                         hora: turno.hora,
-                        duracion: turno.servicio?.duracion !== undefined ? formatDuration(turno.servicio.duracion) : 'N/A',
-                        profesionalDisplay: 'N/A',
+                        duracion: turno.servicio?.duracion
+                            ? `${turno.servicio.duracion} minutos`
+                            : "N/A",
+                        profesionalDisplay: "N/A",
                     };
 
-                    if (userRole === 'admin' || userRole === 'superadmin') {
-                        let usuarioInfo = 'Usuario no disponible';
-                        if (turno.usuario) {
-                            usuarioInfo = `${turno.usuario.name || ''} ${turno.usuario.lastname || ''} (DNI: ${turno.usuario.id || 'N/A'})`.trim();
-                            if (usuarioInfo === "(DNI: N/A)") usuarioInfo = `DNI: ${turno.usuario.id || 'N/A'}`;
-                        } else if (turno.dniusuario) {
-                            usuarioInfo = `DNI: ${turno.dniusuario}`;
-                        }
+                    if (userRole === "admin" || userRole === "superadmin") {
+                        const usuarioInfo = turno.usuario
+                            ? `${turno.usuario.name} ${turno.usuario.lastname} (DNI: ${turno.usuario.id})`
+                            : `DNI: ${turno.dniusuario}`;
+                        const profesionalInfo = turno.profesional
+                            ? `${turno.profesional.name} ${turno.profesional.lastname}`
+                            : "Sin asignar";
 
-
-                        let profesionalInfo = 'Sin asignar';
-                        if (turno.profesional) {
-                            profesionalInfo = `${turno.profesional.name || ''} ${turno.profesional.lastname || ''}`.trim() || 'Profesional Asignado';
-                        }
-
-                        return {
-                            ...baseTurnoData,
-                            usuarioDisplay: usuarioInfo,
-                            profesionalDisplay: profesionalInfo
-                        };
+                        return { ...base, usuarioDisplay: usuarioInfo, profesionalDisplay: profesionalInfo };
                     }
-                    return baseTurnoData;
+
+                    return base;
                 });
 
                 setListaDeTurnos(turnosTransformados);
@@ -142,7 +98,7 @@ const Turnos = ({ onTurnoEliminado }) => {
             }
         };
 
-        fetchTurnosYDeterminarRol();
+        fetchTurnos();
     }, []);
 
     const openTurnoDeleteModal = (id) => {
@@ -155,82 +111,126 @@ const Turnos = ({ onTurnoEliminado }) => {
         setTurnoToDeleteId(null);
     };
 
-    const closeSuccessModal = () => {
-        setShowSuccessModal(false);
-        setSuccessMessage('');
-    };
-
     const confirmDeleteTurno = async () => {
         if (!turnoToDeleteId) return;
-
         setLoading(true);
-        closeTurnoDeleteModal();
 
         try {
-            const token = localStorage.getItem('authtoken');
-            if (!token) {
-                alert('Sesión expirada. Por favor, inicia sesión de nuevo.');
-                setLoading(false);
-                return;
-            }
-
-            const response = await fetch(`http://localhost:3000/misturnos/${turnoToDeleteId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+            const token = localStorage.getItem("authtoken");
+            const res = await fetch(`http://localhost:3000/misturnos/${turnoToDeleteId}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
             });
+            if (!res.ok) throw new Error("Error al eliminar el turno");
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ message: 'Error al eliminar el turno' }));
-                throw new Error(errorData.message || 'Error al eliminar el turno');
-            }
-
-            const nuevaListaDeTurnos = listaDeTurnos.filter(turno => turno.id !== turnoToDeleteId);
-            setListaDeTurnos(nuevaListaDeTurnos);
-
+            setListaDeTurnos((prev) => prev.filter((t) => t.id !== turnoToDeleteId));
             setSuccessMessage("Turno eliminado exitosamente.");
             setShowSuccessModal(true);
-
-            if (onTurnoEliminado) {
-                onTurnoEliminado(turnoToDeleteId);
-            }
-        } catch (error) {
-            console.error('Error al eliminar el turno:', error.message);
-            setError(`No se pudo eliminar el turno: ${error.message}`);
+        } catch (err) {
+            setError(err.message);
         } finally {
             setLoading(false);
-            setTurnoToDeleteId(null);
+            closeTurnoDeleteModal();
         }
     };
 
-    if (loading) {
-        return <p>Cargando turnos...</p>;
-    }
+    const openEditModal = (turno) => {
+        setTurnoToEdit(turno);
+        setEditFecha(turno.fecha);
+        setEditHora(turno.hora);
+        setShowEditModal(true);
+    };
 
-    if (error) {
-        return (
-            <ConfirmationModal
-                show={true}
-                message={error}
-                onClose={() => setError(null)}
-            />
-        );
-    }
+    const closeEditModal = () => {
+        setShowEditModal(false);
+        setTurnoToEdit(null);
+        setEditFecha("");
+        setEditHora("");
+    };
+
+    const confirmEditTurno = async () => {
+        const today = new Date().toISOString().split("T")[0];
+        const horaMin = "15:00";
+        const horaMax = "18:30";
+
+        if (!editFecha) {
+            setEditError("Debes seleccionar una fecha.");
+            return;
+        }
+
+        if (editFecha < today) {
+            setEditError("La fecha no puede ser anterior al día de hoy.");
+            return;
+        }
+
+        if (!editHora) {
+            setEditError("Debes seleccionar una hora.");
+            return;
+        }
+
+        if (editHora < horaMin || editHora > horaMax) {
+            setEditError(`La hora debe estar entre ${horaMin} y ${horaMax}.`);
+            return;
+        }
+
+        setEditError("");
+        setLoading(true);
+
+        try {
+            const token = localStorage.getItem("authtoken");
+            const endpoint =
+                currentUserRole === "admin" || currentUserRole === "superadmin"
+                    ? `http://localhost:3000/admin/turnos/${turnoToEdit.id}`
+                    : `http://localhost:3000/misturnos/${turnoToEdit.id}`;
+
+            const res = await fetch(endpoint, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ dia: editFecha, hora: editHora }),
+            });
+
+            if (!res.ok) throw new Error("Error al actualizar el turno");
+
+            setListaDeTurnos(prev =>
+                prev.map(t => t.id === turnoToEdit.id ? { ...t, fecha: editFecha, hora: editHora } : t)
+            );
+
+            setSuccessMessage("Turno actualizado correctamente.");
+            setShowSuccessModal(true);
+            closeEditModal();
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+    const closeSuccessModal = () => {
+        setShowSuccessModal(false);
+        setSuccessMessage("");
+    };
+
+    if (loading) return <p>Cargando turnos...</p>;
+    if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
         <div className="turnos-container">
             <h2 className="turnos-title">
-                {(currentUserRole === 'admin' || currentUserRole === 'superadmin') ? 'GESTIÓN DE TURNOS' : 'MIS TURNOS'}
+                {currentUserRole === "admin" || currentUserRole === "superadmin"
+                    ? "GESTIÓN DE TURNOS"
+                    : "MIS TURNOS"}
             </h2>
+
             {listaDeTurnos.length === 0 ? (
                 <p>No hay turnos programados.</p>
             ) : (
                 <table className="turnos-table">
                     <thead>
                         <tr>
-                            {(currentUserRole === 'admin' || currentUserRole === 'superadmin') && <th>Usuario</th>}
-                            {(currentUserRole === 'admin' || currentUserRole === 'superadmin') && <th>Profesional</th>}
+                            {(currentUserRole === "admin" || currentUserRole === "superadmin") && <th>Usuario</th>}
+                            {(currentUserRole === "admin" || currentUserRole === "superadmin") && <th>Profesional</th>}
                             <th>Servicio</th>
                             <th>Fecha</th>
                             <th>Hora</th>
@@ -239,32 +239,62 @@ const Turnos = ({ onTurnoEliminado }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {listaDeTurnos.map(turno => (
+                        {listaDeTurnos.map((turno) => (
                             <TurnoItem
                                 key={turno.id}
                                 {...turno}
                                 onEliminar={openTurnoDeleteModal}
-                                isAdminView={currentUserRole === 'admin' || currentUserRole === 'superadmin'}
-                                onVerHistorial={handleViewHistorial} 
-                                isProfesionalView={currentUserRole === 'profesional'} 
+                                onEditar={openEditModal}
+                                isAdminView={currentUserRole === "admin" || currentUserRole === "superadmin"}
                             />
                         ))}
                     </tbody>
                 </table>
             )}
-            <ConfirmationModal
-                show={showTurnoDeleteModal}
-                message="¿Estás seguro que quieres eliminar este turno? Esta acción es irreversible."
-                onConfirm={confirmDeleteTurno}
-                onCancel={closeTurnoDeleteModal}
-            />
-            <ConfirmationModal
-                show={showSuccessModal}
-                message={successMessage}
+
+            <ModalPortal
+                isOpen={showTurnoDeleteModal}
+                onClose={closeTurnoDeleteModal}
+                title="Confirmar eliminación"
+                actions={
+                    <>
+                        <button className="modal-cancel-button" onClick={closeTurnoDeleteModal}>Cancelar</button>
+                        <button className="modal-confirm-button" onClick={confirmDeleteTurno}>Eliminar</button>
+                    </>
+                }
+            >
+                <p>¿Estás seguro que quieres eliminar este turno? Esta acción es irreversible.</p>
+            </ModalPortal>
+
+            <ModalPortal
+                isOpen={showEditModal}
+                onClose={closeEditModal}
+                title="Editar turno"
+                actions={
+                    <>
+                        <button className="modal-cancel-button" onClick={closeEditModal}>Cancelar</button>
+                        <button className="modal-confirm-button" onClick={confirmEditTurno}>Guardar</button>
+                    </>
+                }
+            >
+                <label>Fecha:</label>
+                <input type="date" value={editFecha} onChange={(e) => setEditFecha(e.target.value)} min={new Date().toISOString().split("T")[0]} />
+
+                <label>Hora:</label>
+                <input type="time" value={editHora} onChange={(e) => setEditHora(e.target.value)} min="15:00" max="18:30" />
+
+                {editError && <p className="modal-error">{editError}</p>}
+            </ModalPortal>
+
+
+            <ModalPortal
+                isOpen={showSuccessModal}
                 onClose={closeSuccessModal}
+                title={successMessage}
+                actions={<button className="modal-confirm-button" onClick={closeSuccessModal}>Aceptar</button>}
             />
         </div>
     );
-}
+};
 
 export default Turnos;
