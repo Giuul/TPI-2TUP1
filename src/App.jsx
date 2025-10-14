@@ -19,6 +19,7 @@ import ClearisNavbar from './components/ClearisNavbar/ClearisNavbar';
 import Userspage from './pages/Userspage.jsx';
 import AdminServicios from './pages/AdminServicios.jsx';
 import TurnosProfesional from './pages/TurnosProfesional.jsx';
+import HistorialClinico from './pages/HistorialClinico.jsx'
 
 import { jwtDecode } from 'jwt-decode';
 
@@ -109,6 +110,12 @@ function App() {
 
         {/* RUTAS PROTEGIDAS POR ROL */}
 
+        <Route path="/historialclinico/:dni" element={
+            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['profesional', 'admin', 'superadmin']}>
+                <HistorialClinico />
+            </ProtectedRoute>
+        } />
+        
         <Route path="/programar-turnos-admin" element={
           <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin']}>
             <ProgramarTurnosAdmin />

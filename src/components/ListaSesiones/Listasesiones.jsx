@@ -22,7 +22,7 @@ const ListaSesiones = ({ sesiones }) => {
     const getFormattedDateTime = (timestamp) => {
         const date = new Date(timestamp);
         const fecha = date.toLocaleDateString('es-AR');
-        const hora = date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+        const hora = date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }); 
         return { fecha, hora };
     };
 
@@ -37,7 +37,7 @@ const ListaSesiones = ({ sesiones }) => {
                     <div key={session.id} className="session-item-design"> 
                         <div className="session-header">
                             <span className="session-date-time">
-                                **{fecha}** | {hora}
+                                <strong>{fecha}</strong> | {hora}
                             </span>
                             <span className="session-professional">
                                 Profesional: {session.profesional?.name || 'N/A'}

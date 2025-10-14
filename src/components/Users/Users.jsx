@@ -242,7 +242,7 @@ const Users = () => {
                                     onChange={(e) => setRolSeleccionado(e.target.value)}
                                 >
                                     <option value="user">User</option>
-                                    <option value="professional">Profesional</option>
+                                    <option value="profesional">Profesional</option>
                                     <option value="admin">Administrador</option>
                                 </select>
                             </>

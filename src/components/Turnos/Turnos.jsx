@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TurnoItem from '../TurnoItem/TurnoItem';
 import { jwtDecode } from 'jwt-decode';
 import "./turnos.css";
+import { useNavigate } from 'react-router-dom';
 
 const ConfirmationModal = ({ show, message, onConfirm, onCancel, onClose }) => {
     if (!show) {
@@ -38,8 +39,19 @@ const Turnos = ({ onTurnoEliminado }) => {
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
+    
+    const navigate = useNavigate();
 
     const formatDuration = (duracion) => `${duracion} minutos`;
+    
+    const handleViewHistorial = (dniUsuario) => {
+        if (dniUsuario) {
+            navigate(`/historialclinico/${dniUsuario}`);
+        } else {
+            setSuccessMessage("No se encontró el DNI del usuario para ver el historial.");
+            setShowSuccessModal(true);
+        }
+    };
 
     useEffect(() => {
         const fetchTurnosYDeterminarRol = async () => {
@@ -55,23 +67,19 @@ const Turnos = ({ onTurnoEliminado }) => {
                     userRole = decodedToken.role || 'user';
                 } catch (e) {
                     console.error("Error al decodificar el token:", e);
-
                     setError("Error al verificar la sesión. Intenta iniciar sesión de nuevo.");
                     setLoading(false);
                     return;
                 }
             } else {
-
                 setError("No estás autenticado. Por favor, inicia sesión.");
                 setLoading(false);
-
                 return;
             }
             setCurrentUserRole(userRole);
 
             let url;
             if (userRole === 'admin' || userRole === 'superadmin') {
-
                 url = 'http://localhost:3000/admin/turnos';
             } else {
                 url = 'http://localhost:3000/misturnos';
@@ -94,11 +102,11 @@ const Turnos = ({ onTurnoEliminado }) => {
                 const turnosTransformados = data.map((turno) => {
                     const baseTurnoData = {
                         id: turno.id,
+                        dniusuario: turno.dniusuario, 
                         servicios: turno.servicio?.nombre || 'Servicio no especificado',
                         fecha: turno.dia,
                         hora: turno.hora,
                         duracion: turno.servicio?.duracion !== undefined ? formatDuration(turno.servicio.duracion) : 'N/A',
-
                         profesionalDisplay: 'N/A',
                     };
 
@@ -223,7 +231,6 @@ const Turnos = ({ onTurnoEliminado }) => {
                         <tr>
                             {(currentUserRole === 'admin' || currentUserRole === 'superadmin') && <th>Usuario</th>}
                             {(currentUserRole === 'admin' || currentUserRole === 'superadmin') && <th>Profesional</th>}
-
                             <th>Servicio</th>
                             <th>Fecha</th>
                             <th>Hora</th>
@@ -238,6 +245,8 @@ const Turnos = ({ onTurnoEliminado }) => {
                                 {...turno}
                                 onEliminar={openTurnoDeleteModal}
                                 isAdminView={currentUserRole === 'admin' || currentUserRole === 'superadmin'}
+                                onVerHistorial={handleViewHistorial} 
+                                isProfesionalView={currentUserRole === 'profesional'} 
                             />
                         ))}
                     </tbody>
