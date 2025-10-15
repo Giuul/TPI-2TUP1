@@ -8,6 +8,7 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     font-family: 'Gilda Display';
     color: #635845;
+    
 }
 
 .turnos-title {
@@ -74,4 +75,26 @@ tr:hover td {
 
 .btn-eliminar:active {
     transform: translateY(0);
+}
+
+.botones-turnos {
+  margin: 10px 0 20px 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.btn-principal {
+  background-color: #ffb6c1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-principal:hover {
+  background-color: #ff8fa3;
 }

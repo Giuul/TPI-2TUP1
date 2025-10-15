@@ -137,9 +137,6 @@ const Users = () => {
                 <button className="btn-principal" onClick={() => navigate('/Register')}>
                     CREAR USUARIO
                 </button>
-                <button className="btn-principal" onClick={() => navigate('/programar-turnos-admin')}>
-                    PROGRAMAR TURNO
-                </button>
 
                 <div className="buscar">
                     <label>BUSCAR POR DNI</label>

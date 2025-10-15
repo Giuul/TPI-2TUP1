@@ -39,6 +39,8 @@ const AppointmentsSelection = () => {
     const [professionals, setProfessionals] = useState([]);
     const [profesionalSeleccionado, setProfesionalSeleccionado] = useState('');
 
+    const [services, setServices] = useState([]); 
+
     const mañana = new Date();
     mañana.setDate(mañana.getDate() + 1);
 
@@ -68,7 +70,20 @@ const AppointmentsSelection = () => {
                     }
                 }
             };
+
+            const fetchServices = async () => { 
+                try {
+                    const response = await axios.get('http://localhost:3000/service');
+                    setServices(response.data);
+                } catch (err) {
+                    console.error("Error al cargar servicios:", err);
+                    setErrorMensaje('Error al cargar la lista de servicios.');
+                }
+            };
+
+
             fetchProfessionals();
+            fetchServices();
         }
     }, []);
 
@@ -158,12 +173,6 @@ const AppointmentsSelection = () => {
         }
     };
 
-    const servicios = [
-        { id: 1, nombre: 'Piernas' },
-        { id: 2, nombre: 'Facial' },
-        { id: 3, nombre: 'Brazos' }
-    ];
-
     const esAdmin = currentUserRole === 'admin' || currentUserRole === 'superadmin';
 
     return (
@@ -225,7 +234,7 @@ const AppointmentsSelection = () => {
                     onChange={(e) => setServicioSeleccionado(e.target.value)}
                 >
                     <option value="">-- Elegí un servicio --</option>
-                    {servicios.map(servicio => (
+                    {services.map(servicio => (
                         <option key={servicio.id} value={servicio.id}>
                             {servicio.nombre}
                         </option>
@@ -258,7 +267,7 @@ const AppointmentsSelection = () => {
                     </p>
                     <p className="value">
                         {
-                            servicios.find(servicio => servicio.id === parseInt(servicioSeleccionado))?.nombre
+                            services.find(servicio => servicio.id === parseInt(servicioSeleccionado))?.nombre
                         }
                     </p>
                     <p className="value">{horarioSeleccionado}</p>

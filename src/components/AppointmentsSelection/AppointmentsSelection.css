@@ -264,3 +264,33 @@
   padding: 5px 10px !important;
   font-size: 20px !important;
 }
+
+.dni-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid #635845;
+    border-radius: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    z-index: 1000;
+}
+
+.autocomplete-list li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.autocomplete-list li:hover {
+    background-color: #f0f0f0;
+}
