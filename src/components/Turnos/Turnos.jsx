@@ -223,6 +223,18 @@ const Turnos = () => {
                     : "MIS TURNOS"}
             </h2>
 
+            {(currentUserRole === "admin" || currentUserRole === "superadmin") && (
+                <div className="botones-turnos">
+                    <button
+                        className="btn-principal"
+                        onClick={() => navigate("/programar-turnos-admin")}
+                    >
+                        PROGRAMAR TURNO
+                    </button>
+                </div>
+        )}
+
+
             {listaDeTurnos.length === 0 ? (
                 <p>No hay turnos programados.</p>
             ) : (
