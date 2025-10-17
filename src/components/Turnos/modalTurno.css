@@ -41,6 +41,49 @@
     margin-bottom: 25px;
 }
 
+.modal-body input[type="date"],
+.modal-body input[type="time"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.396);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: 'Gilda Display';
+    color: #635845;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.modal-body input[type="date"]:hover,
+.modal-body input[type="time"]:hover {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.modal-body input[type="date"]:focus,
+.modal-body input[type="time"]:focus {
+    outline: none;
+    border-color: #bca48b;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(60%) sepia(30%) saturate(300%) hue-rotate(10deg);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.3s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+
 .modal-form label {
     text-align: left;
     font-size: 1rem;
