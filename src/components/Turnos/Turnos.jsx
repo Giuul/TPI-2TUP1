@@ -3,7 +3,10 @@ import TurnoItem from "../TurnoItem/TurnoItem";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import ModalPortal from "../Turnos/ModalPortal";
+import DatePicker from "react-datepicker";
 import "./turnos.css";
+import "react-datepicker/dist/react-datepicker.css";
+import "./datepicker.css";
 
 const Turnos = () => {
     const [listaDeTurnos, setListaDeTurnos] = useState([]);
@@ -205,8 +208,6 @@ const Turnos = () => {
         }
     };
 
-
-
     const closeSuccessModal = () => {
         setShowSuccessModal(false);
         setSuccessMessage("");
@@ -232,7 +233,7 @@ const Turnos = () => {
                         PROGRAMAR TURNO
                     </button>
                 </div>
-        )}
+            )}
 
 
             {listaDeTurnos.length === 0 ? (
@@ -289,15 +290,39 @@ const Turnos = () => {
                     </>
                 }
             >
-                <label>Fecha:</label>
-                <input type="date" value={editFecha} onChange={(e) => setEditFecha(e.target.value)} min={new Date().toISOString().split("T")[0]} />
+                <div className="modal-body">
+                    <label>Fecha:</label>
+                    <DatePicker
+                        selected={editFecha ? new Date(editFecha) : null}
+                        onChange={(date) => setEditFecha(date.toISOString().split("T")[0])}
+                        dateFormat="dd/MM/yyyy"
+                        minDate={new Date()}
+                        filterDate={(date) => date.getDay() !== 0 && date.getDay() !== 6} // Bloquea sábados y domingos
+                        className="input-personalizado"
+                    />
 
-                <label>Hora:</label>
-                <input type="time" value={editHora} onChange={(e) => setEditHora(e.target.value)} min="15:00" max="18:30" />
+                    <label>Hora:</label>
+                    <select
+                        value={editHora}
+                        onChange={(e) => setEditHora(e.target.value)}
+                        className={`input-personalizado ${editError && editError.includes("hora") ? "input-error" : ""}`}
+                    >
+                        <option value="">Seleccionar hora</option>
+                        {[
+                            "15:00", "15:30",
+                            "16:00", "16:30",
+                            "17:00", "17:30",
+                            "18:00", "18:30"
+                        ].map((hora) => (
+                            <option key={hora} value={hora}>{hora}</option>
+                        ))}
+                    </select>
 
-                {editError && <p className="modal-error">{editError}</p>}
-            </ModalPortal>
+                    {editError && <p className="modal-error">{editError}</p>}
 
+                </div>
+
+            </ModalPortal >
 
             <ModalPortal
                 isOpen={showSuccessModal}
@@ -305,7 +330,7 @@ const Turnos = () => {
                 title={successMessage}
                 actions={<button className="modal-confirm-button" onClick={closeSuccessModal}>Aceptar</button>}
             />
-        </div>
+        </div >
     );
 };
 
