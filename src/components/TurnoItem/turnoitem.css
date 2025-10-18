@@ -22,6 +22,17 @@ td {
     width: 140px;
 }
 
+.btn-historial {
+    background-color: rgba(255, 235, 220, 0.25);
+    border: 1px solid rgba(210, 180, 140, 0.4);
+    color: #635845;
+    border-radius: 20px;
+}
+
+.btn-historial:hover {
+    background-color: rgba(255, 235, 220, 0.575);
+}
+
 .btn-eliminar {
     background-color: rgba(255, 235, 220, 0.25);
     border: 1px solid rgba(210, 180, 140, 0.4);
@@ -29,7 +40,7 @@ td {
 }
 
 .btn-eliminar:hover {
-    background-color: rgba(255, 235, 220, 0.01);
+    background-color: rgba(255, 235, 220, 0.575);
 }
 
 .btn-eliminar:active {
