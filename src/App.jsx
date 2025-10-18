@@ -110,12 +110,12 @@ function App() {
 
         {/* RUTAS PROTEGIDAS POR ROL */}
 
-        <Route path="/historialclinico/:dni" element={
-            <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['profesional', 'admin', 'superadmin']}>
-                <HistorialClinico />
-            </ProtectedRoute>
+        <Route path="/historial/:dni" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['profesional', 'admin', 'superadmin']}>
+            <HistorialClinico />
+          </ProtectedRoute>
         } />
-        
+
         <Route path="/programar-turnos-admin" element={
           <ProtectedRoute isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['user', 'admin', 'superadmin']}>
             <ProgramarTurnosAdmin />
