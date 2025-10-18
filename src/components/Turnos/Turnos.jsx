@@ -12,7 +12,7 @@ const Turnos = () => {
     const [listaDeTurnos, setListaDeTurnos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentUserRole, setCurrentUserRole] = useState("user");
+    const [currentUserRole, setCurrentUserRole] = useState("user"); 
 
     const [showTurnoDeleteModal, setShowTurnoDeleteModal] = useState(false);
     const [turnoToDeleteId, setTurnoToDeleteId] = useState(null);
@@ -27,6 +27,14 @@ const Turnos = () => {
     const [editError, setEditError] = useState("");
 
     const navigate = useNavigate();
+
+    const handleVerHistorial = (dniPaciente) => {
+        if (dniPaciente) {
+            navigate(`/historial/${dniPaciente}`); 
+        } else {
+            setError("No se pudo obtener el DNI del paciente para el historial.");
+        }
+    };
 
     useEffect(() => {
         const fetchTurnos = async () => {
@@ -53,10 +61,15 @@ const Turnos = () => {
 
             setCurrentUserRole(userRole);
 
-            const url =
-                userRole === "admin" || userRole === "superadmin"
-                    ? "http://localhost:3000/admin/turnos"
-                    : "http://localhost:3000/misturnos";
+            let url = "";
+
+            if (userRole === "admin" || userRole === "superadmin") {
+                url = "http://localhost:3000/admin/turnos";
+            } else if (userRole === "profesional") {
+                url = "http://localhost:3000/admin/turnos?asistio=true"; 
+            } else {
+                url = "http://localhost:3000/misturnos";
+            }
 
             try {
                 const res = await fetch(url, {
@@ -77,9 +90,10 @@ const Turnos = () => {
                             ? `${turno.servicio.duracion} minutos`
                             : "N/A",
                         profesionalDisplay: "N/A",
+                        asistio: turno.asistio, 
                     };
 
-                    if (userRole === "admin" || userRole === "superadmin") {
+                    if (userRole === "admin" || userRole === "superadmin" || userRole === "profesional") {
                         const usuarioInfo = turno.usuario
                             ? `${turno.usuario.name} ${turno.usuario.lastname} (DNI: ${turno.usuario.id})`
                             : `DNI: ${turno.dniusuario}`;
@@ -113,6 +127,46 @@ const Turnos = () => {
         setShowTurnoDeleteModal(false);
         setTurnoToDeleteId(null);
     };
+
+    const toggleAsistencia = async (id, currentStatus) => {
+    const newStatus = !currentStatus;
+    const token = localStorage.getItem("authtoken");
+
+    try {
+        const res = await fetch(`http://localhost:3000/turnos/${id}/asistencia`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ asistio: newStatus }),
+        });
+
+        if (!res.ok) throw new Error("Error al actualizar la asistencia");
+
+        const turnoActualizado = listaDeTurnos.find(t => t.id === id);
+
+        let nombreAmostrar = `Turno #${id}`;
+        if (turnoActualizado && turnoActualizado.usuarioDisplay) {
+            const match = turnoActualizado.usuarioDisplay.match(/(.*) \(DNI:/);
+            nombreAmostrar = match ? match[1].trim() : `Turno #${id}`;
+        }
+
+        if (currentUserRole === "profesional" && newStatus === false) {
+             setListaDeTurnos((prev) => prev.filter((t) => t.id !== id));
+        } else {
+             setListaDeTurnos((prev) =>
+                 prev.map((t) => (t.id === id ? { ...t, asistio: newStatus } : t))
+             );
+        }
+
+        setSuccessMessage(`Asistencia de ${nombreAmostrar} actualizada a ${newStatus ? 'ASISTIO' : 'NO ASISTIO'}.`);
+        setShowSuccessModal(true);
+
+    } catch (err) {
+        setError(err.message);
+    }
+};
 
     const confirmDeleteTurno = async () => {
         if (!turnoToDeleteId) return;
@@ -213,15 +267,15 @@ const Turnos = () => {
         setSuccessMessage("");
     };
 
+    const isGestorView = currentUserRole === "admin" || currentUserRole === "superadmin" || currentUserRole === "profesional";
+
     if (loading) return <p>Cargando turnos...</p>;
     if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
         <div className="turnos-container">
             <h2 className="turnos-title">
-                {currentUserRole === "admin" || currentUserRole === "superadmin"
-                    ? "GESTIÓN DE TURNOS"
-                    : "MIS TURNOS"}
+                {isGestorView ? "GESTIÓN DE TURNOS" : "MIS TURNOS"}
             </h2>
 
             {(currentUserRole === "admin" || currentUserRole === "superadmin") && (
@@ -242,12 +296,13 @@ const Turnos = () => {
                 <table className="turnos-table">
                     <thead>
                         <tr>
-                            {(currentUserRole === "admin" || currentUserRole === "superadmin") && <th>Usuario</th>}
-                            {(currentUserRole === "admin" || currentUserRole === "superadmin") && <th>Profesional</th>}
+                            {isGestorView && <th>Usuario</th>}
+                            {isGestorView && <th>Profesional</th>}
                             <th>Servicio</th>
                             <th>Fecha</th>
                             <th>Hora</th>
                             <th>Duración</th>
+                            {isGestorView && <th>Asistencia</th>} 
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -258,7 +313,10 @@ const Turnos = () => {
                                 {...turno}
                                 onEliminar={openTurnoDeleteModal}
                                 onEditar={openEditModal}
+                                onToggleAsistencia={toggleAsistencia} 
                                 isAdminView={currentUserRole === "admin" || currentUserRole === "superadmin"}
+                                isProfesionalView={currentUserRole === "profesional"}
+                                onVerHistorial={handleVerHistorial}
                             />
                         ))}
                     </tbody>

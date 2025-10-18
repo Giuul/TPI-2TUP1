@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import ListaSesiones from '../components/ListaSesiones/Listasesiones'; 
+import ListaSesiones from '../components/ListaSesiones/ListaSesiones.jsx'; 
 
 
 const HistorialClinico = () => {

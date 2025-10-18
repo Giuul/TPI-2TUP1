@@ -1,5 +1,5 @@
 .turnos-container {
-    max-width: 850px;
+    max-width: 1000px;
     margin: 60px auto;
     padding: 40px;
     border-radius: 25px;
@@ -8,7 +8,6 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     font-family: 'Gilda Display';
     color: #635845;
-
 }
 
 .turnos-title {
@@ -25,53 +24,89 @@
     border-collapse: collapse;
     border-radius: 20px;
     overflow: hidden;
+    /* CORRECCIÓN: Eliminado display: block; y margin: 0 auto; */
 }
 
 .turnos-table thead {
-    display: none;
+    display: table-header-group; 
+    background: rgba(255, 255, 255, 0.4); 
+    border-radius: 20px 20px 0 0; 
 }
 
+/* REGLA UNIFICADA PARA CELDAS Y ENCABEZADOS */
+.turnos-table th,
 .turnos-table td {
-    background: rgba(255, 255, 255, 0.3);
-    padding: 14px 20px;
+    padding: 14px 10px; 
     font-size: 1rem;
     color: #635845;
     font-family: 'Gilda Display';
-    text-align: center;
+    text-align: center; 
+    word-wrap: break-word;
+    white-space: normal;
+    vertical-align: middle;
+}
+
+.turnos-table th {
+    font-weight: bold;
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(100, 100, 100, 0.3); 
+}
+
+/* 1. ESTILO Y ANCHO FIJO PARA COLUMNA USUARIO (Primera columna) */
+.turnos-table th:first-child,
+.turnos-table td:first-child {
+    text-align: left;
+    padding-left: 20px;
+    /* Asignamos un ancho fijo para que el texto largo salte de línea y no rompa la tabla */
+    width: 25%;
+    min-width: 150px;
+}
+
+
+.turnos-table td {
+    background: rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(100, 100, 100, 0.1); 
+}
+
+.turnos-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 .turnos-table tr:hover td {
     background: rgba(255, 255, 255, 0.45);
 }
 
-.turnos-table tr:last-child td {
-    border-bottom: none;
+/* 2. ESTILO Y ANCHO FIJO PARA COLUMNA ASISTENCIA (Penúltima columna) */
+.turnos-table th:nth-last-child(2),
+.turnos-table td:nth-last-child(2) {
+    width: 80px;
+    min-width: 80px;
 }
 
-tr {
-    transition: all 0.3s ease;
-}
-
-tr:hover td {
-    background: rgba(255, 255, 255, 0.25);
-}
-
+/* 3. ESTILO Y ANCHO FIJO PARA COLUMNA ACCIONES (Última columna) */
 .actions-cell {
     text-align: right;
-    width: 140px;
+    /* Asignamos un ancho fijo para garantizar su visibilidad */
+    width: 140px; 
+    min-width: 140px;
+    padding-right: 10px; 
 }
+
+
+/* --- ESTILOS DE BOTONES Y LAYOUT INFERIORES --- */
 
 .btn-eliminar {
     background-color: rgba(255, 235, 220, 0.25);
     border: 1px solid rgba(210, 180, 140, 0.4);
     color: #8b7355;
+    margin-left: 5px; 
 }
 
 .btn-eliminar:hover {
     background-color: rgba(255, 235, 220, 0.45);
     color: #635845;
 }
-
 
 .btn-eliminar:active {
     transform: translateY(0);
