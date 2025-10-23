@@ -76,6 +76,52 @@ const AppointmentsSelection = () => {
         }
     }, []);
 
+
+        useEffect(() => {
+        const source = axios.CancelToken.source();
+
+        const fetchTurnosOcupados = async () => {
+            if (!profesionalSeleccionado || !fecha) return;
+
+            const authToken = localStorage.getItem('token');
+            if (!authToken) return;
+
+            const diaFormatted = fecha.toISOString().split('T')[0];
+
+            try {
+                const response = await axios.get('http://localhost:3000/turnos/ocupados', {
+                    headers: { Authorization: `Bearer ${authToken}` },
+                    params: { profesionalId: profesionalSeleccionado, dia: diaFormatted },
+                    cancelToken: source.token
+                });
+
+                const horasOcupadas = Array.isArray(response.data)
+                    ? response.data.map(t => t.hora?.slice(0,5)).filter(Boolean)
+                    : [];
+                setTurnosOcupados(horasOcupadas);
+
+                if (horasOcupadas.includes(formatTimeToBackend(horarioSeleccionado))) {
+                    setHorarioSeleccionado('');
+                }
+
+            } catch (err) {
+                    if (axios.isCancel(err)) {
+                            console.log("Request cancelado");
+                        } else {
+                            console.error("Error al traer turnos ocupados:", err.response?.data || err.message);
+                            setTurnosOcupados([]); 
+                            setErrorMensaje('No se pudieron cargar los turnos ocupados.');
+                        }
+            }
+        };
+
+        fetchTurnosOcupados();
+
+        return () => {
+            source.cancel(); 
+        };
+    }, [profesionalSeleccionado, fecha]);
+
     const confirmarTurno = async () => {
 
         if (!horarioSeleccionado) {

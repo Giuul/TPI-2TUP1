@@ -113,7 +113,7 @@ const AppointmentsSelection = () => {
                             console.log("Request cancelado");
                         } else {
                             console.error("Error al traer turnos ocupados:", err.response?.data || err.message);
-                            setTurnosOcupados([]); // Evitar que quede undefined
+                            setTurnosOcupados([]); 
                             setErrorMensaje('No se pudieron cargar los turnos ocupados.');
                         }
             }
