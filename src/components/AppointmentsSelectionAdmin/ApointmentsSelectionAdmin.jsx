@@ -6,23 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
-const formatTimeToBackend = (timeString) => {
-    const [time, period] = timeString.split(' ');
-    let [hours, minutes] = time.split(':');
-    hours = parseInt(hours);
-
-    if (period && period.toLowerCase() === 'p.m.' && hours < 12) {
-        hours += 12;
-    } else if (period && period.toLowerCase() === 'a.m.' && hours === 12) {
-        hours = 0;
-    }
-    return `${String(hours).padStart(2, '0')}:${minutes}`;
-};
-
 const horarios = [
-    '3:00 p. m.', '3:30 p. m.', '4:00 p. m.', '4:30 p. m.',
-    '5:00 p. m.', '5:30 p. m.', '6:00 p. m.', '6:30 p. m.'
+    '15:00', '15:30', '16:00', '16:30',
+    '17:00', '17:30', '18:00', '18:30'
 ];
+
+const formatTimeToBackend = (timeString) => timeString;
 
 const AppointmentsSelection = () => {
     const navigate = useNavigate();
@@ -31,6 +20,7 @@ const AppointmentsSelection = () => {
     const [mensajeConfirmacion, setMensajeConfirmacion] = useState('');
     const [errorMensaje, setErrorMensaje] = useState('');
     const [servicioSeleccionado, setServicioSeleccionado] = useState('');
+    const [turnosOcupados, setTurnosOcupados] = useState([]);
 
     const [dniUsuarioAgenda, setDniUsuarioAgenda] = useState('');
     const [currentUserRole, setCurrentUserRole] = useState('');
@@ -140,7 +130,7 @@ const AppointmentsSelection = () => {
                     hora: horaFormatted,
                     idservicio: idservicio,
                     userId: userIdToAssign,
-                    id_profesional: professionalIdToAssign
+                    profesionalId: professionalIdToAssign
                 }),
             });
 
@@ -248,15 +238,20 @@ const AppointmentsSelection = () => {
                     <Calendar onChange={setFecha} value={fecha} locale="es-AR" minDate={mañana} />
                 </div>
                 <div className="time-slots-section">
-                    {horarios.map((horaTurno, index) => (
-                        <button
-                            key={index}
-                            className={`time-slot-btn ${horarioSeleccionado === horaTurno ? 'selected' : ''}`}
-                            onClick={() => setHorarioSeleccionado(horaTurno)}
-                        >
-                            {horaTurno}
-                        </button>
-                    ))}
+                    {horarios.map((horaTurno, index) => {
+                        const estaOcupada = turnosOcupados.some(hora => hora.slice(0,5) === horaTurno);
+
+                        return (
+                            <button
+                                key={index}
+                                className={`time-slot-btn ${horarioSeleccionado === horaTurno ? 'selected' : ''} ${estaOcupada ? 'ocupado' : ''}`}
+                                onClick={() => !estaOcupada && setHorarioSeleccionado(horaTurno)}
+                                disabled={estaOcupada}
+                            >
+                                {horaTurno} {estaOcupada ? '(ocupado)' : ''}
+                            </button>
+                        );
+                    })}
                 </div>
                 <div className="details-section">
                     <p className="label">DETALLES DEL TURNO</p>
