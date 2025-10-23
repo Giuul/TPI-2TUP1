@@ -294,3 +294,12 @@
 .autocomplete-list li:hover {
     background-color: #f0f0f0;
 }
+
+.time-slot-btn.ocupado {
+    background-color: #eee;       
+    color: #888;                  
+    cursor: not-allowed;          
+    text-decoration: line-through; 
+    opacity: 0.6;            
+}
+
