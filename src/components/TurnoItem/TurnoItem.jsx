@@ -22,8 +22,9 @@ const TurnoItem = ({
         ? new Date(fecha + "T00:00:00").toLocaleDateString("es-AR")
         : "Fecha no disponible";
 
+    
     const isGestorView = isAdminView || isProfesionalView;
-    const showAsistenciaCheckbox = isGestorView; 
+    const showAsistenciaCheckbox = isAdminView; 
 
     const turnoParaEditar = { id, fecha, hora, dniusuario }; 
 

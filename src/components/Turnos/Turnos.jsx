@@ -36,7 +36,7 @@ const Turnos = () => {
         }
     };
 
-    useEffect(() => {
+   useEffect(() => {
         const fetchTurnos = async () => {
             setLoading(true);
             setError(null);
@@ -67,7 +67,7 @@ const Turnos = () => {
                 url = "http://localhost:3000/admin/turnos";
             } else if (userRole === "profesional") {
                 url = "http://localhost:3000/admin/turnos?asistio=true"; 
-            } else {
+            } else { 
                 url = "http://localhost:3000/misturnos";
             }
 
@@ -78,8 +78,30 @@ const Turnos = () => {
                 if (!res.ok) throw new Error("Error al obtener los turnos");
 
                 const data = await res.json();
+                
+                const now = new Date();
+                const today = now.toISOString().split("T")[0]; 
+                
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const currentTime = `${hours}:${minutes}`; 
+                
 
-                const turnosTransformados = data.map((turno) => {
+                const turnosFiltrados = data.filter(turno => {
+                    if (!turno.dia) return false; 
+
+                    if (turno.dia > today) {
+                        return true;
+                    }
+                    
+                    if (turno.dia === today) {
+                        return turno.hora >= currentTime;
+                    }
+
+                    return false;
+                });
+                
+                const turnosTransformados = turnosFiltrados.map((turno) => {
                     const base = {
                         id: turno.id,
                         dniusuario: turno.dniusuario,
@@ -133,7 +155,7 @@ const Turnos = () => {
     const token = localStorage.getItem("authtoken");
 
     try {
-        const res = await fetch(`http://localhost:3000/turnos/${id}/asistencia`, {
+        const res = await fetch(`http://localhost:3000/admin/turnos/${id}/asistencia`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

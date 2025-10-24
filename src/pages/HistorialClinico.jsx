@@ -1,34 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import ListaSesiones from '../components/ListaSesiones/Listasesiones';
-import ObservacionModal from '../components/ListaSesiones/ObservacionModal';
+
 
 const HistorialClinico = () => {
     const { dni } = useParams();
     const navigate = useNavigate();
 
-    const [patientData, setPatientData] = useState(null);
-    const [sesiones, setSesiones] = useState([]);
+    const [pacienteInfo, setPacienteInfo] = useState(null); 
+    const [turnosHistoricos, setTurnosHistoricos] = useState([]);
+    
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [showModal, setShowModal] = useState(false);
-    const [selectedSession, setSelectedSession] = useState(null);
-    const [currentProfessional, setCurrentProfessional] = useState({ name: "N/A", id: null });
+    const [showObsModal, setShowObsModal] = useState(false);
+    const [selectedTurnoObs, setSelectedTurnoObs] = useState(null);
+
+    const openObsModal = (turno) => {
+        setSelectedTurnoObs(turno);
+        setShowObsModal(true);
+    };
+
+    const closeObsModal = () => {
+        setShowObsModal(false);
+        setSelectedTurnoObs(null);
+    };
+    
+    const handleGuardarObservacion = async (turnoId, observaciones) => {
+        const token = localStorage.getItem("authtoken");
+        try {
+            const response = await fetch(`http://localhost:3000/admin/turnos/${turnoId}/observacion`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ observaciones })
+            });
+
+            if (!response.ok) throw new Error("Error al guardar observación");
+
+            setTurnosHistoricos(prevTurnos => 
+                prevTurnos.map(t => 
+                    t.id === turnoId ? { ...t, observaciones: observaciones } : t
+                )
+            );
+
+            alert("Observación guardada con éxito.");
+            closeObsModal();
+        } catch (err) {
+            alert("No se pudo guardar la observación: " + err.message);
+        }
+    };
+
 
     useEffect(() => {
         const fetchHistorial = async () => {
+            setLoading(true);
+            setError(null);
             const token = localStorage.getItem('authtoken');
             if (!token) return navigate('/login');
 
             try {
                 const decodedToken = jwtDecode(token);
                 const role = decodedToken.role;
-                const name = decodedToken.name || "N/A";
-                const id = decodedToken.id || null;
-                setCurrentProfessional({ name, id });
-
                 if (!["profesional", "admin", "superadmin"].includes(role)) {
                     throw new Error("Acceso denegado. Solo personal autorizado puede ver historiales.");
                 }
@@ -38,16 +73,31 @@ const HistorialClinico = () => {
                 return;
             }
 
+            const historialUrl = `http://localhost:3000/turnos/paciente/${dni}/historial`;
+
             try {
-                const response = await fetch(`http://localhost:3000/patients/${dni}/sessions`, {
+                const res = await fetch(historialUrl, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                if (response.status === 404) throw new Error(`Paciente con DNI ${dni} no encontrado.`);
-                if (!response.ok) throw new Error(`Error al cargar historial (${response.status})`);
-
-                const data = await response.json();
-                setPatientData(data.patient);
-                setSesiones(data.sessions);
+                
+                if (!res.ok) {
+                    const errorData = await res.json();
+                    throw new Error(errorData.mensaje || "Error al obtener el historial.");
+                }
+                
+                const data = await res.json(); 
+                
+                if (data && data.length > 0) {
+                    const { usuario } = data[0]; 
+                    if (usuario) {
+                        setPacienteInfo(usuario); 
+                    }
+                    setTurnosHistoricos(data);
+                } else {
+                    setPacienteInfo({ name: "Paciente", lastname: "Desconocido", id: dni });
+                    setTurnosHistoricos([]);
+                }
+                
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -55,116 +105,98 @@ const HistorialClinico = () => {
             }
         };
 
-        fetchHistorial();
+        if (dni) {
+            fetchHistorial();
+        }
     }, [dni, navigate]);
-
-    const openModalGeneral = () => {
-        if (sesiones.length === 0) {
-            const nuevaSesion = {
-                id: 'temp',
-                observaciones: '',
-                profesional: currentProfessional,
-                createdAt: new Date()
-            };
-            setSelectedSession(nuevaSesion);
-            setShowModal(true);
-            return;
-        }
-        setSelectedSession(sesiones[0]);
-        setShowModal(true);
-    };
-
-    const handleGuardarObservacion = async (sessionId, observaciones) => {
-        const token = localStorage.getItem("authtoken");
-
-        try {
-            let updatedSession;
-
-            if (sessionId === 'temp') {
-                const response = await fetch(`http://localhost:3000/patients/${dni}/sessions`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ descripcion: observaciones })
-                });
-
-                if (!response.ok) throw new Error("Error al crear la nueva sesión");
-
-                const data = await response.json();
-                updatedSession = data.session;
-            } else {
-                const response = await fetch(`http://localhost:3000/sessions/${sessionId}/observacion`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ observaciones })
-                });
-
-                if (!response.ok) throw new Error("Error al guardar observación");
-                updatedSession = await response.json();
-            }
-
-            setSesiones(prev => {
-                const index = prev.findIndex(s => s.id === updatedSession.id);
-                if (index !== -1) {
-                    return prev.map(s => s.id === updatedSession.id ? updatedSession : s);
-                } else {
-                    return [updatedSession, ...prev];
-                }
-            });
-
-            setShowModal(false);
-        } catch (err) {
-            alert("No se pudo guardar la observación: " + err.message);
-        }
-    };
 
 
     if (loading) return <div className="historial-container"><p>Cargando Historial Clínico...</p></div>;
     if (error) return <div className="historial-container"><p className="error-message">Error: {error}</p></div>;
-    if (!patientData) return <div className="historial-container"><p className="error-message">No se pudieron cargar los datos del paciente.</p></div>;
+    if (!pacienteInfo) return <div className="historial-container"><p className="error-message">No se pudieron cargar los datos del paciente.</p></div>;
 
     return (
         <div className="historial-container">
             <h2 className="historial-title">
-                Historial Clínico de {patientData.name} {patientData.lastname}
+                Historial Clínico de {pacienteInfo.name} {pacienteInfo.lastname}
             </h2>
-            <div className="patient-info-box">
-                <p><strong>DNI:</strong> {patientData.id}</p>
-                <p><strong>Email:</strong> {patientData.email}</p>
-                <p><strong>Teléfono:</strong> {patientData.tel}</p>
+            
+
+            <div className="historial-section">
+                <h3>Registro de Turnos Pasados</h3>
+                {turnosHistoricos.length === 0 ? (
+                    <p className="no-data">No hay turnos históricos registrados para este paciente.</p>
+                ) : (
+                    <table className="historial-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Servicio</th>
+                                <th>Profesional</th>
+                                <th>Asistencia</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {turnosHistoricos.map((turno) => (
+                                <tr key={turno.id} className={turno.asistio ? 'turno-asistio' : 'turno-ausente'}>
+                                    <td>{turno.dia}</td>
+                                    <td>{turno.hora}</td>
+                                    <td>{turno.servicio?.nombre || "N/A"}</td>
+                                    <td>
+                                        {turno.profesional 
+                                            ? `${turno.profesional.name} ${turno.profesional.lastname}` 
+                                            : "Sin asignar"}
+                                    </td>
+                                    <td>
+                                        <span className={`asistencia-badge ${turno.asistio ? 'asistio' : 'ausente'}`}>
+                                            {turno.asistio ? 'Sí' : 'No'}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button 
+                                            onClick={() => openObsModal(turno)}
+                                            className="btn-observaciones"
+                                        >
+                                            {turno.observaciones ? "Ver/Editar" : "Agregar"}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
             </div>
-
-            <div className="sessions-section">
-                <ListaSesiones
-                    sesiones={sesiones}
-                    onObservacionGuardada={(updatedSession) => {
-                        setSesiones(prev =>
-                            prev.map(s => (s.id === updatedSession.id ? updatedSession : s))
-                        );
-                    }}
-                />
-            </div>
-
-            <button onClick={openModalGeneral} className="btn-back">Observaciones</button>
-
+            
+            
             <button onClick={() => navigate(-1)} className="btn-back">
-                Volver a la Agenda
+                ← Volver a la Agenda
             </button>
 
-            {showModal && selectedSession && (
-                <ObservacionModal
-                    show={showModal}
-                    onClose={() => setShowModal(false)}
-                    session={selectedSession}
-                    onGuardar={handleGuardarObservacion}
-                    sesiones={sesiones}
-                    setSession={setSelectedSession}
-                />
+            
+            {showObsModal && selectedTurnoObs && (
+                <div className="modal-backdrop">
+                    <div className="modal-content">
+                        <h3>Observación - Turno {selectedTurnoObs.dia} {selectedTurnoObs.hora}</h3>
+                        <textarea 
+                            id="observacion-text"
+                            defaultValue={selectedTurnoObs.observaciones || ""}
+                            rows="5" 
+                            placeholder="Escriba aquí las observaciones de la sesión..."
+                            style={{width: '90%', padding: '10px'}}
+                        />
+                        <div className="modal-actions">
+                            <button className="modal-cancel-button" onClick={closeObsModal}>Cerrar</button>
+                            <button 
+                                className="modal-confirm-button" 
+                                onClick={() => handleGuardarObservacion(selectedTurnoObs.id, document.getElementById('observacion-text').value)}
+                            >
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
