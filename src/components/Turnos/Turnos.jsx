@@ -36,109 +36,119 @@ const Turnos = () => {
         }
     };
 
-   useEffect(() => {
-        const fetchTurnos = async () => {
-            setLoading(true);
-            setError(null);
+    const fetchTurnos = async () => {
+        setLoading(true);
+        setError(null);
 
-            const token = localStorage.getItem("authtoken");
-            let userRole = "user";
+        const token = localStorage.getItem("authtoken");
+        let userRole = "user";
 
-            if (!token) {
-                setError("No estás autenticado.");
-                setLoading(false);
-                return;
-            }
+        if (!token) {
+            setError("No estás autenticado.");
+            setLoading(false);
+            return;
+        }
 
-            try {
-                const decodedToken = jwtDecode(token);
-                userRole = decodedToken.role || "user";
-            } catch {
-                setError("Error al verificar la sesión.");
-                setLoading(false);
-                return;
-            }
+        try {
+            const decodedToken = jwtDecode(token);
+            userRole = decodedToken.role || "user";
+        } catch {
+            setError("Error al verificar la sesión.");
+            setLoading(false);
+            return;
+        }
 
-            setCurrentUserRole(userRole);
+        setCurrentUserRole(userRole);
 
-            let url = "";
+        let url = "";
 
-            if (userRole === "admin" || userRole === "superadmin") {
-                url = "http://localhost:3000/admin/turnos";
-            } else if (userRole === "profesional") {
-                url = "http://localhost:3000/admin/turnos?asistio=true"; 
-            } else { 
-                url = "http://localhost:3000/misturnos";
-            }
+        if (userRole === "admin" || userRole === "superadmin") {
+            url = "http://localhost:3000/admin/turnos";
+        } else if (userRole === "profesional") {
+            // Este filtro ya trae solo los no asistidos o todos si no se pasa el query, por defecto se usa el filtro por rol
+            url = "http://localhost:3000/admin/turnos"; 
+        } else { 
+            url = "http://localhost:3000/misturnos";
+        }
 
-            try {
-                const res = await fetch(url, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                if (!res.ok) throw new Error("Error al obtener los turnos");
+        try {
+            const res = await fetch(url, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!res.ok) throw new Error("Error al obtener los turnos");
 
-                const data = await res.json();
+            const data = await res.json();
+            
+            // --- INICIO DE CORRECCIÓN DE FILTRO ---
+            const now = new Date();
+            // Obtiene la fecha AAAA-MM-DD del navegador (hora local)
+            const today = now.toISOString().split("T")[0]; 
+            
+            // Obtiene la hora actual HH:MM del navegador (hora local)
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const currentTime = `${hours}:${minutes}`; 
+            
+            // EL FILTRO CLAVE:
+            const turnosFiltrados = data.filter(turno => {
+                if (!turno.dia) return false; 
                 
-                const now = new Date();
-                const today = now.toISOString().split("T")[0]; 
+                // Si el turno es para un día futuro (ej: mañana o pasado)
+                if (turno.dia > today) {
+                    return true;
+                }
                 
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const currentTime = `${hours}:${minutes}`; 
-                
+                // Si el turno es para HOY
+                if (turno.dia === today) {
+                    // Solo muestra el turno si la hora del turno es igual o posterior a la hora actual.
+                    return turno.hora >= currentTime;
+                }
 
-                const turnosFiltrados = data.filter(turno => {
-                    if (!turno.dia) return false; 
+                return false;
+            });
+            // --- FIN DE CORRECCIÓN DE FILTRO ---
+            
+            const turnosTransformados = turnosFiltrados.map((turno) => {
+                const base = {
+                    id: turno.id,
+                    dniusuario: turno.dniusuario,
+                    servicios: turno.servicio?.nombre || "Servicio no especificado",
+                    fecha: turno.dia,
+                    hora: turno.hora,
+                    duracion: turno.servicio?.duracion
+                        ? `${turno.servicio.duracion} minutos`
+                        : "N/A",
+                    profesionalDisplay: "N/A",
+                    asistio: turno.asistio, 
+                };
 
-                    if (turno.dia > today) {
-                        return true;
-                    }
-                    
-                    if (turno.dia === today) {
-                        return turno.hora >= currentTime;
-                    }
+                if (userRole === "admin" || userRole === "superadmin" || userRole === "profesional") {
+                    const usuarioInfo = turno.usuario
+                        ? `${turno.usuario.name} ${turno.usuario.lastname} (DNI: ${turno.usuario.id})`
+                        : `DNI: ${turno.dniusuario}`;
+                    const profesionalInfo = turno.profesional
+                        ? `${turno.profesional.name} ${turno.profesional.lastname}`
+                        : "Sin asignar";
 
-                    return false;
-                });
-                
-                const turnosTransformados = turnosFiltrados.map((turno) => {
-                    const base = {
-                        id: turno.id,
-                        dniusuario: turno.dniusuario,
-                        servicios: turno.servicio?.nombre || "Servicio no especificado",
-                        fecha: turno.dia,
-                        hora: turno.hora,
-                        duracion: turno.servicio?.duracion
-                            ? `${turno.servicio.duracion} minutos`
-                            : "N/A",
-                        profesionalDisplay: "N/A",
-                        asistio: turno.asistio, 
-                    };
+                    return { ...base, usuarioDisplay: usuarioInfo, profesionalDisplay: profesionalInfo };
+                }
 
-                    if (userRole === "admin" || userRole === "superadmin" || userRole === "profesional") {
-                        const usuarioInfo = turno.usuario
-                            ? `${turno.usuario.name} ${turno.usuario.lastname} (DNI: ${turno.usuario.id})`
-                            : `DNI: ${turno.dniusuario}`;
-                        const profesionalInfo = turno.profesional
-                            ? `${turno.profesional.name} ${turno.profesional.lastname}`
-                            : "Sin asignar";
+                return base;
+            });
 
-                        return { ...base, usuarioDisplay: usuarioInfo, profesionalDisplay: profesionalInfo };
-                    }
+            setListaDeTurnos(turnosTransformados);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-                    return base;
-                });
 
-                setListaDeTurnos(turnosTransformados);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
+    useEffect(() => {
         fetchTurnos();
-    }, []);
+    }, []); // La recarga ocurre al remontar el componente (al volver de /programar-turnos-admin)
+
 
     const openTurnoDeleteModal = (id) => {
         setTurnoToDeleteId(id);
@@ -151,44 +161,45 @@ const Turnos = () => {
     };
 
     const toggleAsistencia = async (id, currentStatus) => {
-    const newStatus = !currentStatus;
-    const token = localStorage.getItem("authtoken");
+        const newStatus = !currentStatus;
+        const token = localStorage.getItem("authtoken");
 
-    try {
-        const res = await fetch(`http://localhost:3000/admin/turnos/${id}/asistencia`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ asistio: newStatus }),
-        });
+        try {
+            const res = await fetch(`http://localhost:3000/admin/turnos/${id}/asistencia`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ asistio: newStatus }),
+            });
 
-        if (!res.ok) throw new Error("Error al actualizar la asistencia");
+            if (!res.ok) throw new Error("Error al actualizar la asistencia");
 
-        const turnoActualizado = listaDeTurnos.find(t => t.id === id);
+            // Si es profesional y marca como NO ASISTIO, lo sacamos del listado visible.
+            if (currentUserRole === "profesional" && newStatus === false) {
+                 setListaDeTurnos((prev) => prev.filter((t) => t.id !== id));
+            } else {
+                 setListaDeTurnos((prev) =>
+                     prev.map((t) => (t.id === id ? { ...t, asistio: newStatus } : t))
+                 );
+            }
+            
+            // Recuperar el nombre para el mensaje de éxito
+            const turnoActualizado = listaDeTurnos.find(t => t.id === id);
+            let nombreAmostrar = `Turno #${id}`;
+            if (turnoActualizado && turnoActualizado.usuarioDisplay) {
+                const match = turnoActualizado.usuarioDisplay.match(/(.*) \(DNI:/);
+                nombreAmostrar = match ? match[1].trim() : `Turno #${id}`;
+            }
 
-        let nombreAmostrar = `Turno #${id}`;
-        if (turnoActualizado && turnoActualizado.usuarioDisplay) {
-            const match = turnoActualizado.usuarioDisplay.match(/(.*) \(DNI:/);
-            nombreAmostrar = match ? match[1].trim() : `Turno #${id}`;
+            setSuccessMessage(`Asistencia de ${nombreAmostrar} actualizada a ${newStatus ? 'ASISTIO' : 'NO ASISTIO'}.`);
+            setShowSuccessModal(true);
+
+        } catch (err) {
+            setError(err.message);
         }
-
-        if (currentUserRole === "profesional" && newStatus === false) {
-             setListaDeTurnos((prev) => prev.filter((t) => t.id !== id));
-        } else {
-             setListaDeTurnos((prev) =>
-                 prev.map((t) => (t.id === id ? { ...t, asistio: newStatus } : t))
-             );
-        }
-
-        setSuccessMessage(`Asistencia de ${nombreAmostrar} actualizada a ${newStatus ? 'ASISTIO' : 'NO ASISTIO'}.`);
-        setShowSuccessModal(true);
-
-    } catch (err) {
-        setError(err.message);
-    }
-};
+    };
 
     const confirmDeleteTurno = async () => {
         if (!turnoToDeleteId) return;
@@ -202,7 +213,9 @@ const Turnos = () => {
             });
             if (!res.ok) throw new Error("Error al eliminar el turno");
 
+            // Actualizar el estado localmente
             setListaDeTurnos((prev) => prev.filter((t) => t.id !== turnoToDeleteId));
+            
             setSuccessMessage("Turno eliminado exitosamente.");
             setShowSuccessModal(true);
         } catch (err) {
@@ -270,6 +283,7 @@ const Turnos = () => {
 
             if (!res.ok) throw new Error("Error al actualizar el turno");
 
+            // Actualiza el estado localmente
             setListaDeTurnos(prev =>
                 prev.map(t => t.id === turnoToEdit.id ? { ...t, fecha: editFecha, hora: editHora } : t)
             );
