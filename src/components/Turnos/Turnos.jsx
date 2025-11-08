@@ -3,10 +3,7 @@ import TurnoItem from "../TurnoItem/TurnoItem";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import ModalPortal from "../Turnos/ModalPortal";
-import DatePicker from "react-datepicker";
 import "./turnos.css";
-import "react-datepicker/dist/react-datepicker.css";
-import "./datepicker.css";
 
 const Turnos = () => {
     const [listaDeTurnos, setListaDeTurnos] = useState([]);
@@ -17,14 +14,8 @@ const Turnos = () => {
     const [showTurnoDeleteModal, setShowTurnoDeleteModal] = useState(false);
     const [turnoToDeleteId, setTurnoToDeleteId] = useState(null);
 
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [turnoToEdit, setTurnoToEdit] = useState(null);
-    const [editFecha, setEditFecha] = useState("");
-    const [editHora, setEditHora] = useState("");
-
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
-    const [editError, setEditError] = useState("");
 
     const navigate = useNavigate();
 
@@ -62,11 +53,8 @@ const Turnos = () => {
 
         let url = "";
 
-        if (userRole === "admin" || userRole === "superadmin") {
+        if (userRole === "admin" || userRole === "superadmin" || userRole === "profesional") {
             url = "http://localhost:3000/admin/turnos";
-        } else if (userRole === "profesional") {
-            // Este filtro ya trae solo los no asistidos o todos si no se pasa el query, por defecto se usa el filtro por rol
-            url = "http://localhost:3000/admin/turnos"; 
         } else { 
             url = "http://localhost:3000/misturnos";
         }
@@ -79,34 +67,25 @@ const Turnos = () => {
 
             const data = await res.json();
             
-            // --- INICIO DE CORRECCIÓN DE FILTRO ---
             const now = new Date();
-            // Obtiene la fecha AAAA-MM-DD del navegador (hora local)
             const today = now.toISOString().split("T")[0]; 
-            
-            // Obtiene la hora actual HH:MM del navegador (hora local)
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const currentTime = `${hours}:${minutes}`; 
             
-            // EL FILTRO CLAVE:
             const turnosFiltrados = data.filter(turno => {
                 if (!turno.dia) return false; 
                 
-                // Si el turno es para un día futuro (ej: mañana o pasado)
                 if (turno.dia > today) {
                     return true;
                 }
                 
-                // Si el turno es para HOY
                 if (turno.dia === today) {
-                    // Solo muestra el turno si la hora del turno es igual o posterior a la hora actual.
                     return turno.hora >= currentTime;
                 }
 
                 return false;
             });
-            // --- FIN DE CORRECCIÓN DE FILTRO ---
             
             const turnosTransformados = turnosFiltrados.map((turno) => {
                 const base = {
@@ -147,7 +126,7 @@ const Turnos = () => {
 
     useEffect(() => {
         fetchTurnos();
-    }, []); // La recarga ocurre al remontar el componente (al volver de /programar-turnos-admin)
+    }, []); 
 
 
     const openTurnoDeleteModal = (id) => {
@@ -176,7 +155,6 @@ const Turnos = () => {
 
             if (!res.ok) throw new Error("Error al actualizar la asistencia");
 
-            // Si es profesional y marca como NO ASISTIO, lo sacamos del listado visible.
             if (currentUserRole === "profesional" && newStatus === false) {
                  setListaDeTurnos((prev) => prev.filter((t) => t.id !== id));
             } else {
@@ -185,7 +163,6 @@ const Turnos = () => {
                  );
             }
             
-            // Recuperar el nombre para el mensaje de éxito
             const turnoActualizado = listaDeTurnos.find(t => t.id === id);
             let nombreAmostrar = `Turno #${id}`;
             if (turnoActualizado && turnoActualizado.usuarioDisplay) {
@@ -213,7 +190,6 @@ const Turnos = () => {
             });
             if (!res.ok) throw new Error("Error al eliminar el turno");
 
-            // Actualizar el estado localmente
             setListaDeTurnos((prev) => prev.filter((t) => t.id !== turnoToDeleteId));
             
             setSuccessMessage("Turno eliminado exitosamente.");
@@ -226,84 +202,13 @@ const Turnos = () => {
         }
     };
 
-    const openEditModal = (turno) => {
-        setTurnoToEdit(turno);
-        setEditFecha(turno.fecha);
-        setEditHora(turno.hora);
-        setShowEditModal(true);
-    };
-
-    const closeEditModal = () => {
-        setShowEditModal(false);
-        setTurnoToEdit(null);
-        setEditFecha("");
-        setEditHora("");
-    };
-
-    const confirmEditTurno = async () => {
-        const today = new Date().toISOString().split("T")[0];
-        const horaMin = "15:00";
-        const horaMax = "18:30";
-
-        if (!editFecha) {
-            setEditError("Debes seleccionar una fecha.");
-            return;
-        }
-
-        if (editFecha < today) {
-            setEditError("La fecha no puede ser anterior al día de hoy.");
-            return;
-        }
-
-        if (!editHora) {
-            setEditError("Debes seleccionar una hora.");
-            return;
-        }
-
-        if (editHora < horaMin || editHora > horaMax) {
-            setEditError(`La hora debe estar entre ${horaMin} y ${horaMax}.`);
-            return;
-        }
-
-        setEditError("");
-        setLoading(true);
-
-        try {
-            const token = localStorage.getItem("authtoken");
-            const endpoint =
-                currentUserRole === "admin" || currentUserRole === "superadmin"
-                    ? `http://localhost:3000/admin/turnos/${turnoToEdit.id}`
-                    : `http://localhost:3000/misturnos/${turnoToEdit.id}`;
-
-            const res = await fetch(endpoint, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                body: JSON.stringify({ dia: editFecha, hora: editHora }),
-            });
-
-            if (!res.ok) throw new Error("Error al actualizar el turno");
-
-            // Actualiza el estado localmente
-            setListaDeTurnos(prev =>
-                prev.map(t => t.id === turnoToEdit.id ? { ...t, fecha: editFecha, hora: editHora } : t)
-            );
-
-            setSuccessMessage("Turno actualizado correctamente.");
-            setShowSuccessModal(true);
-            closeEditModal();
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const closeSuccessModal = () => {
         setShowSuccessModal(false);
         setSuccessMessage("");
     };
 
     const isGestorView = currentUserRole === "admin" || currentUserRole === "superadmin" || currentUserRole === "profesional";
+    const isUserView = currentUserRole === "user";
 
     if (loading) return <p>Cargando turnos...</p>;
     if (error) return <p style={{ color: "red" }}>{error}</p>;
@@ -348,10 +253,10 @@ const Turnos = () => {
                                 key={turno.id}
                                 {...turno}
                                 onEliminar={openTurnoDeleteModal}
-                                onEditar={openEditModal}
                                 onToggleAsistencia={toggleAsistencia} 
                                 isAdminView={currentUserRole === "admin" || currentUserRole === "superadmin"}
                                 isProfesionalView={currentUserRole === "profesional"}
+                                isUserView={isUserView}
                                 onVerHistorial={handleVerHistorial}
                             />
                         ))}
@@ -374,57 +279,12 @@ const Turnos = () => {
             </ModalPortal>
 
             <ModalPortal
-                isOpen={showEditModal}
-                onClose={closeEditModal}
-                title="Editar turno"
-                actions={
-                    <>
-                        <button className="modal-cancel-button" onClick={closeEditModal}>Cancelar</button>
-                        <button className="modal-confirm-button" onClick={confirmEditTurno}>Guardar</button>
-                    </>
-                }
-            >
-                <div className="modal-body">
-                    <label>Fecha:</label>
-                    <DatePicker
-                        selected={editFecha ? new Date(editFecha) : null}
-                        onChange={(date) => setEditFecha(date.toISOString().split("T")[0])}
-                        dateFormat="dd/MM/yyyy"
-                        minDate={new Date()}
-                        filterDate={(date) => date.getDay() !== 0 && date.getDay() !== 6} // Bloquea sábados y domingos
-                        className="input-personalizado"
-                    />
-
-                    <label>Hora:</label>
-                    <select
-                        value={editHora}
-                        onChange={(e) => setEditHora(e.target.value)}
-                        className={`input-personalizado ${editError && editError.includes("hora") ? "input-error" : ""}`}
-                    >
-                        <option value="">Seleccionar hora</option>
-                        {[
-                            "15:00", "15:30",
-                            "16:00", "16:30",
-                            "17:00", "17:30",
-                            "18:00", "18:30"
-                        ].map((hora) => (
-                            <option key={hora} value={hora}>{hora}</option>
-                        ))}
-                    </select>
-
-                    {editError && <p className="modal-error">{editError}</p>}
-
-                </div>
-
-            </ModalPortal >
-
-            <ModalPortal
                 isOpen={showSuccessModal}
                 onClose={closeSuccessModal}
                 title={successMessage}
                 actions={<button className="modal-confirm-button" onClick={closeSuccessModal}>Aceptar</button>}
             />
-        </div >
+        </div>
     );
 };
 
