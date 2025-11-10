@@ -12,21 +12,18 @@ const TurnoItem = ({
     dniusuario,
     asistio,
     onEliminar,
-    onEditar,
-    onVerHistorial, 
+    onVerHistorial,
     onToggleAsistencia,
     isAdminView,
     isProfesionalView,
+    isUserView, 
 }) => {
     let fechaFormateada = fecha
         ? new Date(fecha + "T00:00:00").toLocaleDateString("es-AR")
         : "Fecha no disponible";
 
-    
     const isGestorView = isAdminView || isProfesionalView;
-    const showAsistenciaCheckbox = isAdminView; 
-
-    const turnoParaEditar = { id, fecha, hora, dniusuario }; 
+    const canEliminar = isAdminView || isUserView; 
 
     return (
         <tr>
@@ -38,55 +35,36 @@ const TurnoItem = ({
             <td>{hora}</td>
             <td>{duracion}</td>
 
-            {showAsistenciaCheckbox && (
+            {/* Columna de Asistencia (Solo para Gestores) */}
+            {isGestorView && (
                 <td>
-                    <input
-                        type="checkbox"
-                        checked={asistio}
-                        onChange={() => onToggleAsistencia(id, asistio)}
-                        title={asistio ? "Marcar como Faltó" : "Marcar como Asistió"}
-                    />
+                    <button 
+                        className={asistio ? "btn-asistio" : "btn-no-asistio"}
+                        onClick={() => onToggleAsistencia(id, asistio)}
+                    >
+                        {asistio ? "ASISTIÓ" : "NO ASISTIÓ"}
+                    </button>
                 </td>
             )}
 
-            <td className="actions-cell">
-                {isProfesionalView && dniusuario && onVerHistorial && (
+            {/* Columna de Acciones - USANDO .actions-cell PARA APILAMIENTO */}
+            <td>
+                {/* Botón de Historial (Solo para Gestores) */}
+                {isGestorView && dniusuario && onVerHistorial && (
                     <button
-                        className="btn-historial"
-                        onClick={() => onVerHistorial(dniusuario)} 
+                        className="btn-secundario btn-historial"
+                        onClick={() => onVerHistorial(dniusuario)}
                         title="Ver Historial Clínico del paciente"
                     >
-                        <i className="bi bi-file-earmark-medical"></i> Ver Historial
-                    </button>
-                )}
-
-                {(isAdminView || isProfesionalView) && ( 
-                    <button
-                        className="btn-editar"
-                        onClick={() => onEditar(turnoParaEditar)}
-                    >
-                        <i className="bi bi-pencil-square"></i> Editar
+                        Historial
                     </button>
                 )}
                 
-                {(isAdminView || isProfesionalView) && (
+                {/* Botón de Eliminar (Admin y Usuario) */}
+                {canEliminar && (
                     <button className="btn-eliminar" onClick={() => onEliminar(id)}>
-                        <i className="bi bi-trash"></i> Eliminar
+                        Eliminar
                     </button>
-                )}
-                
-                {!(isAdminView || isProfesionalView) && ( 
-                    <>
-                        <button
-                            className="btn-editar"
-                            onClick={() => onEditar(turnoParaEditar)}
-                        >
-                            <i className="bi bi-pencil-square"></i> Editar
-                        </button>
-                        <button className="btn-eliminar" onClick={() => onEliminar(id)}>
-                            <i className="bi bi-trash"></i> Eliminar
-                        </button>
-                    </>
                 )}
             </td>
         </tr>

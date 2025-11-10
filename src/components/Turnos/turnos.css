@@ -24,7 +24,6 @@
     border-collapse: collapse;
     border-radius: 20px;
     overflow: hidden;
-    /* CORRECCIÓN: Eliminado display: block; y margin: 0 auto; */
 }
 
 .turnos-table thead {
@@ -58,7 +57,6 @@
 .turnos-table td:first-child {
     text-align: left;
     padding-left: 20px;
-    /* Asignamos un ancho fijo para que el texto largo salte de línea y no rompa la tabla */
     width: 25%;
     min-width: 150px;
 }
@@ -77,40 +75,29 @@
     background: rgba(255, 255, 255, 0.45);
 }
 
-/* 2. ESTILO Y ANCHO FIJO PARA COLUMNA ASISTENCIA (Penúltima columna) */
+/* 2. ESTILO Y ANCHO FIJO PARA COLUMNA ASISTENCIA */
 .turnos-table th:nth-last-child(2),
 .turnos-table td:nth-last-child(2) {
-    width: 80px;
-    min-width: 80px;
+    width: 100px;
+    min-width: 100px;
 }
 
-/* 3. ESTILO Y ANCHO FIJO PARA COLUMNA ACCIONES (Última columna) */
+/* 3. ESTILO PARA COLUMNA ACCIONES (Última columna) */
 .actions-cell {
-    text-align: right;
-    /* Asignamos un ancho fijo para garantizar su visibilidad */
+    /* **SOLUCIÓN: FLEXBOX EN COLUMNA** */
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    gap: 5px; /* Espacio vertical entre botones */
+    
     width: 140px; 
     min-width: 140px;
     padding-right: 10px; 
 }
 
 
-/* --- ESTILOS DE BOTONES Y LAYOUT INFERIORES --- */
-
-.btn-eliminar {
-    background-color: rgba(255, 235, 220, 0.25);
-    border: 1px solid rgba(210, 180, 140, 0.4);
-    color: #8b7355;
-    margin-left: 5px; 
-}
-
-.btn-eliminar:hover {
-    background-color: rgba(255, 235, 220, 0.45);
-    color: #635845;
-}
-
-.btn-eliminar:active {
-    transform: translateY(0);
-}
+/* --- ESTILOS DE BOTONES GENERALES Y LAYOUT --- */
 
 .botones-turnos {
     margin: 10px 0 20px 0;
@@ -119,17 +106,81 @@
     align-items: center;
 }
 
+.btn-principal,
+.btn-eliminar,
+.btn-secundario,
+.btn-asistio,
+.btn-no-asistio {
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s;
+    text-align: center;
+    width: 100px; 
+}
+
+/* Botón Principal (Programar Turno) */
 .btn-principal {
     background-color: rgba(255, 235, 220, 0.25);
     color: #635845;
     border: none;
     padding: 10px 20px;
     border-radius: 20px !important;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 .btn-principal:hover {
     background-color: rgba(255, 235, 220, 0.45);
+}
+
+/* Botón Eliminar */
+.btn-eliminar {
+    background-color: rgba(210, 140, 140, 0.15);
+    border: 1px solid rgba(210, 140, 140, 0.5);
+    color: #a04040;
+}
+
+.btn-eliminar:hover {
+    background-color: rgba(210, 140, 140, 0.35);
+    color: #702a2a;
+}
+
+/* Botón Secundario (Historial) */
+.btn-secundario {
+    background-color: rgba(220, 240, 255, 0.25);
+    border: 1px solid rgba(140, 180, 210, 0.4);
+    color: #557b8b;
+}
+
+.btn-secundario:hover {
+    background-color: rgba(220, 240, 255, 0.45);
+    color: #45636b;
+}
+
+/* Botones Asistencia/No Asistencia */
+.btn-asistio {
+    background-color: rgba(140, 210, 140, 0.25); 
+    border: 1px solid rgba(100, 180, 100, 0.5);
+    color: #40a040;
+    width: 85px; 
+}
+
+.btn-no-asistio {
+    background-color: rgba(255, 200, 150, 0.25);
+    border: 1px solid rgba(210, 140, 70, 0.5);
+    color: #a06040;
+    width: 85px; 
+}
+
+.btn-asistio:hover,
+.btn-no-asistio:hover {
+    opacity: 0.8;
+}
+
+.btn-eliminar:active,
+.btn-secundario:active,
+.btn-asistio:active,
+.btn-no-asistio:active {
+    transform: translateY(1px);
 }
