@@ -17,26 +17,26 @@ const Servicios = () => {
     <div>
       <div className='contenedorServicios'>
         {services.map(service => {
-          // Asegurarnos de que la imagen sea un string
           const base64Image = typeof service.imagen === 'string' ? service.imagen : null;
 
-          // Detectar tipo de imagen
           let imageType = 'jpeg';
           if (base64Image?.startsWith('iVBOR')) imageType = 'png';
 
           return (
             <Service
               key={service.id}
+              id={service.id}
               img={
                 base64Image
                   ? `data:image/${imageType};base64,${base64Image}`
-                  : '/img/placeholder.png' // fallback local
+                  : '/img/placeholder.png'
               }
               title={service.nombre}
               desc={service.descripcion}
             />
           );
         })}
+
       </div>
       <ClearisFooter />
     </div>

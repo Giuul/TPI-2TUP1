@@ -6,15 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
-
-
 const horarios = [
     '15:00', '15:30', '16:00', '16:30',
     '17:00', '17:30', '18:00', '18:30'
 ];
 
 const formatTimeToBackend = (timeString) => timeString;
-
 
 const AppointmentsSelection = () => {
     const navigate = useNavigate();
@@ -32,7 +29,7 @@ const AppointmentsSelection = () => {
     const [professionals, setProfessionals] = useState([]);
     const [profesionalSeleccionado, setProfesionalSeleccionado] = useState('');
 
-    const [services, setServices] = useState([]); 
+    const [services, setServices] = useState([]);
 
     const mañana = new Date();
     mañana.setDate(mañana.getDate() + 1);
@@ -64,22 +61,26 @@ const AppointmentsSelection = () => {
                 }
             };
 
-            const fetchServices = async () => { 
+            const fetchServices = async () => {
                 try {
-                    const response = await axios.get('http://localhost:3000/service');
-                    setServices(response.data);
-                } catch (err) {
-                    console.error("Error al cargar servicios:", err);
-                    setErrorMensaje('Error al cargar la lista de servicios.');
+                    const response = await fetch('http://localhost:3000/service');
+                    const data = await response.json();
+                    setServices(data);
+
+                    const servicioGuardado = localStorage.getItem('servicioSeleccionado');
+                    if (servicioGuardado) {
+                        setServicioSeleccionado(servicioGuardado);
+                        localStorage.removeItem('servicioSeleccionado');
+                    }
+                } catch (error) {
+                    console.error("Error al cargar servicios:", error);
                 }
             };
-
 
             fetchProfessionals();
             fetchServices();
         }
     }, []);
-
 
     useEffect(() => {
         const source = axios.CancelToken.source();
@@ -100,7 +101,7 @@ const AppointmentsSelection = () => {
                 });
 
                 const horasOcupadas = Array.isArray(response.data)
-                    ? response.data.map(t => t.hora?.slice(0,5)).filter(Boolean)
+                    ? response.data.map(t => t.hora?.slice(0, 5)).filter(Boolean)
                     : [];
                 setTurnosOcupados(horasOcupadas);
 
@@ -109,25 +110,22 @@ const AppointmentsSelection = () => {
                 }
 
             } catch (err) {
-                    if (axios.isCancel(err)) {
-                            console.log("Request cancelado");
-                        } else {
-                            console.error("Error al traer turnos ocupados:", err.response?.data || err.message);
-                            setTurnosOcupados([]); 
-                            setErrorMensaje('No se pudieron cargar los turnos ocupados.');
-                        }
+                if (axios.isCancel(err)) {
+                    console.log("Request cancelado");
+                } else {
+                    console.error("Error al traer turnos ocupados:", err.response?.data || err.message);
+                    setTurnosOcupados([]);
+                    setErrorMensaje('No se pudieron cargar los turnos ocupados.');
+                }
             }
         };
 
         fetchTurnosOcupados();
 
         return () => {
-            source.cancel(); 
+            source.cancel();
         };
     }, [profesionalSeleccionado, fecha]);
-
-
-    
 
     const confirmarTurno = async () => {
 
@@ -169,7 +167,7 @@ const AppointmentsSelection = () => {
                 return;
             }
             userIdToAssign = dniUsuarioAgenda;
-        } 
+        }
 
         try {
             const response = await fetch('http://localhost:3000/misturnos', {
@@ -257,8 +255,8 @@ const AppointmentsSelection = () => {
                 <label className="label">SELECCIONÁ UN PROFESIONAL</label>
                 <select
                     className='service-selection'
-                    value={profesionalSeleccionado}
-                    onChange={(e) => setProfesionalSeleccionado(e.target.value)}
+                    value={servicioSeleccionado}
+                    onChange={(e) => setServicioSeleccionado(e.target.value)}
                 >
                     <option value="">-- Seleccione un profesional --</option>
                     {professionals.map(prof => (
@@ -268,7 +266,7 @@ const AppointmentsSelection = () => {
                     ))}
                 </select>
             </div>
-            
+
             <div className="service-container">
                 <label className="label">SELECCIONÁ UN SERVICIO</label>
                 <select className='service-selection'
@@ -289,7 +287,7 @@ const AppointmentsSelection = () => {
                 </div>
                 <div className="time-slots-section">
                     {horarios.map((horaTurno, index) => {
-                        const estaOcupada = turnosOcupados.some(hora => hora.slice(0,5) === horaTurno);
+                        const estaOcupada = turnosOcupados.some(hora => hora.slice(0, 5) === horaTurno);
 
                         return (
                             <button

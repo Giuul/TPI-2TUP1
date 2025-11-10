@@ -1,13 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './services.css';
+import "./Services.css";
 
-const Service = ({ img, title, desc }) => {
+const Service = ({ id, img, title, desc }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
     const token = localStorage.getItem('token');
     if (token) {
+      localStorage.setItem('servicioSeleccionado', id.toString());
       navigate('/programar-turnos');
     } else {
       navigate('/login');
