@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import './AdminServices.css';
+import "./AdminServices.css";
 import axios from "axios";
 
 const AdminServices = () => {
@@ -26,33 +26,29 @@ const AdminServices = () => {
         fetchServices();
     }, []);
 
-    const closeModal = (setModalOpen) => {
-        const overlay = document.querySelector('.modal-overlay.show');
-        const modal = document.querySelector('.modal.show');
-        if (modal && overlay) {
-            modal.classList.add('hide');
-            overlay.classList.add('hide');
-            setTimeout(() => setModalOpen(false), 300);
-        } else {
-            setModalOpen(false);
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             if (editingId) {
-                await axios.put(`http://localhost:3000/service/${editingId}`, form);
+                const servicioActual = services.find(s => s.id === editingId);
+                const formConImagen = {
+                    ...form,
+                    imagen: form.imagen.trim() || servicioActual?.imagen || ""
+                };
+
+                await axios.put(`http://localhost:3000/service/${editingId}`, formConImagen);
                 setMessage("Servicio editado correctamente");
             } else {
                 await axios.post("http://localhost:3000/service", form);
                 setMessage("Servicio creado correctamente");
             }
+
             setForm({ nombre: "", descripcion: "", duracion: "", imagen: "" });
             setEditingId(null);
             setIsFormModalOpen(false);
             setIsMessageModalOpen(true);
             fetchServices();
+
         } catch (err) {
             setMessage(err.response?.data?.message || "Error al guardar el servicio");
             setIsMessageModalOpen(true);
@@ -60,7 +56,12 @@ const AdminServices = () => {
     };
 
     const handleEdit = (service) => {
-        setForm({ nombre: service.nombre, descripcion: service.descripcion, duracion: service.duracion, imagen: service.imagen });
+        setForm({
+            nombre: service.nombre,
+            descripcion: service.descripcion,
+            duracion: service.duracion,
+            imagen: service.imagen || ""
+        });
         setEditingId(service.id);
         setIsFormModalOpen(true);
     };
@@ -83,30 +84,69 @@ const AdminServices = () => {
         }
     };
 
+    const closeAllModals = () => {
+        setIsFormModalOpen(false);
+        setIsMessageModalOpen(false);
+        setIsDeleteModalOpen(false);
+        setEditingId(null);
+        setForm({ nombre: "", descripcion: "", duracion: "", imagen: "" });
+    };
+
     return (
         <div className="admin-services">
             <h2>Administrar Servicios</h2>
 
-            <button className="create-btn" onClick={() => {
-                setEditingId(null);
-                setForm({ nombre: "", descripcion: "", duracion: "", imagen: "" });
-                setIsFormModalOpen(true);
-            }}>
+            <button
+                className="create-btn"
+                onClick={() => {
+                    setEditingId(null);
+                    setForm({ nombre: "", descripcion: "", duracion: "", imagen: "" });
+                    setIsFormModalOpen(true);
+                }}
+            >
                 Crear Servicio
             </button>
 
             {isFormModalOpen && (
-                <div className="modal-overlay show">
-                    <div className="modal show">
+                <div className="modal-overlay">
+                    <div className="service-form">
                         <h3>{editingId ? "Editar Servicio" : "Crear Servicio"}</h3>
                         <form onSubmit={handleSubmit}>
-                            <input placeholder="Nombre" value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} required />
-                            <input placeholder="Descripción" value={form.descripcion} onChange={(e) => setForm({ ...form, descripcion: e.target.value })} required />
-                            <input type="number" placeholder="Duración (min)" value={form.duracion} onChange={(e) => setForm({ ...form, duracion: e.target.value })} />
-                            <input placeholder="URL Imagen" value={form.imagen} onChange={(e) => setForm({ ...form, imagen: e.target.value })} />
-                            <div className="modal-actions">
-                                <button type="submit">{editingId ? "Guardar cambios" : "Crear"}</button>
-                                <button type="button" className="close-btn" onClick={() => closeModal(setIsFormModalOpen)}>Cancelar</button>
+                            <input
+                                placeholder="Nombre del servicio"
+                                value={form.nombre}
+                                onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+                                required
+                            />
+                            <textarea
+                                placeholder="Descripción"
+                                value={form.descripcion}
+                                onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="number"
+                                placeholder="Duración (min)"
+                                value={form.duracion}
+                                onChange={(e) => setForm({ ...form, duracion: e.target.value })}
+                            />
+                            <input
+                                placeholder="URL o base64 de imagen"
+                                value={form.imagen}
+                                onChange={(e) => setForm({ ...form, imagen: e.target.value })}
+                            />
+
+                            <div className="form-buttons">
+                                <button type="submit" className="create-btn">
+                                    {editingId ? "Guardar Cambios" : "Crear Servicio"}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="cancel-btn"
+                                    onClick={closeAllModals}
+                                >
+                                    Cancelar
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -114,22 +154,33 @@ const AdminServices = () => {
             )}
 
             {isMessageModalOpen && (
-                <div className="modal-overlay show">
-                    <div className="modal message-modal show">
+                <div className="modal-overlay">
+                    <div className="service-form">
                         <p>{message}</p>
-                        <button className="close-btn" onClick={() => closeModal(setIsMessageModalOpen)}>Cerrar</button>
+                        <div className="form-buttons">
+                            <button className="create-btn" onClick={closeAllModals}>
+                                Aceptar
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
 
             {isDeleteModalOpen && (
-                <div className="modal-overlay show">
-                    <div className="modal delete-modal show">
-                        <h3>Eliminar Servicio</h3>
-                        <p>¿Estás seguro que quieres eliminar este servicio?</p>
-                        <div className="modal-actions">
-                            <button onClick={confirmDelete}>Sí, eliminar</button>
-                            <button className="close-btn" onClick={() => closeModal(setIsDeleteModalOpen)}>Cancelar</button>
+                <div className="modal-overlay">
+                    <div className="service-form">
+                        <h3>Confirmar Eliminación</h3>
+                        <p>¿Estás seguro de que querés eliminar este servicio?</p>
+                        <div className="form-buttons">
+                            <button className="create-btn" onClick={confirmDelete}>
+                                Sí, eliminar
+                            </button>
+                            <button
+                                className="cancel-btn"
+                                onClick={closeAllModals}
+                            >
+                                Cancelar
+                            </button>
                         </div>
                     </div>
                 </div>
