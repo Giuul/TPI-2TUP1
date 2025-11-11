@@ -26,7 +26,7 @@ const TurnoItem = ({
     const isGestorView = isAdminView || isProfesionalView;
     const canEliminar = isAdminView || isUserView; 
     const showAsistenciaColumn = isGestorView; 
-    const canToggleAsistencia = isGestorView; 
+    const canToggleAsistencia = isAdminView; 
     const canAddObservaciones = isGestorView; 
 
 
@@ -42,22 +42,29 @@ const TurnoItem = ({
 
             {showAsistenciaColumn && (
                 <td className="asistencia-cell">
-                    <input
-                        type="checkbox" 
-                        checked={asistio}
-                        onChange={canToggleAsistencia ? () => onToggleAsistencia(id, asistio) : undefined}
-                        id={`asistio-${id}`}
-                        className="asistencia-checkbox"
-                        disabled={!canToggleAsistencia} 
-                        title={asistio ? "Marcar como NO ASISTIÓ" : "Marcar como ASISTIÓ"}
-                    />
-                    <label 
-                        htmlFor={`asistio-${id}`} 
-                        className="asistencia-label" 
-                        style={{ cursor: canToggleAsistencia ? 'pointer' : 'default' }}
-                    >
-                        {asistio ? "Asistió" : "Pendiente"}
-                    </label>
+                    {!isProfesionalView ? (
+                        <>
+                            <input
+                                type="checkbox" 
+                                checked={asistio}
+                                onChange={() => onToggleAsistencia(id, asistio)}
+                                id={`asistio-${id}`}
+                                className="asistencia-checkbox"
+                                disabled={!canToggleAsistencia} 
+                                title={asistio ? "Marcar como NO ASISTIÓ" : "Marcar como ASISTIÓ"}
+                            />
+                            <label 
+                                htmlFor={`asistio-${id}`} 
+                                className="asistencia-label" 
+                                style={{ cursor: canToggleAsistencia ? 'pointer' : 'default' }}
+                            >
+                                {asistio ? "Asistió" : "Pendiente"}
+                            </label>
+                        </>
+                    ) : (
+                        
+                        <span>{asistio ? "Asistió" : "Pendiente"}</span>
+                    )}
                 </td>
             )}
 
