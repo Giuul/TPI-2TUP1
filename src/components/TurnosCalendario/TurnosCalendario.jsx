@@ -36,7 +36,7 @@ const TurnosCalendarView = ({
             </div>
 
             {turnos.length === 0 ? (
-                <p>No hay turnos programados para el día **{selectedDate}**.</p>
+                <p>No hay turnos programados para el día {selectedDate}.</p>
             ) : (
                 <table className="turnos-table">
                     <thead>
