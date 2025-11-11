@@ -25,13 +25,13 @@ h1 {
     border: none;
     padding: 0.5rem 1rem;
     font-weight: bold;
-    border-radius: 6px;
+    border-radius: 25px !important;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .btn-principal:hover {
-    background-color: rgba(255, 255, 255, 0.081) !important;
+    background-color: rgba(255, 255, 255, 0.59) !important;
 }
 
 .buscar {
@@ -112,20 +112,22 @@ h1 {
 .btn-editar {
     background-color: rgba(255, 255, 255, 0.125) !important;
     color: #635845 !important;
+    border-radius: 25px !important;
 }
 
 .btn-editar:hover {
-    background-color: rgba(255, 255, 255, 0.125) !important;
+    background-color: rgba(255, 255, 255, 0.681) !important;
     color: #635845 !important;
 }
 
 .btn-eliminar {
     background-color: rgba(255, 255, 255, 0.125) !important;
     color: #635845 !important;
+    border-radius: 25px !important;
 }
 
 .btn-eliminar:hover {
-    background-color: rgba(255, 255, 255, 0.125) !important;
+    background-color: rgba(255, 255, 255, 0.681) !important;
     color: #635845 !important;
 }
 
