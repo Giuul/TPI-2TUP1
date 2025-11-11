@@ -1,0 +1,210 @@
+.historial-container {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 40px;
+    padding-bottom: 150px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Gilda Display';
+    color: #635845;
+    min-height: calc(100vh - 120px);
+}
+
+.historial-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #635845;
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
+    font-weight: 400;
+}
+
+.historial-table-wrapper {
+    overflow-x: auto;
+}
+
+.historial-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 20px;
+    overflow: hidden;
+    font-size: 1rem;
+}
+
+.historial-table thead {
+    display: table-header-group;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 20px 20px 0 0;
+}
+
+.historial-table th,
+.historial-table td {
+    padding: 14px 10px;
+    font-size: 1rem;
+    color: #635845;
+    text-align: center;
+    word-wrap: break-word;
+    white-space: normal;
+    vertical-align: middle;
+}
+
+.historial-table th {
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(100, 100, 100, 0.3);
+}
+
+.historial-table th:first-child,
+.historial-table td:first-child {
+    text-align: left;
+    padding-left: 20px;
+    width: 25%;
+    min-width: 150px;
+}
+
+.historial-table td {
+    background: rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(100, 100, 100, 0.1);
+}
+
+.historial-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.historial-table tr:hover td {
+    background: rgba(255, 255, 255, 0.132);
+}
+
+.historial-table tr:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.actions-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 140px;
+    min-width: 140px;
+    padding-right: 10px;
+}
+
+.obs-cell {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 6px 10px;
+    max-width: 200px;
+    word-wrap: break-word;
+    white-space: normal;
+    font-size: 0.85rem;
+    color: #4f3f2f;
+    text-align: left;
+    transition: background 0.3s ease;
+}
+
+.obs-cell:hover {
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.btn-back,
+.btn-secundario {
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s;
+    text-align: center;
+}
+
+.btn-back {
+    margin-top: 25px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    color: #635845;
+    padding: 10px 25px;
+    border-radius: 20px;
+}
+
+.btn-back:hover {
+    background-color: rgba(255, 255, 255, 0.725);
+    color: #635845;
+}
+
+.btn-back:active {
+    transform: translateY(1px);
+}
+
+.btn-secundario {
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #635845;
+    padding: 6px 10px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    width: 85px;
+}
+
+.btn-secundario:hover {
+    background-color: rgba(255, 255, 255, 0.725);
+    color: #635845;
+}
+
+.btn-secundario:active {
+    transform: translateY(1px);
+}
+
+.no-data {
+    font-size: 1.1rem;
+    color: #635845;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.error-message {
+    font-size: 1.1rem;
+    color: #635845;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.success-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
+    color: #635845;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    z-index: 1000;
+    animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    10% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    90% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}

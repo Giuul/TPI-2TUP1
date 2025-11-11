@@ -12,8 +12,8 @@ const Turnos = () => {
     const [listaDeTurnos, setListaDeTurnos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentUserRole, setCurrentUserRole] = useState("user"); 
-    
+    const [currentUserRole, setCurrentUserRole] = useState("user");
+
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
 
     const [showTurnoDeleteModal, setShowTurnoDeleteModal] = useState(false);
@@ -31,13 +31,13 @@ const Turnos = () => {
 
     const handleVerHistorial = (dniPaciente) => {
         if (dniPaciente) {
-            navigate(`/historial/${dniPaciente}`); 
+            navigate(`/historial/${dniPaciente}`);
         } else {
             setError("No se pudo obtener el DNI del paciente para el historial.");
         }
     };
 
-    const fetchTurnos = async (dateToFetch = selectedDate) => { 
+    const fetchTurnos = async (dateToFetch = selectedDate) => {
         setLoading(true);
         setError(null);
 
@@ -65,8 +65,8 @@ const Turnos = () => {
         const isGestor = userRole === "admin" || userRole === "superadmin" || userRole === "profesional";
 
         if (isGestor) {
-            url = `http://localhost:3000/admin/turnos?dia=${dateToFetch}`; 
-        } else { 
+            url = `http://localhost:3000/admin/turnos?dia=${dateToFetch}`;
+        } else {
             url = "http://localhost:3000/misturnos";
         }
 
@@ -78,19 +78,19 @@ const Turnos = () => {
 
             const data = await res.json();
             let turnosFinales = data;
-            
+
             if (!isGestor) {
                 const now = new Date();
-                const today = now.toISOString().split("T")[0]; 
+                const today = now.toISOString().split("T")[0];
                 const hours = String(now.getHours()).padStart(2, '0');
                 const minutes = String(now.getMinutes()).padStart(2, '0');
-                const currentTime = `${hours}:${minutes}`; 
-                
+                const currentTime = `${hours}:${minutes}`;
+
                 turnosFinales = data.filter(turno => {
-                    if (!turno.dia) return false; 
-                    
+                    if (!turno.dia) return false;
+
                     if (turno.dia > today) return true;
-                    
+
                     if (turno.dia === today) return turno.hora >= currentTime;
 
                     return false;
@@ -107,25 +107,25 @@ const Turnos = () => {
                     duracion: turno.servicio?.duracion
                         ? `${turno.servicio.duracion} minutos`
                         : "N/A",
-                    profesionalDisplay: turno.profesional 
+                    profesionalDisplay: turno.profesional
                         ? `${turno.profesional.name} ${turno.profesional.lastname}`
                         : "Sin asignar",
-                    asistio: turno.asistio, 
+                    asistio: turno.asistio,
                     observaciones: turno.observaciones,
-                    createdAt: turno.createdAt, 
+                    createdAt: turno.createdAt,
                 };
 
                 if (isGestor) {
                     const usuarioInfo = turno.usuario
                         ? `${turno.usuario.name} ${turno.usuario.lastname} (DNI: ${turno.usuario.id})`
                         : `DNI: ${turno.dniusuario}`;
-                    
+
                     return { ...base, usuarioDisplay: usuarioInfo, profesionalDisplay: base.profesionalDisplay };
                 }
 
                 return base;
             });
-            
+
             setListaDeTurnos(turnosTransformados);
         } catch (err) {
             setError(err.message);
@@ -136,12 +136,12 @@ const Turnos = () => {
 
     const handleDateChange = (newDate) => {
         setSelectedDate(newDate);
-        fetchTurnos(newDate); 
+        fetchTurnos(newDate);
     };
 
     useEffect(() => {
         fetchTurnos(selectedDate);
-    }, []); 
+    }, []);
 
     const openTurnoDeleteModal = (id) => {
         setTurnoToDeleteId(id);
@@ -172,7 +172,7 @@ const Turnos = () => {
             setListaDeTurnos((prev) =>
                 prev.map((t) => (t.id === id ? { ...t, asistio: newStatus } : t))
             );
-            
+
             const turnoActualizado = listaDeTurnos.find(t => t.id === id);
             let nombreAmostrar = `Turno #${id}`;
             if (turnoActualizado && turnoActualizado.usuarioDisplay) {
@@ -194,14 +194,14 @@ const Turnos = () => {
 
         try {
             const token = localStorage.getItem("authtoken");
-            const res = await fetch(`http://localhost:3000/misturnos/${turnoToDeleteId}`, { 
+            const res = await fetch(`http://localhost:3000/misturnos/${turnoToDeleteId}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (!res.ok) throw new Error("Error al eliminar el turno");
 
             setListaDeTurnos((prev) => prev.filter((t) => t.id !== turnoToDeleteId));
-            
+
             setSuccessMessage("Turno eliminado exitosamente.");
             setShowSuccessModal(true);
         } catch (err) {
@@ -213,7 +213,7 @@ const Turnos = () => {
     };
 
     const openObservacionesModal = (turno) => {
-        setTurnoObservaciones(turno); 
+        setTurnoObservaciones(turno);
         setErrorObservaciones(null);
         setShowObservacionesModal(true);
     };
@@ -239,11 +239,11 @@ const Turnos = () => {
             });
 
             if (!res.ok) throw new Error("Error al guardar las observaciones");
-            
+
             setListaDeTurnos((prev) =>
                 prev.map((t) => (t.id === id ? { ...t, observaciones: texto } : t))
             );
-            setTurnoObservaciones((prev) => ({...prev, observaciones: texto}))
+            setTurnoObservaciones((prev) => ({ ...prev, observaciones: texto }))
             setSuccessMessage("Observaciones guardadas exitosamente.");
             setShowSuccessModal(true);
             closeObservacionesModal();
@@ -344,7 +344,7 @@ const Turnos = () => {
                 title={successMessage}
                 actions={<button className="modal-confirm-button" onClick={closeSuccessModal}>Aceptar</button>}
             />
-            
+
             <ObservacionesModal
                 show={showObservacionesModal}
                 onClose={closeObservacionesModal}

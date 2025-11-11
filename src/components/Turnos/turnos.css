@@ -2,14 +2,15 @@
     max-width: 1000px;
     margin: 60px auto;
     padding: 40px;
-    padding-bottom: 150px; 
+    padding-bottom: 150px;
     border-radius: 25px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(15px);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    font-family: 'Gilda Display';
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    font-family: 'Gilda Display', serif;
     color: #635845;
-    min-height: calc(100vh - 120px); 
+    min-height: calc(100vh - 120px);
+    animation: fadeInTurnos 0.4s ease-out;
 }
 
 .turnos-title {
@@ -29,32 +30,28 @@
 }
 
 .turnos-table thead {
-    display: table-header-group; 
-    background: rgba(255, 255, 255, 0.4); 
-    border-radius: 20px 20px 0 0; 
+    background: rgba(255, 255, 255, 0.4);
 }
 
-/* REGLA UNIFICADA PARA CELDAS Y ENCABEZADOS */
 .turnos-table th,
 .turnos-table td {
-    padding: 14px 10px; 
+    padding: 14px 10px;
     font-size: 1rem;
     color: #635845;
-    font-family: 'Gilda Display';
-    text-align: center; 
+    text-align: center;
+    vertical-align: middle;
     word-wrap: break-word;
     white-space: normal;
-    vertical-align: middle;
+    transition: background-color 0.2s ease;
 }
 
 .turnos-table th {
     font-weight: bold;
-    text-transform: uppercase; 
+    text-transform: uppercase;
     letter-spacing: 0.5px;
-    border-bottom: 1px solid rgba(100, 100, 100, 0.3); 
+    border-bottom: 1px solid rgba(100, 100, 100, 0.2);
 }
 
-/* 1. ESTILO Y ANCHO FIJO PARA COLUMNA USUARIO (Primera columna) */
 .turnos-table th:first-child,
 .turnos-table td:first-child {
     text-align: left;
@@ -63,10 +60,9 @@
     min-width: 150px;
 }
 
-
 .turnos-table td {
-    background: rgba(255, 255, 255, 0.3);
-    border-bottom: 1px solid rgba(100, 100, 100, 0.1); 
+    background: rgba(255, 255, 255, 0.35);
+    border-bottom: 1px solid rgba(100, 100, 100, 0.1);
 }
 
 .turnos-table tbody tr:last-child td {
@@ -74,32 +70,19 @@
 }
 
 .turnos-table tr:hover td {
-    background: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.55);
 }
 
-/* 2. ESTILO Y ANCHO FIJO PARA COLUMNA ASISTENCIA */
-.turnos-table th:nth-last-child(2),
-.turnos-table td:nth-last-child(2) {
-    width: 100px;
-    min-width: 100px;
-}
-
-/* 3. ESTILO PARA COLUMNA ACCIONES (Última columna) */
 .actions-cell {
-    /* **SOLUCIÓN: FLEXBOX EN COLUMNA** */
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 5px; /* Espacio vertical entre botones */
-    
-    width: 140px; 
+    gap: 5px;
+    width: 140px;
     min-width: 140px;
-    padding-right: 10px; 
+    padding-right: 10px;
 }
-
-
-/* --- ESTILOS DE BOTONES GENERALES Y LAYOUT --- */
 
 .botones-turnos {
     margin: 10px 0 20px 0;
@@ -113,42 +96,38 @@
 .btn-secundario,
 .btn-asistio,
 .btn-no-asistio {
-    padding: 8px 12px;
-    border-radius: 15px;
+    padding: 7px !important;
+    border-radius: 20px;
     font-size: 0.9rem;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s;
-    text-align: center;
-    width: 100px; 
+    transition: all 0.25s ease;
+    align-items: center !important;
+    width: 110px;
+    border: none;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Botón Principal (Programar Turno) */
 .btn-principal {
-    background-color: rgba(255, 235, 220, 0.25);
+    background-color: rgba(255, 235, 220, 0.35);
     color: #635845;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px !important;
 }
 
 .btn-principal:hover {
-    background-color: rgba(255, 235, 220, 0.45);
+    background-color: rgba(255, 235, 220, 0.55);
 }
 
-/* Botón Eliminar */
 .btn-eliminar {
-    background-color: rgba(210, 140, 140, 0.15);
-    border: 1px solid rgba(210, 140, 140, 0.5);
-    color: #a04040;
+    background-color: rgba(255, 255, 255, 0.445) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: #635845 !important;
 }
 
 .btn-eliminar:hover {
-    background-color: rgba(210, 140, 140, 0.35);
+    background-color: rgba(210, 140, 140, 0.3);
     color: #702a2a;
 }
 
-/* Botón Secundario (Historial) */
 .btn-secundario {
     background-color: rgba(220, 240, 255, 0.25);
     border: 1px solid rgba(140, 180, 210, 0.4);
@@ -160,19 +139,18 @@
     color: #45636b;
 }
 
-/* Botones Asistencia/No Asistencia */
 .btn-asistio {
-    background-color: rgba(140, 210, 140, 0.25); 
+    background-color: rgba(140, 210, 140, 0.25);
     border: 1px solid rgba(100, 180, 100, 0.5);
-    color: #40a040;
-    width: 85px; 
+    color: #3e9440;
+    width: 90px;
 }
 
 .btn-no-asistio {
     background-color: rgba(255, 200, 150, 0.25);
     border: 1px solid rgba(210, 140, 70, 0.5);
     color: #a06040;
-    width: 85px; 
+    width: 90px;
 }
 
 .btn-asistio:hover,
@@ -185,4 +163,108 @@
 .btn-asistio:active,
 .btn-no-asistio:active {
     transform: translateY(1px);
+}
+
+.input-personalizado {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(200, 180, 150, 0.25);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: 'Gilda Display';
+    color: #635845;
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.input-personalizado:focus {
+    outline: none;
+    border-color: #b79a6b;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.react-datepicker {
+    font-family: 'Gilda Display';
+    border-radius: 10px;
+    border: 1px solid rgba(200, 180, 150, 0.25);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__year-text--selected {
+    background-color: #635845 !important;
+    color: #fff !important;
+    border-radius: 0.4rem;
+}
+
+.modal-body input[type="date"],
+.modal-body input[type="time"] {
+    appearance: none;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(200, 180, 150, 0.25);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: 'Gilda Display';
+    color: #635845;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.modal-body input[type="date"]:focus,
+.modal-body input[type="time"]:focus {
+    outline: none;
+    border-color: #b79a6b;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.input-error {
+    border: 2px solid #a04040 !important;
+    background-color: rgba(255, 220, 220, 0.6);
+}
+
+.modal-error {
+    color: #a04040;
+    font-size: 0.9rem;
+    margin-top: 8px;
+}
+
+@keyframes fadeInTurnos {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .turnos-container {
+        padding: 25px;
+    }
+
+    .turnos-table th,
+    .turnos-table td {
+        font-size: 0.85rem;
+        padding: 10px 8px;
+    }
+
+    .btn-principal,
+    .btn-eliminar,
+    .btn-secundario {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+        width: auto;
+    }
+
+    .actions-cell {
+        flex-direction: row;
+        gap: 8px;
+    }
 }

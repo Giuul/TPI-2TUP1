@@ -1,4 +1,5 @@
 import React from "react";
+import "./TurnoItem.css";
 
 const TurnoItem = ({
     id,
@@ -16,25 +17,23 @@ const TurnoItem = ({
     onToggleAsistencia,
     onAbrirObservaciones,
     isAdminView,
-    isProfesionalView, 
-    isUserView, 
+    isProfesionalView,
+    isUserView,
 }) => {
-    let fechaFormateada = fecha
+    const fechaFormateada = fecha
         ? new Date(fecha + "T00:00:00").toLocaleDateString("es-AR")
         : "Fecha no disponible";
 
     const isGestorView = isAdminView || isProfesionalView;
-    const canEliminar = isAdminView || isUserView; 
-    const showAsistenciaColumn = isGestorView; 
-    const canToggleAsistencia = isAdminView; 
-    const canAddObservaciones = isGestorView; 
-
+    const canEliminar = isAdminView || isUserView;
+    const showAsistenciaColumn = isGestorView;
+    const canToggleAsistencia = isAdminView;
+    const canAddObservaciones = isGestorView;
 
     return (
-        <tr>
+        <tr className="turno-row">
             {isGestorView && <td>{usuarioDisplay}</td>}
             {isGestorView && <td>{profesionalDisplay}</td>}
-
             <td>{servicios}</td>
             <td>{fechaFormateada}</td>
             <td>{hora}</td>
@@ -45,24 +44,22 @@ const TurnoItem = ({
                     {!isProfesionalView ? (
                         <>
                             <input
-                                type="checkbox" 
+                                type="checkbox"
                                 checked={asistio}
                                 onChange={() => onToggleAsistencia(id, asistio)}
                                 id={`asistio-${id}`}
                                 className="asistencia-checkbox"
-                                disabled={!canToggleAsistencia} 
+                                disabled={!canToggleAsistencia}
                                 title={asistio ? "Marcar como NO ASISTIÓ" : "Marcar como ASISTIÓ"}
                             />
-                            <label 
-                                htmlFor={`asistio-${id}`} 
-                                className="asistencia-label" 
-                                style={{ cursor: canToggleAsistencia ? 'pointer' : 'default' }}
+                            <label
+                                htmlFor={`asistio-${id}`}
+                                className="asistencia-label"
                             >
                                 {asistio ? "Asistió" : "Pendiente"}
                             </label>
                         </>
                     ) : (
-                        
                         <span>{asistio ? "Asistió" : "Pendiente"}</span>
                     )}
                 </td>
@@ -70,28 +67,38 @@ const TurnoItem = ({
 
             <td>
                 <div className="actions-cell">
-                    {isGestorView && dniusuario && onVerHistorial && (
+                    {isGestorView && dniusuario && (
                         <button
                             className="btn-secundario btn-historial"
                             onClick={() => onVerHistorial(dniusuario)}
-                            title="Ver Historial Clínico del paciente"
                         >
                             Historial
                         </button>
                     )}
-                    
-                    {canAddObservaciones && onAbrirObservaciones && (
+
+                    {canAddObservaciones && (
                         <button
-                            className="btn-principal btn-observaciones" 
-                            onClick={() => onAbrirObservaciones({ id, observaciones, fecha, hora, usuarioDisplay, profesionalDisplay })}
-                            title="Agregar o editar observaciones del turno"
+                            className="btn-principal btn-observaciones"
+                            onClick={() =>
+                                onAbrirObservaciones({
+                                    id,
+                                    observaciones,
+                                    fecha,
+                                    hora,
+                                    usuarioDisplay,
+                                    profesionalDisplay,
+                                })
+                            }
                         >
-                            {observaciones ? "Observaciones" : "Observaciones"}
+                            Observaciones
                         </button>
                     )}
-                    
+
                     {canEliminar && (
-                        <button className="btn-eliminar" onClick={() => onEliminar(id)}>
+                        <button
+                            className="btn-eliminar"
+                            onClick={() => onEliminar(id)}
+                        >
                             Eliminar
                         </button>
                     )}

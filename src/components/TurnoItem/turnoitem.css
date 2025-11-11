@@ -1,65 +1,84 @@
-tr {
-    background: rgba(255, 255, 255, 0.466);
+.turno-row {
+    background: rgba(255, 255, 255, 0.159);
     transition: all 0.3s ease;
 }
 
-tr:hover {
-    background: rgba(255, 255, 255, 0.2);
+.turno-row:hover {
+    background: rgba(255, 255, 255, 0.168);
     transform: translateY(-2px);
 }
 
 td {
     padding: 14px 25px;
     font-size: 1rem;
-    color: #635845;
-    font-family: 'Gilda Display';
-    border: none;
+    color: #4a3f35;
+    font-family: "Gilda Display";
+    border-bottom: 1px solid rgba(210, 180, 140, 0.3);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.asistencia-cell {
     text-align: center;
 }
 
+.asistencia-checkbox {
+    cursor: pointer;
+    transform: scale(1.2);
+    margin-right: 6px;
+}
+
+.asistencia-label {
+    font-weight: 500;
+}
+
 .actions-cell {
-    text-align: right;
-    width: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
-.btn-historial {
-    background-color: rgba(255, 235, 220, 0.25);
-    border: 1px solid rgba(210, 180, 140, 0.4);
-    color: #635845;
+button {
+    border: none;
     border-radius: 20px;
+    padding: 6px 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
 }
 
-.btn-historial:hover {
-    background-color: rgba(255, 235, 220, 0.575);
+.btn-secundario,
+.btn-eliminar,
+.btn-principal {
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    border: 1px solid rgba(157, 145, 145, 0.344) !important;
+    color: #635845 !important;
+}
+
+.btn-secundario:hover,
+.btn-eliminar:hover,
+.btn-principal:hover {
+    background-color: rgba(255, 255, 255, 0.895) !important;
 }
 
 .btn-eliminar {
-    background-color: rgba(255, 235, 220, 0.25);
-    border: 1px solid rgba(210, 180, 140, 0.4);
     color: #635845;
-}
-
-.btn-eliminar:hover {
-    background-color: rgba(255, 235, 220, 0.575);
-}
-
-.btn-eliminar:active {
-    transform: translateY(0);
-}
-
-.btn-eliminar .bi-trash {
-    margin-right: 6px;
-    font-size: 1rem;
 }
 
 @media (max-width: 768px) {
     td {
-        font-size: 0.9rem;
-        padding: 10px 15px;
+        font-size: 0.85rem;
+        padding: 10px 12px;
     }
 
-    .btn-eliminar {
-        padding: 6px 16px;
-        font-size: 0.85rem;
+    .actions-cell {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    button {
+        font-size: 0.8rem;
+        padding: 5px 10px;
     }
 }

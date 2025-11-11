@@ -112,20 +112,18 @@ body {
 }
 
 .btn-observaciones {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #635845;
-    border: none;
-    border-radius: 25px;
-    padding: 0.6rem 1.4rem;
+    background-color: rgba(255, 255, 255, 0.445) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: #635845 !important;
+    padding: 6px 8px !important;
+    border-radius: 15px !important;
     font-size: 0.9rem;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: all 0.3s ease;
+    font-weight: bold;
+    width: 85px;
 }
 
 .btn-observaciones:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
+    background-color: rgb(255, 255, 255);
     box-shadow: 0 3px 8px rgba(232, 170, 191, 0.3);
 }
 
@@ -163,6 +161,7 @@ body {
     margin-top: 10px;
     box-shadow: 0 6px 20px rgba(255, 255, 255, 0.258);
     animation: slideUp 0.35s ease;
+    transform: translateY(-100px);
 }
 
 .modal-title {

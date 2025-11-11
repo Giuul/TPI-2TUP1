@@ -1,40 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import './listasesiones.css';
 
-const ObservacionesModal = ({ 
-    show, 
-    onClose, 
-    turno, 
-    onGuardar, 
+const ObservacionesModal = ({
+    show,
+    onClose,
+    turno,
+    onGuardar,
     loading,
     error
 }) => {
     const [observacion, setObservacion] = useState(turno?.observaciones || "");
 
-    
+
     useEffect(() => {
         if (turno) {
-            setObservacion(turno.observaciones || ""); 
+            setObservacion(turno.observaciones || "");
         }
-    }, [turno]); 
+    }, [turno]);
 
     if (!show || !turno) return null;
 
     const handleSave = () => {
         onGuardar(turno.id, observacion);
     };
-    
+
     const getTurnoDateTime = () => {
         if (turno.fecha && turno.hora) {
-             return `${turno.fecha} ${turno.hora}`; 
+            return `${turno.fecha} ${turno.hora}`;
+        }
+        if (turno.fechaHora) {
+            const date = new Date(turno.fechaHora);
+            return date.toLocaleDateString('es-AR') + ' a las ' +
+                date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
         }
         if (turno.createdAt) {
-             const date = new Date(turno.createdAt);
-             return date.toLocaleDateString('es-AR') + ' a las ' +
+            const date = new Date(turno.createdAt);
+            return date.toLocaleDateString('es-AR') + ' a las ' +
                 date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
         }
         return 'Fecha no disponible';
     };
+
 
 
     return (
@@ -47,18 +53,18 @@ const ObservacionesModal = ({
                     <p><strong>Profesional:</strong> {turno.profesionalDisplay || 'N/A'}</p>
                     <p><strong>Fecha/Hora:</strong> {getTurnoDateTime()}</p>
                 </div>
-                
+
                 {error && <p style={{ color: 'red', marginBottom: '10px' }}>{error}</p>}
 
                 <textarea
                     value={observacion}
-                    onChange={(e) => setObservacion(e.target.value)} 
+                    onChange={(e) => setObservacion(e.target.value)}
                     placeholder="Escribe aquí las observaciones..."
                     rows="5"
                 />
 
                 <div className="modal-actions">
-                    
+
                     <button onClick={onClose} className="modal-cancel-button" disabled={loading}>Cancelar</button>
                     <button onClick={handleSave} className="modal-confirm-button" disabled={loading}>
                         {loading ? 'Guardando...' : 'Guardar'}

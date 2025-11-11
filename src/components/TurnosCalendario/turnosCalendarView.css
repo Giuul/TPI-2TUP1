@@ -1,0 +1,64 @@
+.calendar-controls {
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Gilda Display', serif;
+    color: #635845;
+}
+
+.calendar-controls label {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.date-input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(99, 88, 69, 0.4);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-family: 'Gilda Display';
+    font-size: 0.95rem;
+    color: #635845;
+    box-shadow: 0 2px 4px rgba(99, 88, 69, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 200px;
+}
+
+.date-input:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(99, 88, 69, 0.5);
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: #b8a77e;
+    box-shadow: 0 0 6px rgba(184, 167, 126, 0.5);
+}
+
+.react-datepicker {
+    font-family: 'Gilda Display';
+    border-radius: 10px !important;
+    border: 1px solid rgba(99, 88, 69, 0.3);
+    box-shadow: 0 2px 8px rgba(99, 88, 69, 0.15);
+}
+
+.react-datepicker__header {
+    background-color: #f9f7f3 !important;
+    border-bottom: 1px solid rgba(99, 88, 69, 0.2);
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+    background-color: #b8a77e !important;
+    color: white !important;
+    border-radius: 50%;
+}
+
+.react-datepicker__day:hover {
+    background-color: rgba(184, 167, 126, 0.2);
+    border-radius: 50%;
+}
