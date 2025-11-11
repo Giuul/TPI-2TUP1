@@ -2,12 +2,14 @@
     max-width: 1000px;
     margin: 60px auto;
     padding: 40px;
+    padding-bottom: 150px; 
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(15px);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     font-family: 'Gilda Display';
     color: #635845;
+    min-height: calc(100vh - 120px); 
 }
 
 .turnos-title {

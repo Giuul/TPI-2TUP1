@@ -36,10 +36,13 @@ const ClearisNavbar = ({ isLoggedIn, username, onLogout, userRole }) => {
                                     </>
                                 ) : (
                                     <>
-                                        <NavDropdown.Item as={Link} to="/programar-turnos">Sacar Turno</NavDropdown.Item>
-                                        <NavDropdown.Divider />
-                                        <NavDropdown.Item as={Link} to="/misturnos">Mis Turnos</NavDropdown.Item>
-                                    </>
+                                         {userRole !== 'profesional' && (
+                                            <NavDropdown.Item as={Link} to="/programar-turnos">Sacar Turno</NavDropdown.Item>
+                                         )}
+                                         {userRole !== 'profesional' && <NavDropdown.Divider />}
+                                         
+                                             <NavDropdown.Item as={Link} to="/misturnos">Mis Turnos</NavDropdown.Item>
+                                   </>
                                 )}
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={onLogout}>Cerrar Sesión</NavDropdown.Item>

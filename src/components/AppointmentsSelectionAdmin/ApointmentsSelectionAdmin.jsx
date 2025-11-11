@@ -28,10 +28,13 @@ const AppointmentsSelection = () => {
 
     const [professionals, setProfessionals] = useState([]);
     const [profesionalSeleccionado, setProfesionalSeleccionado] = useState('');
-    const [services, setServices] = useState([]); 
+    const [services, setServices] = useState([]);
 
-    const mañana = new Date();
-    mañana.setDate(mañana.getDate() + 1);
+    // --- CÓDIGO CORREGIDO: minDate ahora es hoy (minDateAllowed) ---
+    const minDateAllowed = new Date();
+    // Establecer la hora a medianoche (00:00:00) para incluir todo el día de hoy
+    minDateAllowed.setHours(0, 0, 0, 0); 
+    // -----------------------------------------------------------------
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -60,7 +63,7 @@ const AppointmentsSelection = () => {
                 }
             };
 
-            const fetchServices = async () => { 
+            const fetchServices = async () => { 
                 try {
                     const response = await axios.get('http://localhost:3000/service');
                     setServices(response.data);
@@ -77,50 +80,50 @@ const AppointmentsSelection = () => {
     }, []);
 
 
-        useEffect(() => {
-        const source = axios.CancelToken.source();
+            useEffect(() => {
+            const source = axios.CancelToken.source();
 
-        const fetchTurnosOcupados = async () => {
-            if (!profesionalSeleccionado || !fecha) return;
+            const fetchTurnosOcupados = async () => {
+                if (!profesionalSeleccionado || !fecha) return;
 
-            const authToken = localStorage.getItem('token');
-            if (!authToken) return;
+                const authToken = localStorage.getItem('token');
+                if (!authToken) return;
 
-            const diaFormatted = fecha.toISOString().split('T')[0];
+                const diaFormatted = fecha.toISOString().split('T')[0];
 
-            try {
-                const response = await axios.get('http://localhost:3000/turnos/ocupados', {
-                    headers: { Authorization: `Bearer ${authToken}` },
-                    params: { profesionalId: profesionalSeleccionado, dia: diaFormatted },
-                    cancelToken: source.token
-                });
+                try {
+                    const response = await axios.get('http://localhost:3000/turnos/ocupados', {
+                        headers: { Authorization: `Bearer ${authToken}` },
+                        params: { profesionalId: profesionalSeleccionado, dia: diaFormatted },
+                        cancelToken: source.token
+                    });
 
-                const horasOcupadas = Array.isArray(response.data)
-                    ? response.data.map(t => t.hora?.slice(0,5)).filter(Boolean)
-                    : [];
-                setTurnosOcupados(horasOcupadas);
+                    const horasOcupadas = Array.isArray(response.data)
+                        ? response.data.map(t => t.hora?.slice(0,5)).filter(Boolean)
+                        : [];
+                    setTurnosOcupados(horasOcupadas);
 
-                if (horasOcupadas.includes(formatTimeToBackend(horarioSeleccionado))) {
-                    setHorarioSeleccionado('');
-                }
+                    if (horasOcupadas.includes(formatTimeToBackend(horarioSeleccionado))) {
+                        setHorarioSeleccionado('');
+                    }
 
-            } catch (err) {
-                    if (axios.isCancel(err)) {
-                            console.log("Request cancelado");
-                        } else {
-                            console.error("Error al traer turnos ocupados:", err.response?.data || err.message);
-                            setTurnosOcupados([]); 
-                            setErrorMensaje('No se pudieron cargar los turnos ocupados.');
-                        }
-            }
-        };
+                } catch (err) {
+                        if (axios.isCancel(err)) {
+                                console.log("Request cancelado");
+                            } else {
+                                console.error("Error al traer turnos ocupados:", err.response?.data || err.message);
+                                setTurnosOcupados([]); 
+                                setErrorMensaje('No se pudieron cargar los turnos ocupados.');
+                            }
+                }
+            };
 
-        fetchTurnosOcupados();
+            fetchTurnosOcupados();
 
-        return () => {
-            source.cancel(); 
-        };
-    }, [profesionalSeleccionado, fecha]);
+            return () => {
+                source.cancel(); 
+            };
+        }, [profesionalSeleccionado, fecha]);
 
     const confirmarTurno = async () => {
 
@@ -281,7 +284,14 @@ const AppointmentsSelection = () => {
             </div>
             <div className="turno-content">
                 <div className="calendar-section">
-                    <Calendar onChange={setFecha} value={fecha} locale="es-AR" minDate={mañana} />
+                    <Calendar 
+                        onChange={setFecha} 
+                        value={fecha} 
+                        locale="es-AR" 
+                        // --- USO DE LA FECHA MÍNIMA MODIFICADA ---
+                        minDate={minDateAllowed} 
+                        // ------------------------------------------
+                    />
                 </div>
                 <div className="time-slots-section">
                     {horarios.map((horaTurno, index) => {
