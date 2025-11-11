@@ -1,22 +1,123 @@
-.who-we-are {
-    text-align: center;
-    margin: 150px auto;
+.us-carousel {
     max-width: 1000px;
-    padding: 50px;
-    background: rgba(231, 223, 223, 0.384);
-    border-radius: 12px;
-    font-family: 'Mooli';
+    margin: 150px auto;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     color: #635845;
-    line-height: 1.2;
+    font-family: 'Gilda Display';
 }
 
-.who-we-are h1 {
-    font-size: 65px;
-    margin-bottom: 20px;
-    color: #635845;
+.us-slide {
+    background-size: cover;
+    background-position: center;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
-.who-we-are p {
+.us-overlay {
+    background: rgba(255, 255, 255, 0.247);
+    backdrop-filter: blur(3px);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.us-content {
+    padding: 50px 70px;
+    text-align: center;
+    border-radius: 20px;
+    max-width: 900px;
+}
+
+.us-content h1 {
+    font-size: 60px;
+    margin-bottom: 25px;
+}
+
+.us-content p {
+    font-size: 22px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.icon-img {
+    display: block;
+    margin: 0 auto 10px auto;
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    border-radius: 20px;
+}
+
+.icon-img:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.why-grid div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.slick-prev,
+.slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    font-size: 0;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.slick-prev:hover,
+.slick-next:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.slick-prev:before,
+.slick-next:before {
     font-size: 25px;
-    margin-bottom: 15px;
+    color: #635845;
+}
+
+.slick-prev {
+    left: 20px;
+}
+
+.slick-next {
+    right: 20px;
+}
+
+.slick-dots li button:before {
+    color: #635845;
+}
+
+.slick-dots li.slick-active button:before {
+    color: #7a654d;
 }
