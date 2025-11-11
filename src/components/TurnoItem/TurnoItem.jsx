@@ -1,37 +1,94 @@
-import React from 'react';
-import './turnoItem.css';
-import "../Turnos/modalTurno.css";
+import React from "react";
 
-const TurnoItem = ({ id, servicios, fecha, hora, duracion, usuarioDisplay, onEliminar, isAdminView }) => {
-    let fechaFormateada = 'Fecha no disponible';
-    if (fecha) {
+const TurnoItem = ({
+    id,
+    servicios,
+    fecha,
+    hora,
+    duracion,
+    usuarioDisplay,
+    profesionalDisplay,
+    dniusuario,
+    asistio,
+    observaciones,
+    onEliminar,
+    onVerHistorial,
+    onToggleAsistencia,
+    onAbrirObservaciones,
+    isAdminView,
+    isProfesionalView, 
+    isUserView, 
+}) => {
+    let fechaFormateada = fecha
+        ? new Date(fecha + "T00:00:00").toLocaleDateString("es-AR")
+        : "Fecha no disponible";
 
-        const parsedDate = new Date(fecha + 'T00:00:00');
-        if (!isNaN(parsedDate.getTime())) {
-            fechaFormateada = parsedDate.toLocaleDateString('es-AR');
-        } else {
+    const isGestorView = isAdminView || isProfesionalView;
+    const canEliminar = isAdminView || isUserView; 
+    const showAsistenciaColumn = isGestorView; 
+    const canToggleAsistencia = isGestorView; 
+    const canAddObservaciones = isGestorView; 
 
-            console.error("Error: Fecha inválida recibida en TurnoItem:", fecha);
-            fechaFormateada = 'Fecha inválida';
-        }
-
-    }
 
     return (
         <tr>
-            {usuarioDisplay && <td>{usuarioDisplay}</td>}
+            {isGestorView && <td>{usuarioDisplay}</td>}
+            {isGestorView && <td>{profesionalDisplay}</td>}
+
             <td>{servicios}</td>
             <td>{fechaFormateada}</td>
             <td>{hora}</td>
             <td>{duracion}</td>
-            <td className="actions-cell">
-                <button
-                    className="btn-eliminar"
-                    onClick={() => onEliminar(id)}
-                >
-                    <i className="bi bi-trash"></i>
-                    Eliminar
-                </button>
+
+            {showAsistenciaColumn && (
+                <td className="asistencia-cell">
+                    <input
+                        type="checkbox" 
+                        checked={asistio}
+                        onChange={canToggleAsistencia ? () => onToggleAsistencia(id, asistio) : undefined}
+                        id={`asistio-${id}`}
+                        className="asistencia-checkbox"
+                        disabled={!canToggleAsistencia} 
+                        title={asistio ? "Marcar como NO ASISTIÓ" : "Marcar como ASISTIÓ"}
+                    />
+                    <label 
+                        htmlFor={`asistio-${id}`} 
+                        className="asistencia-label" 
+                        style={{ cursor: canToggleAsistencia ? 'pointer' : 'default' }}
+                    >
+                        {asistio ? "Asistió" : "Pendiente"}
+                    </label>
+                </td>
+            )}
+
+            <td>
+                <div className="actions-cell">
+                    {isGestorView && dniusuario && onVerHistorial && (
+                        <button
+                            className="btn-secundario btn-historial"
+                            onClick={() => onVerHistorial(dniusuario)}
+                            title="Ver Historial Clínico del paciente"
+                        >
+                            Historial
+                        </button>
+                    )}
+                    
+                    {canAddObservaciones && onAbrirObservaciones && (
+                        <button
+                            className="btn-principal btn-observaciones" 
+                            onClick={() => onAbrirObservaciones({ id, observaciones, fecha, hora, usuarioDisplay, profesionalDisplay })}
+                            title="Agregar o editar observaciones del turno"
+                        >
+                            {observaciones ? "Observaciones" : "Observaciones"}
+                        </button>
+                    )}
+                    
+                    {canEliminar && (
+                        <button className="btn-eliminar" onClick={() => onEliminar(id)}>
+                            Eliminar
+                        </button>
+                    )}
+                </div>
             </td>
         </tr>
     );

@@ -1,38 +1,131 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import './AppointmentsSelection.css';
+import '../AppointmentsSelection/AppointmentsSelection.css';
 import { useNavigate } from 'react-router-dom';
-
-
-const formatTimeToBackend = (timeString) => {
-    const [time, period] = timeString.split(' ');
-    let [hours, minutes] = time.split(':');
-    hours = parseInt(hours);
-
-    if (period && period.toLowerCase() === 'p.m.' && hours < 12) {
-        hours += 12;
-    } else if (period && period.toLowerCase() === 'a.m.' && hours === 12) {
-        hours = 0;
-    }
-    return `${String(hours).padStart(2, '0')}:${minutes}`;
-};
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 const horarios = [
-    '3:00 p. m.', '3:30 p. m.', '4:00 p. m.', '4:30 p. m.',
-    '5:00 p. m.', '5:30 p. m.', '6:00 p. m.', '6:30 p. m.'
+    '15:00', '15:30', '16:00', '16:30',
+    '17:00', '17:30', '18:00', '18:30'
 ];
 
+const formatTimeToBackend = (timeString) => timeString;
+
 const AppointmentsSelection = () => {
+    const navigate = useNavigate();
     const [fecha, setFecha] = useState(new Date());
     const [horarioSeleccionado, setHorarioSeleccionado] = useState('');
     const [mensajeConfirmacion, setMensajeConfirmacion] = useState('');
     const [errorMensaje, setErrorMensaje] = useState('');
     const [servicioSeleccionado, setServicioSeleccionado] = useState('');
-    const navigate = useNavigate();
+    const [turnosOcupados, setTurnosOcupados] = useState([]);
+
+    const [dniUsuarioAgenda, setDniUsuarioAgenda] = useState('');
+    const [currentUserRole, setCurrentUserRole] = useState('');
+    const [currentUserId, setCurrentUserId] = useState('');
+
+    const [professionals, setProfessionals] = useState([]);
+    const [profesionalSeleccionado, setProfesionalSeleccionado] = useState('');
+
+    const [services, setServices] = useState([]);
 
     const mañana = new Date();
     mañana.setDate(mañana.getDate() + 1);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            let decodedToken = {};
+            try {
+                decodedToken = jwtDecode(token);
+                setCurrentUserRole(decodedToken.role);
+                setCurrentUserId(decodedToken.id);
+            } catch (e) {
+                console.error("Error al decodificar el token:", e);
+                return;
+            }
+
+            const fetchProfessionals = async () => {
+                if (decodedToken.role === 'admin' || decodedToken.role === 'superadmin' || decodedToken.role === 'user') {
+                    try {
+                        const response = await axios.get('http://localhost:3000/professionals', {
+                            headers: { Authorization: `Bearer ${token}` }
+                        });
+                        setProfessionals(response.data);
+                    } catch (err) {
+                        console.error("Error al cargar profesionales:", err);
+                        setErrorMensaje('Error al cargar la lista de profesionales.');
+                    }
+                }
+            };
+
+            const fetchServices = async () => {
+                try {
+                    const response = await fetch('http://localhost:3000/service');
+                    const data = await response.json();
+                    setServices(data);
+
+                    const servicioGuardado = localStorage.getItem('servicioSeleccionado');
+                    if (servicioGuardado) {
+                        setServicioSeleccionado(servicioGuardado);
+                        localStorage.removeItem('servicioSeleccionado');
+                    }
+                } catch (error) {
+                    console.error("Error al cargar servicios:", error);
+                }
+            };
+
+            fetchProfessionals();
+            fetchServices();
+        }
+    }, []);
+
+    useEffect(() => {
+        const source = axios.CancelToken.source();
+
+        const fetchTurnosOcupados = async () => {
+            if (!profesionalSeleccionado || !fecha) return;
+
+            const authToken = localStorage.getItem('token');
+            if (!authToken) return;
+
+            const diaFormatted = fecha.toISOString().split('T')[0];
+
+            try {
+                const response = await axios.get('http://localhost:3000/turnos/ocupados', {
+                    headers: { Authorization: `Bearer ${authToken}` },
+                    params: { profesionalId: profesionalSeleccionado, dia: diaFormatted },
+                    cancelToken: source.token
+                });
+
+                const horasOcupadas = Array.isArray(response.data)
+                    ? response.data.map(t => t.hora?.slice(0, 5)).filter(Boolean)
+                    : [];
+                setTurnosOcupados(horasOcupadas);
+
+                if (horasOcupadas.includes(formatTimeToBackend(horarioSeleccionado))) {
+                    setHorarioSeleccionado('');
+                }
+
+            } catch (err) {
+                if (axios.isCancel(err)) {
+                    console.log("Request cancelado");
+                } else {
+                    console.error("Error al traer turnos ocupados:", err.response?.data || err.message);
+                    setTurnosOcupados([]);
+                    setErrorMensaje('No se pudieron cargar los turnos ocupados.');
+                }
+            }
+        };
+
+        fetchTurnosOcupados();
+
+        return () => {
+            source.cancel();
+        };
+    }, [profesionalSeleccionado, fecha]);
 
     const confirmarTurno = async () => {
 
@@ -46,24 +139,37 @@ const AppointmentsSelection = () => {
             return;
         }
 
+        if (!profesionalSeleccionado) {
+            setErrorMensaje('Por favor, seleccioná un profesional.');
+            return;
+        }
+
         setErrorMensaje('');
 
         const diaFormatted = fecha.toISOString().split('T')[0];
         const horaFormatted = formatTimeToBackend(horarioSeleccionado);
-
-        const authToken = localStorage.getItem('authtoken');
+        const authToken = localStorage.getItem('token');
 
         if (!authToken) {
             setErrorMensaje('No estás autenticado. Por favor, inicia sesión para agendar un turno.');
-
+            navigate('/login');
             return;
         }
 
-
         const idservicio = parseInt(servicioSeleccionado);
 
-        try {
+        let userIdToAssign = currentUserId;
+        let professionalIdToAssign = profesionalSeleccionado;
 
+        if (currentUserRole === 'admin' || currentUserRole === 'superadmin') {
+            if (!dniUsuarioAgenda) {
+                setErrorMensaje('Si sos administrador, debés ingresar el DNI del usuario para el turno.');
+                return;
+            }
+            userIdToAssign = dniUsuarioAgenda;
+        }
+
+        try {
             const response = await fetch('http://localhost:3000/misturnos', {
                 method: 'POST',
                 headers: {
@@ -74,6 +180,8 @@ const AppointmentsSelection = () => {
                     dia: diaFormatted,
                     hora: horaFormatted,
                     idservicio: idservicio,
+                    userId: userIdToAssign,
+                    profesionalId: professionalIdToAssign
                 }),
             });
 
@@ -83,7 +191,8 @@ const AppointmentsSelection = () => {
                 setErrorMensaje(errorData.mensaje || 'Error desconocido al agendar el turno. Por favor, intenta de nuevo.');
 
                 if (response.status === 401 || response.status === 403) {
-                    localStorage.removeItem('authtoken');
+                    localStorage.removeItem('token');
+                    navigate('/login');
                 }
                 return;
             }
@@ -93,6 +202,9 @@ const AppointmentsSelection = () => {
 
             setMensajeConfirmacion('¡Turno agendado con éxito!');
             setHorarioSeleccionado('');
+            setServicioSeleccionado('');
+            setDniUsuarioAgenda('');
+            setProfesionalSeleccionado('');
             setTimeout(() => navigate('/misturnos'), 2000);
 
         } catch (error) {
@@ -101,11 +213,7 @@ const AppointmentsSelection = () => {
         }
     };
 
-    const servicios = [
-        { id: 1, nombre: 'Piernas' },
-        { id: 2, nombre: 'Facial' },
-        { id: 3, nombre: 'Brazos' }
-    ];
+    const esAdmin = currentUserRole === 'admin' || currentUserRole === 'superadmin';
 
     return (
         <div className="turno-container">
@@ -128,6 +236,37 @@ const AppointmentsSelection = () => {
                     </button>
                 </div>
             )}
+
+            {esAdmin && (
+                <div className="dni-input-container">
+                    <label className="label" htmlFor="dniUsuarioAgenda">DNI DEL USUARIO PARA EL TURNO </label>
+                    <input
+                        type="text"
+                        id="dniUsuarioAgenda"
+                        placeholder="-- DNI USUARIO --"
+                        value={dniUsuarioAgenda}
+                        onChange={(e) => setDniUsuarioAgenda(e.target.value)}
+                        className="dni-input"
+                    />
+                </div>
+            )}
+
+            <div className="professional-container">
+                <label className="label">SELECCIONÁ UN PROFESIONAL</label>
+                <select
+                    className='service-selection'
+                    value={servicioSeleccionado}
+                    onChange={(e) => setServicioSeleccionado(e.target.value)}
+                >
+                    <option value="">-- Seleccione un profesional --</option>
+                    {professionals.map(prof => (
+                        <option key={prof.id} value={prof.id}>
+                            {prof.name} {prof.lastname}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
             <div className="service-container">
                 <label className="label">SELECCIONÁ UN SERVICIO</label>
                 <select className='service-selection'
@@ -135,7 +274,7 @@ const AppointmentsSelection = () => {
                     onChange={(e) => setServicioSeleccionado(e.target.value)}
                 >
                     <option value="">-- Elegí un servicio --</option>
-                    {servicios.map(servicio => (
+                    {services.map(servicio => (
                         <option key={servicio.id} value={servicio.id}>
                             {servicio.nombre}
                         </option>
@@ -147,15 +286,20 @@ const AppointmentsSelection = () => {
                     <Calendar onChange={setFecha} value={fecha} locale="es-AR" minDate={mañana} />
                 </div>
                 <div className="time-slots-section">
-                    {horarios.map((horaTurno, index) => (
-                        <button
-                            key={index}
-                            className={`time-slot-btn ${horarioSeleccionado === horaTurno ? 'selected' : ''}`}
-                            onClick={() => setHorarioSeleccionado(horaTurno)}
-                        >
-                            {horaTurno}
-                        </button>
-                    ))}
+                    {horarios.map((horaTurno, index) => {
+                        const estaOcupada = turnosOcupados.some(hora => hora.slice(0, 5) === horaTurno);
+
+                        return (
+                            <button
+                                key={index}
+                                className={`time-slot-btn ${horarioSeleccionado === horaTurno ? 'selected' : ''} ${estaOcupada ? 'ocupado' : ''}`}
+                                onClick={() => !estaOcupada && setHorarioSeleccionado(horaTurno)}
+                                disabled={estaOcupada}
+                            >
+                                {horaTurno} {estaOcupada ? '(ocupado)' : ''}
+                            </button>
+                        );
+                    })}
                 </div>
                 <div className="details-section">
                     <p className="label">DETALLES DEL TURNO</p>
@@ -168,20 +312,39 @@ const AppointmentsSelection = () => {
                     </p>
                     <p className="value">
                         {
-                            servicios.find(servicio => servicio.id === parseInt(servicioSeleccionado))?.nombre
+                            services.find(servicio => servicio.id === parseInt(servicioSeleccionado))?.nombre
                         }
                     </p>
                     <p className="value">{horarioSeleccionado}</p>
-                    {(!horarioSeleccionado || !servicioSeleccionado) && (
-                        <p style={{ color: '#bb8c68', marginTop: '10px' }}>
-                            Seleccioná un servicio y un horario para poder confirmar tu turno.
+
+                    {esAdmin && dniUsuarioAgenda && (
+                        <p className="value">Para DNI: {dniUsuarioAgenda}</p>
+                    )}
+
+                    {profesionalSeleccionado && (
+                        <p className="value">
+                            Profesional: {professionals.find(p => p.id === profesionalSeleccionado)?.name}
+                        </p>
+                    )}
+
+                    {(!horarioSeleccionado || !servicioSeleccionado || !profesionalSeleccionado || (esAdmin && !dniUsuarioAgenda)) && (
+                        <p style={{ color: '#635845', marginTop: '10px' }}>
+                            {esAdmin
+                                ? 'Seleccioná servicio, horario, Profesional y DNI de usuario.'
+                                : 'Seleccioná un servicio, horario y profesional para confirmar tu turno.'
+                            }
                         </p>
                     )}
 
                     <button
                         className="confirm-btn"
                         onClick={confirmarTurno}
-                        disabled={!horarioSeleccionado || !servicioSeleccionado}
+                        disabled={
+                            !horarioSeleccionado ||
+                            !servicioSeleccionado ||
+                            !profesionalSeleccionado ||
+                            (esAdmin && !dniUsuarioAgenda)
+                        }
                     >
                         CONFIRMAR
                     </button>

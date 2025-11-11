@@ -1,9 +1,9 @@
 import React from 'react';
-import AppointmentsSelection from '../components/AppointmentsSelection/AppointmentsSelection';
+import AppointmentsSelectionAdmin from '../components/AppointmentsSelection/AppointmentsSelection';
 const ProgramarTurnos = () => {
   return (
     <div>
-      <AppointmentsSelection />
+      <AppointmentsSelectionAdmin />
     </div>
   );
 };

@@ -2,11 +2,13 @@
   max-width: 900px;
   margin: 40px auto;
   margin-top: 100px;
-  background: white;
+  background: rgba(255, 255, 255, 0.25);
   padding: 40px 60px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  font-family: 'Julius Sans One', sans-serif;
-  color: #bb8c68;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  font-family: 'Gilda Display';
+  color: #635845;
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
 }
 
 .turno-title {
@@ -14,6 +16,7 @@
   font-size: 28px;
   letter-spacing: 2px;
   margin-bottom: 40px;
+  color: #635845;
 }
 
 .turno-content {
@@ -30,12 +33,13 @@
 
 .react-calendar {
   border: none;
-  font-family: 'Julius Sans One', sans-serif;
-  color: #bb8c68;
+  font-family: 'gilda display';
+  color: #635845;
+  border-radius: 20px;
 }
 
 .react-calendar__navigation button {
-  color: #bb8c68;
+  color: #635845;
   font-weight: 700;
   background: transparent;
   border: none;
@@ -43,30 +47,37 @@
 
 .react-calendar__navigation button:enabled:hover,
 .react-calendar__navigation button:enabled:focus {
-  background-color: #f1e5dc;
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .react-calendar__month-view__weekdays {
   text-transform: lowercase;
   font-weight: 500;
   font-size: 0.8rem;
-  color: #bb8c68;
+  color: #635845;
 }
 
+.react-calendar__month-view__days {
+  text-transform: lowercase;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+
 .react-calendar__tile {
-  color: #bb8c68;
+  color: #635845;
   font-weight: 500;
 }
 
 .react-calendar__tile--now {
-  background: transparent;
-  color: #bb8c68;
+  background: rgba(255, 255, 255, 0.25);
+  color: #635845;
   font-weight: 700;
 }
 
 .react-calendar__tile--active {
-  background: #bb8c68;
-  color: white;
+  background: rgba(255, 255, 255, 0.786);
+  color: #635845;
   font-weight: 700;
 }
 
@@ -78,8 +89,8 @@
 }
 
 .time-slot-btn {
-  border: 1px solid #bb8c68;
-  background: white;
+  border: 1px solid #635845;
+  background: rgba(255, 255, 255, 0.403);
   padding: 10px 0;
   text-align: center;
   font-weight: 600;
@@ -87,44 +98,44 @@
   transition: all 0.2s ease-in-out;
   border-radius: 2px;
   font-size: 1rem;
+  border-radius: 20px;
 }
 
 .time-slot-btn.selected {
-  background-color: #bb8c68;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #635845;
   font-weight: 700;
 }
 
 .time-slot-btn:hover {
-  background-color: #f1e5dc;
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .details-section {
-  flex: 0.8;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-size: 0.9rem;
-  font-weight: 600;
-  line-height: 1.5;
+  background: rgba(255, 255, 255, 0.059);
+  padding: 20px 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
+  text-align: center;
 }
 
 .details-section .label {
   margin-bottom: 10px;
-  color: #bb8c68;
+  color: #635845;
   font-weight: 700;
   letter-spacing: 1.5px;
 }
 
 .details-section .value {
   margin-bottom: 15px;
-  color: #5c3a21;
+  color: #635845;
   text-transform: uppercase;
 }
 
 .confirm-btn {
-  background-color: #bb8c68;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #635845;
   border: none;
   padding: 10px 30px;
   font-weight: 700;
@@ -132,74 +143,79 @@
   align-self: flex-start;
   border-radius: 3px;
   transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 20px;
 }
 
 .confirm-btn:disabled {
-  background-color: #ccc;
-  color: #666;
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #635845;
   cursor: not-allowed;
 }
 
 .confirm-btn:hover {
-  background-color: #a6734c;
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .react-calendar__tile:disabled {
-  background-color: #f9f4f1;
-  color: #ccc;
+  color: #635845;
   cursor: not-allowed;
 }
 
 .modal-overlay {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(255, 255, 255, 0.25);
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 1s ease;
   z-index: 1000;
+  border-radius: 20px;
 }
 
 .modal-content {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.25);
   padding: 30px 30px;
   border-radius: 10px;
-  color: #5c3a21;
+  color: #635845;
   text-align: center;
   font-size: 1rem;
   font-weight: 600;
   max-width: 400px;
   width: 100%;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  animation: scaleUp 0.3s ease;
+  animation: scaleUp 1s ease;
 }
 
 .modal-close {
   margin-top: 20px;
   padding: 8px 20px;
-  background-color: #bb8c68;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.899);
+  color: #635845;
+  color: 635845;
   border: none;
   border-radius: 3px;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.5s ease;
 }
 
 .modal-close:hover {
-  background-color: #a6734c;
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .service-selection {
-  color: #a6734c;
+  color: #635845;
   margin: 10px;
-  border-color: #bb8c68;
+  border-color: #635845;
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
   outline: none;
+  border-radius: 20px;
 }
 
 .service-container {
   margin-bottom: 15px;
+  color: #635845;
+  border-radius: 20px;
 }
 
 .label {
@@ -207,7 +223,7 @@
   display: inline;
   text-align: center;
   margin-bottom: 5px;
-  color: #5c3a21;
+  color: #635845;
   font-weight: 600;
 }
 
@@ -216,25 +232,74 @@
 }
 
 .dni-input {
-  color: #a6734c;
-  border: 1px solid #bb8c68;
+  color: #635845;
+  border: 1px solid #635845;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   outline: none;
-  font-family: 'Julius Sans One', sans-serif;
+  font-family: 'Gilda display';
   font-size: 1rem;
   max-width: 300px;
   display: inline;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.25);
   line-height: normal;
   text-align: center;
+  border-radius: 20px;
 }
 
 .dni-input::placeholder {
-  color: #a6734c80;
+  color: #635845;
 }
 
 .dni-input:focus {
-  border-color: #a6734c;
+  border-color: #635845;
   box-shadow: 0 0 0 3px rgba(187, 140, 104, 0.2);
   outline: none;
 }
+
+.error-message {
+  color: #635845 !important;
+  background-color: rgba(255, 255, 255, 0.448) !important;
+  border-color: #635845 !important;
+  border-radius: 20px !important;
+  padding: 5px 10px !important;
+  font-size: 20px !important;
+}
+
+.dni-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid #635845;
+    border-radius: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    z-index: 1000;
+}
+
+.autocomplete-list li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.autocomplete-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.time-slot-btn.ocupado {
+    background-color: #eee;       
+    color: #888;                  
+    cursor: not-allowed;          
+    text-decoration: line-through; 
+    opacity: 0.6;            
+}
+

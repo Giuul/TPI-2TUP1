@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "./pages.css";
 import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
-import ClearisPiernas from '../assets/img/ClearisPiernas.png';
-import ClearisFacial from '../assets/img/ClearisFacial.png';
-import ClearisBrazos from '../assets/img/ClearisBrazos.png';
 import Service from '../components/Services/Services';
 
 const Servicios = () => {
@@ -16,26 +13,30 @@ const Servicios = () => {
       .catch(error => console.error('Error al cargar servicios:', error));
   }, []);
 
-  const imageMap = {
-    "PIERNAS": ClearisPiernas,
-    "FACIAL": ClearisFacial,
-    "BRAZOS": ClearisBrazos,
-  };
-
   return (
     <div>
       <div className='contenedorServicios'>
         {services.map(service => {
-          const key = service.nombre.trim().toUpperCase();
+          const base64Image = typeof service.imagen === 'string' ? service.imagen : null;
+
+          let imageType = 'jpeg';
+          if (base64Image?.startsWith('iVBOR')) imageType = 'png';
+
           return (
             <Service
               key={service.id}
-              img={imageMap[key] || 'https://via.placeholder.com/150'}
+              id={service.id}
+              img={
+                base64Image
+                  ? `data:image/${imageType};base64,${base64Image}`
+                  : '/img/placeholder.png'
+              }
               title={service.nombre}
               desc={service.descripcion}
             />
           );
         })}
+
       </div>
       <ClearisFooter />
     </div>

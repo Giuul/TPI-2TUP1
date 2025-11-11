@@ -1,72 +1,188 @@
 .turnos-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: transparent;
-    border-radius: 6px;
-    box-shadow: none;
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 40px;
+    padding-bottom: 150px; 
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Gilda Display';
+    color: #635845;
+    min-height: calc(100vh - 120px); 
 }
 
 .turnos-title {
     text-align: center;
-    font-size: 30px;
-    color: #d39b77;
-    margin-bottom: 30px;
-    letter-spacing: 2px;
+    font-size: 2rem;
+    color: #635845;
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
     font-weight: 400;
-    text-transform: uppercase;
 }
 
 .turnos-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 15px;
-    margin-top: 20px;
-    box-shadow: none;
-    border: none;
+    border-collapse: collapse;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
 .turnos-table thead {
-    display: none;
+    display: table-header-group; 
+    background: rgba(255, 255, 255, 0.4); 
+    border-radius: 20px 20px 0 0; 
+}
+
+/* REGLA UNIFICADA PARA CELDAS Y ENCABEZADOS */
+.turnos-table th,
+.turnos-table td {
+    padding: 14px 10px; 
+    font-size: 1rem;
+    color: #635845;
+    font-family: 'Gilda Display';
+    text-align: center; 
+    word-wrap: break-word;
+    white-space: normal;
+    vertical-align: middle;
 }
 
 .turnos-table th {
-    background-color: transparent;
-    color: inherit;
-    font-weight: normal;
-    text-transform: none;
-    font-size: inherit;
+    font-weight: bold;
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(100, 100, 100, 0.3); 
 }
+
+/* 1. ESTILO Y ANCHO FIJO PARA COLUMNA USUARIO (Primera columna) */
+.turnos-table th:first-child,
+.turnos-table td:first-child {
+    text-align: left;
+    padding-left: 20px;
+    width: 25%;
+    min-width: 150px;
+}
+
 
 .turnos-table td {
-    padding: 20px 25px;
-    text-align: left;
+    background: rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(100, 100, 100, 0.1); 
+}
+
+.turnos-table tbody tr:last-child td {
     border-bottom: none;
-    vertical-align: middle;
-    font-size: 16px;
-    color: #5a5a5a;
+}
+
+.turnos-table tr:hover td {
+    background: rgba(255, 255, 255, 0.45);
+}
+
+/* 2. ESTILO Y ANCHO FIJO PARA COLUMNA ASISTENCIA */
+.turnos-table th:nth-last-child(2),
+.turnos-table td:nth-last-child(2) {
+    width: 100px;
+    min-width: 100px;
+}
+
+/* 3. ESTILO PARA COLUMNA ACCIONES (Última columna) */
+.actions-cell {
+    /* **SOLUCIÓN: FLEXBOX EN COLUMNA** */
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    gap: 5px; /* Espacio vertical entre botones */
+    
+    width: 140px; 
+    min-width: 140px;
+    padding-right: 10px; 
 }
 
 
-.turnos-container>p {
-    text-align: center;
-    font-size: 18px;
-    color: #777;
-    margin-top: 30px;
-    padding: 20px;
-    border: 1px dashed #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+/* --- ESTILOS DE BOTONES GENERALES Y LAYOUT --- */
+
+.botones-turnos {
+    margin: 10px 0 20px 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
-.turnos-container p {
-    text-align: center;
-    font-size: 1.1em;
-    color: #555;
-    margin-top: 20px;
-}
-
-.turnos-container p.error-message {
-    color: #d9534f;
+.btn-principal,
+.btn-eliminar,
+.btn-secundario,
+.btn-asistio,
+.btn-no-asistio {
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
     font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s;
+    text-align: center;
+    width: 100px; 
+}
+
+/* Botón Principal (Programar Turno) */
+.btn-principal {
+    background-color: rgba(255, 235, 220, 0.25);
+    color: #635845;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px !important;
+}
+
+.btn-principal:hover {
+    background-color: rgba(255, 235, 220, 0.45);
+}
+
+/* Botón Eliminar */
+.btn-eliminar {
+    background-color: rgba(210, 140, 140, 0.15);
+    border: 1px solid rgba(210, 140, 140, 0.5);
+    color: #a04040;
+}
+
+.btn-eliminar:hover {
+    background-color: rgba(210, 140, 140, 0.35);
+    color: #702a2a;
+}
+
+/* Botón Secundario (Historial) */
+.btn-secundario {
+    background-color: rgba(220, 240, 255, 0.25);
+    border: 1px solid rgba(140, 180, 210, 0.4);
+    color: #557b8b;
+}
+
+.btn-secundario:hover {
+    background-color: rgba(220, 240, 255, 0.45);
+    color: #45636b;
+}
+
+/* Botones Asistencia/No Asistencia */
+.btn-asistio {
+    background-color: rgba(140, 210, 140, 0.25); 
+    border: 1px solid rgba(100, 180, 100, 0.5);
+    color: #40a040;
+    width: 85px; 
+}
+
+.btn-no-asistio {
+    background-color: rgba(255, 200, 150, 0.25);
+    border: 1px solid rgba(210, 140, 70, 0.5);
+    color: #a06040;
+    width: 85px; 
+}
+
+.btn-asistio:hover,
+.btn-no-asistio:hover {
+    opacity: 0.8;
+}
+
+.btn-eliminar:active,
+.btn-secundario:active,
+.btn-asistio:active,
+.btn-no-asistio:active {
+    transform: translateY(1px);
 }

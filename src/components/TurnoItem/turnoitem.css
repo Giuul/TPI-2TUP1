@@ -1,47 +1,65 @@
 tr {
-    background-color: #f7f0eb;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: background-color 0.3s ease;
+    background: rgba(255, 255, 255, 0.466);
+    transition: all 0.3s ease;
 }
 
 tr:hover {
-    background-color: #f5ede5;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+td {
+    padding: 14px 25px;
+    font-size: 1rem;
+    color: #635845;
+    font-family: 'Gilda Display';
+    border: none;
+    text-align: center;
 }
 
 .actions-cell {
     text-align: right;
-    width: 150px;
+    width: 140px;
+}
+
+.btn-historial {
+    background-color: rgba(255, 235, 220, 0.25);
+    border: 1px solid rgba(210, 180, 140, 0.4);
+    color: #635845;
+    border-radius: 20px;
+}
+
+.btn-historial:hover {
+    background-color: rgba(255, 235, 220, 0.575);
 }
 
 .btn-eliminar {
-    background-color: transparent;
-    color: #d39b77;
-    border: 1px solid #d39b77;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    background-color: rgba(255, 235, 220, 0.25);
+    border: 1px solid rgba(210, 180, 140, 0.4);
+    color: #635845;
 }
 
 .btn-eliminar:hover {
-    background-color: #d39b77;
-    color: white;
-    border-color: #d39b77;
+    background-color: rgba(255, 235, 220, 0.575);
 }
 
 .btn-eliminar:active {
-    background-color: #c08b6a;
-    border-color: #c08b6a;
+    transform: translateY(0);
 }
 
 .btn-eliminar .bi-trash {
-    display: none;
+    margin-right: 6px;
+    font-size: 1rem;
 }
 
-.btn-eliminar .bi-trash {
-    display: inline-block;
-    font-size: 1.1em;
+@media (max-width: 768px) {
+    td {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+
+    .btn-eliminar {
+        padding: 6px 16px;
+        font-size: 0.85rem;
+    }
 }
