@@ -8,18 +8,18 @@ import "slick-carousel/slick/slick-theme.css";
 import "./body.css";
 
 const Body = () => {
-  const images = [slideshowImg1, slideshowImg2,slideshowImg3];
+  const images = [slideshowImg1, slideshowImg2, slideshowImg3];
 
   const settings = {
-    infinite: true,         
-    speed: 800,             
+    infinite: true,
+    speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000,   
+    autoplaySpeed: 5000,
     arrows: true,
-    fade: true,             
-    pauseOnHover: true,     
+    fade: true,
+    pauseOnHover: true,
   };
 
   return (
