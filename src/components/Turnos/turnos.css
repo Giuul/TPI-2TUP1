@@ -1,8 +1,7 @@
 .turnos-container {
     max-width: 1000px;
     margin: 60px auto;
-    padding: 40px;
-    padding-bottom: 150px;
+    padding: 40px 30px 100px 30px;
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(15px);
@@ -22,6 +21,36 @@
     font-weight: 400;
 }
 
+.calendar-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.calendar-controls label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #635845;
+}
+
+.date-input {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(210, 180, 140, 0.35);
+    background-color: rgba(255, 255, 255, 0.9);
+    font-family: 'Gilda Display', serif;
+    font-size: 1rem;
+    color: #635845;
+    transition: all 0.25s ease;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: #635045;
+    background-color: rgba(255, 255, 255, 1);
+}
+
 .turnos-table {
     width: 100%;
     border-collapse: collapse;
@@ -30,7 +59,7 @@
 }
 
 .turnos-table thead {
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.45);
 }
 
 .turnos-table th,
@@ -52,21 +81,9 @@
     border-bottom: 1px solid rgba(100, 100, 100, 0.2);
 }
 
-.turnos-table th:first-child,
-.turnos-table td:first-child {
-    text-align: left;
-    padding-left: 20px;
-    width: 25%;
-    min-width: 150px;
-}
-
 .turnos-table td {
     background: rgba(255, 255, 255, 0.35);
     border-bottom: 1px solid rgba(100, 100, 100, 0.1);
-}
-
-.turnos-table tbody tr:last-child td {
-    border-bottom: none;
 }
 
 .turnos-table tr:hover td {
@@ -79,9 +96,6 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    width: 140px;
-    min-width: 140px;
-    padding-right: 10px;
 }
 
 .botones-turnos {
@@ -89,54 +103,61 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    gap: 8px;
 }
 
 .btn-principal,
 .btn-eliminar,
 .btn-secundario,
 .btn-asistio,
-.btn-no-asistio {
-    padding: 7px !important;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
+.btn-no-asistio,
+.btn-editar,
+.btn-historial,
+.modal-confirm-button,
+.modal-cancel-button {
+    padding: 8px 14px !important;
+    border-radius: 20px !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
     transition: all 0.25s ease;
-    align-items: center !important;
-    width: 110px;
-    border: none;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08) !important;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn-principal {
-    background-color: rgba(255, 235, 220, 0.35);
+    background-color: rgba(255, 255, 255, 0.45);
     color: #635845;
 }
 
 .btn-principal:hover {
-    background-color: rgba(255, 235, 220, 0.55);
+    background-color: rgba(255, 255, 255, 0.55);
 }
 
 .btn-eliminar {
-    background-color: rgba(255, 255, 255, 0.445) !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    color: #635845 !important;
+    background-color: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #635845;
 }
 
 .btn-eliminar:hover {
     background-color: rgba(210, 140, 140, 0.3);
-    color: #702a2a;
+    color: #635045;
 }
 
-.btn-secundario {
-    background-color: rgba(220, 240, 255, 0.25);
-    border: 1px solid rgba(140, 180, 210, 0.4);
-    color: #557b8b;
+.btn-editar {
+    background-color: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #4a7b8d;
+    font-weight: bold;
 }
 
-.btn-secundario:hover {
-    background-color: rgba(220, 240, 255, 0.45);
-    color: #45636b;
+.btn-editar:hover {
+    background-color: rgba(210, 140, 140, 0.3);
+    color: #635045;
 }
 
 .btn-asistio {
@@ -158,15 +179,8 @@
     opacity: 0.8;
 }
 
-.btn-eliminar:active,
-.btn-secundario:active,
-.btn-asistio:active,
-.btn-no-asistio:active {
-    transform: translateY(1px);
-}
-
 .input-personalizado {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.85);
     border: 1px solid rgba(200, 180, 150, 0.25);
     border-radius: 10px;
     padding: 10px 14px;
@@ -179,57 +193,115 @@
 
 .input-personalizado:focus {
     outline: none;
-    border-color: #b79a6b;
+    border-color: #635845;
     background: rgba(255, 255, 255, 0.95);
 }
 
-.react-datepicker {
-    font-family: 'Gilda Display';
-    border-radius: 10px;
-    border: 1px solid rgba(200, 180, 150, 0.25);
-    background: rgba(255, 255, 255, 0.95);
+.modal-overlay {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 10000 !important;
+    background-color: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    animation: fadeInOverlay 0.25s ease-out;
 }
 
-.react-datepicker__day--selected,
-.react-datepicker__day--in-range,
-.react-datepicker__month-text--selected,
-.react-datepicker__year-text--selected {
-    background-color: #635845 !important;
-    color: #fff !important;
-    border-radius: 0.4rem;
-}
-
-.modal-body input[type="date"],
-.modal-body input[type="time"] {
-    appearance: none;
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(200, 180, 150, 0.25);
-    border-radius: 10px;
-    padding: 10px 14px;
+.modal-content {
+    position: relative;
+    margin-top: -100px !important;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 20px;
+    padding: 35px 50px;
+    width: 90%;
+    max-width: 440px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    text-align: center;
     font-family: 'Gilda Display';
     color: #635845;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    animation: popIn 0.3s ease-out;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    font-family: 'Gilda Display', serif;
+    color: #635845;
 }
 
-.modal-body input[type="date"]:focus,
-.modal-body input[type="time"]:focus {
+.modal-body label {
+    font-weight: 500;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.modal-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #635845;
+    font-weight: 400;
+    margin-top: 50px;
+}
+
+.modal-body input[type="text"],
+.modal-body input[type="date"],
+.modal-body input[type="time"] {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(210, 180, 140, 0.225);
+    background-color: rgba(255, 255, 255, 0.559);
+    font-size: 1rem;
+    font-family: 'Gilda Display', serif;
+    color: #635845;
+    transition: all 0.25s ease;
+}
+
+.modal-body input:focus {
     outline: none;
-    border-color: #b79a6b;
-    background: rgba(255, 255, 255, 0.95);
+    border-color: #635845;
+    background-color: rgba(255, 255, 255, 1);
 }
 
-.input-error {
-    border: 2px solid #a04040 !important;
-    background-color: rgba(255, 220, 220, 0.6);
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
 }
 
-.modal-error {
-    color: #a04040;
-    font-size: 0.9rem;
-    margin-top: 8px;
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 10px;
+    color: #635845;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: #635045;
+    transform: scale(1.1);
 }
 
 @keyframes fadeInTurnos {
@@ -244,6 +316,28 @@
     }
 }
 
+@keyframes fadeInOverlay {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 @media (max-width: 768px) {
     .turnos-container {
         padding: 25px;
@@ -255,16 +349,25 @@
         padding: 10px 8px;
     }
 
-    .btn-principal,
-    .btn-eliminar,
-    .btn-secundario {
-        font-size: 0.8rem;
-        padding: 8px 12px;
-        width: auto;
-    }
-
     .actions-cell {
         flex-direction: row;
         gap: 8px;
+    }
+
+    .botones-turnos {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 20px 15px;
+        max-width: 90%;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+        gap: 10px;
     }
 }

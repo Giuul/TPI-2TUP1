@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import TurnoItem from "../TurnoItem/TurnoItem";
-import TurnosCalendario from "../TurnosCalendario/TurnosCalendario";
+import TurnosCalendarView from "../TurnosCalendario/TurnosCalendario";
 import ObservacionesModal from "../ListaSesiones/ObservacionModal";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import ModalPortal from "../Turnos/ModalPortal";
-import './turnos.css'
-
+import './turnos.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Turnos = () => {
     const [listaDeTurnos, setListaDeTurnos] = useState([]);
@@ -15,6 +16,9 @@ const Turnos = () => {
     const [currentUserRole, setCurrentUserRole] = useState("user");
 
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
+
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [turnoToEdit, setTurnoToEdit] = useState(null);
 
     const [showTurnoDeleteModal, setShowTurnoDeleteModal] = useState(false);
     const [turnoToDeleteId, setTurnoToDeleteId] = useState(null);
@@ -61,55 +65,40 @@ const Turnos = () => {
 
         setCurrentUserRole(userRole);
 
-        let url = "";
         const isGestor = userRole === "admin" || userRole === "superadmin" || userRole === "profesional";
-
-        if (isGestor) {
-            url = `http://localhost:3000/admin/turnos?dia=${dateToFetch}`;
-        } else {
-            url = "http://localhost:3000/misturnos";
-        }
+        const url = isGestor
+            ? `http://localhost:3000/admin/turnos?dia=${dateToFetch}`
+            : "http://localhost:3000/misturnos";
 
         try {
-            const res = await fetch(url, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
             if (!res.ok) throw new Error("Error al obtener los turnos");
 
             const data = await res.json();
             let turnosFinales = data;
 
             if (!isGestor) {
+                const today = new Date().toISOString().split("T")[0];
                 const now = new Date();
-                const today = now.toISOString().split("T")[0];
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const currentTime = `${hours}:${minutes}`;
+                const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
                 turnosFinales = data.filter(turno => {
                     if (!turno.dia) return false;
-
                     if (turno.dia > today) return true;
-
                     if (turno.dia === today) return turno.hora >= currentTime;
-
                     return false;
                 });
             }
 
-            const turnosTransformados = turnosFinales.map((turno) => {
+            const turnosTransformados = turnosFinales.map(turno => {
                 const base = {
                     id: turno.id,
                     dniusuario: turno.dniusuario,
                     servicios: turno.servicio?.nombre || "Servicio no especificado",
                     fecha: turno.dia,
                     hora: turno.hora,
-                    duracion: turno.servicio?.duracion
-                        ? `${turno.servicio.duracion} minutos`
-                        : "N/A",
-                    profesionalDisplay: turno.profesional
-                        ? `${turno.profesional.name} ${turno.profesional.lastname}`
-                        : "Sin asignar",
+                    duracion: turno.servicio?.duracion ? `${turno.servicio.duracion} minutos` : "N/A",
+                    profesionalDisplay: turno.profesional ? `${turno.profesional.name} ${turno.profesional.lastname}` : "Sin asignar",
                     asistio: turno.asistio,
                     observaciones: turno.observaciones,
                     createdAt: turno.createdAt,
@@ -119,8 +108,7 @@ const Turnos = () => {
                     const usuarioInfo = turno.usuario
                         ? `${turno.usuario.name} ${turno.usuario.lastname} (DNI: ${turno.usuario.id})`
                         : `DNI: ${turno.dniusuario}`;
-
-                    return { ...base, usuarioDisplay: usuarioInfo, profesionalDisplay: base.profesionalDisplay };
+                    return { ...base, usuarioDisplay: usuarioInfo };
                 }
 
                 return base;
@@ -139,9 +127,29 @@ const Turnos = () => {
         fetchTurnos(newDate);
     };
 
+    useEffect(() => { fetchTurnos(selectedDate); }, []);
+
+    const [serviciosDisponibles, setServiciosDisponibles] = useState([]);
+
     useEffect(() => {
-        fetchTurnos(selectedDate);
+        const fetchServicios = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const res = await fetch("http://localhost:3000/servicios", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                const data = await res.json();
+                setServiciosDisponibles(data);
+            } catch (error) {
+                console.error("Error al cargar servicios:", error);
+            }
+        };
+
+        fetchServicios();
     }, []);
+
 
     const openTurnoDeleteModal = (id) => {
         setTurnoToDeleteId(id);
@@ -160,48 +168,78 @@ const Turnos = () => {
         try {
             const res = await fetch(`http://localhost:3000/admin/turnos/${id}/asistencia`, {
                 method: "PUT",
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ asistio: newStatus }),
+            });
+            if (!res.ok) throw new Error("Error al actualizar la asistencia");
+
+            setListaDeTurnos(prev => prev.map(t => t.id === id ? { ...t, asistio: newStatus } : t));
+            setSuccessMessage(`Asistencia actualizada a ${newStatus ? 'ASISTIO' : 'NO ASISTIO'}.`);
+            setShowSuccessModal(true);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    const openEditModal = (turno) => {
+        const servicioEncontrado = serviciosDisponibles.find(
+            (s) => s.nombre.toLowerCase() === turno.servicios.toLowerCase()
+        );
+
+        setTurnoToEdit({
+            ...turno,
+            servicioId: servicioEncontrado ? servicioEncontrado.id : "",
+        });
+
+        setShowEditModal(true);
+    };
+
+    const closeEditModal = () => {
+        setShowEditModal(false);
+        setTurnoToEdit(null);
+    };
+
+    const handleSaveEdit = async (editedTurno) => {
+        try {
+            const token = localStorage.getItem("token");
+
+            const res = await fetch(`http://localhost:3000/admin/turnos/${editedTurno.id}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ asistio: newStatus }),
+                body: JSON.stringify({
+                    dia: editedTurno.fecha,
+                    hora: editedTurno.hora,
+                    idservicio: Number(editedTurno.servicioId),
+                }),
             });
 
-            if (!res.ok) throw new Error("Error al actualizar la asistencia");
+            const data = await res.json();
+            console.log("Respuesta backend:", data);
 
-            setListaDeTurnos((prev) =>
-                prev.map((t) => (t.id === id ? { ...t, asistio: newStatus } : t))
-            );
-
-            const turnoActualizado = listaDeTurnos.find(t => t.id === id);
-            let nombreAmostrar = `Turno #${id}`;
-            if (turnoActualizado && turnoActualizado.usuarioDisplay) {
-                const match = turnoActualizado.usuarioDisplay.match(/(.*) \(DNI:/);
-                nombreAmostrar = match ? match[1].trim() : `Turno #${id}`;
+            if (!res.ok) {
+                throw new Error(data.mensaje || "Error al guardar los cambios del turno");
             }
 
-            setSuccessMessage(`Asistencia de ${nombreAmostrar} actualizada a ${newStatus ? 'ASISTIO' : 'NO ASISTIO'}.`);
-            setShowSuccessModal(true);
+            await fetchTurnos(selectedDate);
 
-        } catch (err) {
-            setError(err.message);
+            setShowEditModal(false);
+        } catch (error) {
+            console.error("Error al editar turno:", error);
+            alert("No se pudo guardar el turno. " + error.message);
         }
     };
 
     const confirmDeleteTurno = async () => {
         if (!turnoToDeleteId) return;
         setLoading(true);
-
         try {
             const token = localStorage.getItem("authtoken");
-            const res = await fetch(`http://localhost:3000/misturnos/${turnoToDeleteId}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const res = await fetch(`http://localhost:3000/misturnos/${turnoToDeleteId}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
             if (!res.ok) throw new Error("Error al eliminar el turno");
-
-            setListaDeTurnos((prev) => prev.filter((t) => t.id !== turnoToDeleteId));
-
+            setListaDeTurnos(prev => prev.filter(t => t.id !== turnoToDeleteId));
             setSuccessMessage("Turno eliminado exitosamente.");
             setShowSuccessModal(true);
         } catch (err) {
@@ -214,8 +252,8 @@ const Turnos = () => {
 
     const openObservacionesModal = (turno) => {
         setTurnoObservaciones(turno);
-        setErrorObservaciones(null);
         setShowObservacionesModal(true);
+        setErrorObservaciones(null);
     };
 
     const closeObservacionesModal = () => {
@@ -225,29 +263,18 @@ const Turnos = () => {
 
     const handleSaveObservaciones = async (id, texto) => {
         setLoadingObservaciones(true);
-        setErrorObservaciones(null);
         const token = localStorage.getItem("authtoken");
-
         try {
             const res = await fetch(`http://localhost:3000/admin/turnos/${id}/observaciones`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ observaciones: texto }),
             });
-
             if (!res.ok) throw new Error("Error al guardar las observaciones");
-
-            setListaDeTurnos((prev) =>
-                prev.map((t) => (t.id === id ? { ...t, observaciones: texto } : t))
-            );
-            setTurnoObservaciones((prev) => ({ ...prev, observaciones: texto }))
+            setListaDeTurnos(prev => prev.map(t => t.id === id ? { ...t, observaciones: texto } : t));
             setSuccessMessage("Observaciones guardadas exitosamente.");
             setShowSuccessModal(true);
             closeObservacionesModal();
-
         } catch (err) {
             setErrorObservaciones(err.message);
         } finally {
@@ -268,23 +295,18 @@ const Turnos = () => {
 
     return (
         <div className="turnos-container">
-            <h2 className="turnos-title">
-                {isGestorView ? "GESTIÓN DE TURNOS" : "MIS TURNOS"}
-            </h2>
+            <h2 className="turnos-title">{isGestorView ? "GESTIÓN DE TURNOS" : "MIS TURNOS"}</h2>
 
             {(currentUserRole === "admin" || currentUserRole === "superadmin") && (
                 <div className="botones-turnos">
-                    <button
-                        className="btn-principal"
-                        onClick={() => navigate("/programar-turnos-admin")}
-                    >
+                    <button className="btn-principal" onClick={() => navigate("/programar-turnos-admin")}>
                         PROGRAMAR TURNO
                     </button>
                 </div>
             )}
 
             {isGestorView ? (
-                <TurnosCalendario
+                <TurnosCalendarView
                     turnos={listaDeTurnos}
                     loading={loading}
                     error={error}
@@ -295,6 +317,7 @@ const Turnos = () => {
                     toggleAsistencia={toggleAsistencia}
                     handleVerHistorial={handleVerHistorial}
                     openObservacionesModal={openObservacionesModal}
+                    openEditModal={openEditModal}
                 />
             ) : (
                 listaDeTurnos.length === 0 ? (
@@ -311,11 +334,12 @@ const Turnos = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {listaDeTurnos.map((turno) => (
+                            {listaDeTurnos.map(turno => (
                                 <TurnoItem
                                     key={turno.id}
                                     {...turno}
                                     onEliminar={openTurnoDeleteModal}
+                                    onEditarTurno={openEditModal}
                                     isUserView={isUserView}
                                 />
                             ))}
@@ -344,6 +368,101 @@ const Turnos = () => {
                 title={successMessage}
                 actions={<button className="modal-confirm-button" onClick={closeSuccessModal}>Aceptar</button>}
             />
+
+            <ModalPortal
+                isOpen={showEditModal}
+                onClose={closeEditModal}
+                title="Editar Turno"
+                className="modal-edit"
+                actions={
+                    <>
+                        <button className="modal-cancel-button" onClick={closeEditModal}>Cancelar</button>
+                        <button
+                            className="modal-confirm-button"
+                            onClick={() => handleSaveEdit(turnoToEdit)}
+                            disabled={!turnoToEdit?.hora || !turnoToEdit?.fecha}
+                        >
+                            Guardar
+                        </button>
+                    </>
+                }
+            >
+                <div className="modal-body">
+                    <p className="modal-info">
+                        Solo se puede modificar la <strong>fecha</strong> y la <strong>hora</strong> del turno.
+                    </p>
+
+                    <label>Servicio</label>
+                    <input
+                        type="text"
+                        value={turnoToEdit?.servicios || ""}
+                        disabled
+                        className="input-disabled"
+                    />
+
+                    <label>Fecha</label>
+                    <DatePicker
+                        selected={
+                            turnoToEdit?.fecha
+                                ? new Date(turnoToEdit.fecha + "T00:00:00")
+                                : null
+                        }
+                        onChange={(date) => {
+                            if (!date) return;
+                            const localDate = new Date(
+                                date.getFullYear(),
+                                date.getMonth(),
+                                date.getDate()
+                            );
+                            const formattedDate = localDate.toISOString().split("T")[0];
+                            setTurnoToEdit({ ...turnoToEdit, fecha: formattedDate, hora: "" });
+                        }}
+                        dateFormat="dd/MM/yyyy"
+                        className="date-input"
+                        placeholderText="Seleccionar fecha"
+                        minDate={new Date()}
+                        filterDate={(date) => {
+                            const day = date.getDay();
+                            return day !== 0 && day !== 6;
+                        }}
+                    />
+
+                    <label>Hora</label>
+                    <select
+                        value={turnoToEdit?.hora || ""}
+                        onChange={(e) => {
+                            const horaSeleccionada = e.target.value;
+                            const turnoExistente = listaDeTurnos.some(
+                                t => t.fecha === turnoToEdit.fecha && t.hora === horaSeleccionada && t.id !== turnoToEdit.id
+                            );
+
+                            if (turnoExistente) {
+                                alert("Este horario ya está ocupado para el día seleccionado.");
+                            } else {
+                                setTurnoToEdit({ ...turnoToEdit, hora: horaSeleccionada });
+                            }
+                        }}
+                    >
+                        <option value="">Seleccionar horario</option>
+                        {[
+                            "13:00", "13:30", "14:00", "14:30",
+                            "15:00", "15:30", "16:00", "16:30",
+                            "17:00", "17:30", "18:00", "18:30"
+                        ].map((hora) => {
+                            const ocupado = listaDeTurnos.some(
+                                (t) => t.fecha === turnoToEdit?.fecha && t.hora === hora && t.id !== turnoToEdit?.id
+                            );
+
+                            return (
+                                <option key={hora} value={hora} disabled={ocupado}>
+                                    {hora}{ocupado ? " (Ocupado)" : ""}
+                                </option>
+                            );
+                        })}
+                    </select>
+                </div>
+            </ModalPortal>
+
 
             <ObservacionesModal
                 show={showObservacionesModal}

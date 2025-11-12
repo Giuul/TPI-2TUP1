@@ -1,13 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./modalTurno.css";
-
 const ModalPortal = ({ isOpen, onClose, title, children, actions }) => {
     if (!isOpen) return null;
 
     return ReactDOM.createPortal(
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content1" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="modal-close" onClick={onClose}>✕</button>
                 {title && <h2 className="modal-title">{title}</h2>}
                 {children && <div className="modal-body">{children}</div>}
