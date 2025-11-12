@@ -16,6 +16,7 @@ const TurnoItem = ({
     onVerHistorial,
     onToggleAsistencia,
     onAbrirObservaciones,
+    onEditarTurno,
     isAdminView,
     isProfesionalView,
     isUserView,
@@ -30,6 +31,11 @@ const TurnoItem = ({
     const canToggleAsistencia = isAdminView;
     const canAddObservaciones = isGestorView;
 
+    const turnoDateTime = new Date(`${fecha}T${hora}`);
+    const now = new Date();
+
+    const esTurnoPasado = turnoDateTime < now;
+
     return (
         <tr className="turno-row">
             {isGestorView && <td>{usuarioDisplay}</td>}
@@ -43,27 +49,34 @@ const TurnoItem = ({
                 <td className="asistencia-cell">
                     {!isProfesionalView ? (
                         <>
-                            <input
-                                type="checkbox"
-                                checked={asistio}
-                                onChange={() => onToggleAsistencia(id, asistio)}
-                                id={`asistio-${id}`}
-                                className="asistencia-checkbox"
-                                disabled={!canToggleAsistencia}
-                                title={asistio ? "Marcar como NO ASISTIÓ" : "Marcar como ASISTIÓ"}
-                            />
-                            <label
-                                htmlFor={`asistio-${id}`}
-                                className="asistencia-label"
-                            >
-                                {asistio ? "Asistió" : "Pendiente"}
-                            </label>
+                            {turnoDateTime > now ? (
+                                <span className="pendiente-futuro">Pendiente</span>
+                            ) : (
+                                <>
+                                    <input
+                                        type="checkbox"
+                                        checked={asistio}
+                                        onChange={() => onToggleAsistencia(id, asistio)}
+                                        id={`asistio-${id}`}
+                                        className="asistencia-checkbox"
+                                        disabled={!canToggleAsistencia}
+                                        title={asistio ? "Marcar como NO ASISTIÓ" : "Marcar como ASISTIÓ"}
+                                    />
+                                    <label
+                                        htmlFor={`asistio-${id}`}
+                                        className="asistencia-label"
+                                    >
+                                        {asistio ? "Asistió" : "Pendiente"}
+                                    </label>
+                                </>
+                            )}
                         </>
                     ) : (
                         <span>{asistio ? "Asistió" : "Pendiente"}</span>
                     )}
                 </td>
             )}
+
 
             <td>
                 <div className="actions-cell">
@@ -94,10 +107,34 @@ const TurnoItem = ({
                         </button>
                     )}
 
+                    {isGestorView && (
+                        <button
+                            className="btn-editar"
+                            onClick={() =>
+                                onEditarTurno({
+                                    id,
+                                    servicios,
+                                    fecha,
+                                    hora,
+                                    duracion,
+                                    usuarioDisplay,
+                                    profesionalDisplay,
+                                    observaciones,
+                                })
+                            }
+                            disabled={esTurnoPasado || asistio}
+                            title={esTurnoPasado ? "No se puede editar un turno pasado o de hoy" : ""}
+                        >
+                            Editar
+                        </button>
+                    )}
+
                     {canEliminar && (
                         <button
                             className="btn-eliminar"
                             onClick={() => onEliminar(id)}
+                            disabled={esTurnoPasado}
+                            title={esTurnoPasado ? "No se puede eliminar un turno pasado o de hoy" : ""}
                         >
                             Eliminar
                         </button>

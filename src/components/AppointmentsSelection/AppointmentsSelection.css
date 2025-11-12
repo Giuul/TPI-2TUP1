@@ -81,6 +81,12 @@
   font-weight: 700;
 }
 
+.react-calendar__tile:disabled {
+  color: #635845 !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .time-slots-section {
   flex: 1.2;
   display: grid;
@@ -163,44 +169,57 @@
 
 .modal-overlay {
   position: fixed;
-  background-color: rgba(255, 255, 255, 0.25);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: fadeIn 1s ease;
-  z-index: 1000;
-  border-radius: 20px;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease forwards;
 }
 
 .modal-content {
-  background-color: rgba(255, 255, 255, 0.25);
-  padding: 30px 30px;
-  border-radius: 10px;
-  color: #635845;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 20px;
+  padding: 50px 60px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  font-family: 'Gilda Display';
+  color: #3f3527;
   text-align: center;
-  font-size: 1rem;
-  font-weight: 600;
-  max-width: 400px;
-  width: 100%;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  animation: scaleUp 1s ease;
+  animation: scaleUp 0.25s ease forwards;
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(15px);
+}
+
+.modal-content p {
+  font-size: 20px;
+  margin-bottom: 25px;
 }
 
 .modal-close {
-  margin-top: 20px;
-  padding: 8px 20px;
-  background-color: rgba(255, 255, 255, 0.899);
+  margin-top: 15px;
+  padding: 10px 25px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid #635845;
   color: #635845;
-  color: 635845;
-  border: none;
-  border-radius: 3px;
+  border-radius: 20px;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.5s ease;
+  transition: all 0.25s ease;
 }
 
 .modal-close:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: #635845;
+  color: #fff;
+  transform: scale(1.05);
 }
 
 .service-selection {
@@ -266,40 +285,58 @@
 }
 
 .dni-input-container {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 
 .autocomplete-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    max-height: 150px;
-    overflow-y: auto;
-    background: rgba(255,255,255,0.95);
-    border: 1px solid #635845;
-    border-radius: 8px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    z-index: 1000;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #635845;
+  border-radius: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  z-index: 1000;
 }
 
 .autocomplete-list li {
-    padding: 8px 12px;
-    cursor: pointer;
+  padding: 8px 12px;
+  cursor: pointer;
 }
 
 .autocomplete-list li:hover {
-    background-color: #f0f0f0;
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
-.time-slot-btn.ocupado {
-    background-color: #eee;       
-    color: #888;                  
-    cursor: not-allowed;          
-    text-decoration: line-through; 
-    opacity: 0.6;            
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
