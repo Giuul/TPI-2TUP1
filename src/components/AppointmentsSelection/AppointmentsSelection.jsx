@@ -7,19 +7,24 @@ import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
 const horarios = [
-    '15:00', '15:30', '16:00', '16:30',
-    '17:00', '17:30', '18:00', '18:30'
+    '15:00', '15:30', 
+    '16:00', '16:30', '17:00', '17:30',
+    '18:00', '18:30', 
 ];
 
 const formatTimeToBackend = (timeString) => timeString;
 
 const AppointmentsSelection = () => {
+    const initialServiceId = localStorage.getItem('servicioSeleccionado') || ''; 
+
     const navigate = useNavigate();
     const [fecha, setFecha] = useState(new Date());
     const [horarioSeleccionado, setHorarioSeleccionado] = useState('');
     const [mensajeConfirmacion, setMensajeConfirmacion] = useState('');
     const [errorMensaje, setErrorMensaje] = useState('');
-    const [servicioSeleccionado, setServicioSeleccionado] = useState('');
+    
+    const [servicioSeleccionado, setServicioSeleccionado] = useState(initialServiceId); 
+    
     const [turnosOcupados, setTurnosOcupados] = useState([]);
 
     const [dniUsuarioAgenda, setDniUsuarioAgenda] = useState('');
@@ -32,6 +37,12 @@ const AppointmentsSelection = () => {
 
     const minDateAllowed = new Date();
     minDateAllowed.setHours(0, 0, 0, 0);
+
+    useEffect(() => {
+        if (initialServiceId) {
+            localStorage.removeItem('servicioSeleccionado'); 
+        }
+    }, []); 
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -104,6 +115,7 @@ const AppointmentsSelection = () => {
                     : [];
                 setTurnosOcupados(horasOcupadas);
 
+                
                 if (horasOcupadas.includes(formatTimeToBackend(horarioSeleccionado))) {
                     setHorarioSeleccionado('');
                 }
@@ -120,7 +132,7 @@ const AppointmentsSelection = () => {
         return () => {
             source.cancel();
         };
-    }, [profesionalSeleccionado, fecha, horarioSeleccionado]);
+    }, [profesionalSeleccionado, fecha, horarioSeleccionado]); 
 
     const confirmarTurno = async () => {
         if (!profesionalSeleccionado) return setErrorMensaje('Por favor, seleccioná un profesional.'); 
@@ -276,7 +288,9 @@ const AppointmentsSelection = () => {
                                 const [h, m] = horaTurno.split(':').map(Number);
                                 const horaSlot = new Date(diaSeleccionado);
                                 horaSlot.setHours(h, m, 0, 0);
+
                                 const ahoraConMargen = new Date(ahora.getTime() + 60000); 
+
                                 horaPasadaHoy = horaSlot < ahoraConMargen;
                             }
                             
