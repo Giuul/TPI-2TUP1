@@ -15,7 +15,6 @@ const Turnos = () => {
     const [error, setError] = useState(null);
     const [currentUserRole, setCurrentUserRole] = useState("user");
     
-    // NUEVO ESTADO: Almacena el nombre del usuario logueado
     const [currentUserName, setCurrentUserName] = useState(null); 
 
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
@@ -50,7 +49,7 @@ const Turnos = () => {
 
         const token = localStorage.getItem("authtoken");
         let userRole = "user";
-        let userName = null; // Variable local para el nombre
+        let userName = null; 
 
         if (!token) {
             setError("No estás autenticado.");
@@ -61,7 +60,6 @@ const Turnos = () => {
         try {
             const decodedToken = jwtDecode(token);
             userRole = decodedToken.role || "user";
-            // Obtener el nombre para el filtrado si es profesional
             if (userRole === "profesional" && decodedToken.name && decodedToken.lastname) {
                 userName = `${decodedToken.name} ${decodedToken.lastname}`;
             }
@@ -72,7 +70,7 @@ const Turnos = () => {
         }
 
         setCurrentUserRole(userRole);
-        setCurrentUserName(userName); // Actualizar el estado con el nombre del profesional
+        setCurrentUserName(userName); 
 
         const isGestor = userRole === "admin" || userRole === "superadmin" || userRole === "profesional";
         const url = isGestor
@@ -87,7 +85,6 @@ const Turnos = () => {
             let turnosFinales = data;
 
             if (!isGestor) {
-                // Lógica de filtrado para Usuario (mantiene solo turnos futuros)
                 const today = new Date().toISOString().split("T")[0];
                 const now = new Date();
                 const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -124,7 +121,6 @@ const Turnos = () => {
                 return base;
             });
 
-            // FILTRADO ADICIONAL PARA PROFESIONALES:
             let turnosFiltrados = turnosTransformados;
             if (userRole === "profesional" && userName) {
                 turnosFiltrados = turnosTransformados.filter(turno => 
@@ -152,7 +148,7 @@ const Turnos = () => {
     useEffect(() => {
         const fetchServicios = async () => {
             try {
-                const token = localStorage.getItem("authtoken"); // Usar 'authtoken' como en fetchTurnos
+                const token = localStorage.getItem("authtoken"); 
                 const res = await fetch("http://localhost:3000/servicios", {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -180,7 +176,6 @@ const Turnos = () => {
     };
 
     const toggleAsistencia = async (id, currentStatus) => {
-        // ... (Lógica de toggleAsistencia sin cambios)
         const newStatus = !currentStatus;
         const token = localStorage.getItem("authtoken");
 
@@ -201,7 +196,6 @@ const Turnos = () => {
     };
 
     const openEditModal = (turno) => {
-        // Si el rol es profesional, no se debe abrir el modal de edición
         if (currentUserRole === "profesional") return; 
 
         const servicioEncontrado = serviciosDisponibles.find(
@@ -222,9 +216,8 @@ const Turnos = () => {
     };
 
     const handleSaveEdit = async (editedTurno) => {
-        // ... (Lógica de handleSaveEdit sin cambios)
         try {
-            const token = localStorage.getItem("authtoken"); // Usar 'authtoken' aquí
+            const token = localStorage.getItem("authtoken"); 
             
             const res = await fetch(`http://localhost:3000/admin/turnos/${editedTurno.id}`, {
                 method: "PUT",
@@ -256,7 +249,6 @@ const Turnos = () => {
     };
 
     const confirmDeleteTurno = async () => {
-        // ... (Lógica de confirmDeleteTurno sin cambios)
         if (!turnoToDeleteId) return;
         setLoading(true);
         try {
@@ -286,7 +278,6 @@ const Turnos = () => {
     };
 
     const handleSaveObservaciones = async (id, texto) => {
-        // ... (Lógica de handleSaveObservaciones sin cambios)
         setLoadingObservaciones(true);
         const token = localStorage.getItem("authtoken");
         try {
@@ -313,8 +304,8 @@ const Turnos = () => {
     };
 
     const isGestorView = currentUserRole === "admin" || currentUserRole === "superadmin" || currentUserRole === "profesional";
-    const isAdminView = currentUserRole === "admin" || currentUserRole === "superadmin"; // Variable para los botones de admin
-    const isProfesionalView = currentUserRole === "profesional"; // Nueva variable para profesional
+    const isAdminView = currentUserRole === "admin" || currentUserRole === "superadmin"; 
+    const isProfesionalView = currentUserRole === "profesional"; 
     const isUserView = currentUserRole === "user";
 
     if (loading) return <p>Cargando turnos...</p>;
@@ -324,7 +315,7 @@ const Turnos = () => {
         <div className="turnos-container">
             <h2 className="turnos-title">{isGestorView ? "GESTIÓN DE TURNOS" : "MIS TURNOS"}</h2>
 
-            {isAdminView && ( // Usamos isAdminView para el botón PROGRAMAR TURNO
+            {isAdminView && ( 
                 <div className="botones-turnos">
                     <button className="btn-principal" onClick={() => navigate("/programar-turnos-admin")}>
                         PROGRAMAR TURNO
@@ -375,7 +366,6 @@ const Turnos = () => {
                 )
             )}
 
-            {/* Modals (sin cambios) */}
 
             <ModalPortal
                 isOpen={showTurnoDeleteModal}

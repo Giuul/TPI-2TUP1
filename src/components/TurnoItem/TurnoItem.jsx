@@ -36,7 +36,7 @@ const TurnoItem = ({
         ? new Date(fecha + "T00:00:00").toLocaleDateString("es-AR")
         : "Fecha no disponible";
 
-    // isGestorView (Admin o Profesional) se mantiene para columnas y otros botones (Historial, Observaciones)
+    
     const isGestorView = isAdminView || isProfesionalView; 
     const canEliminar = isAdminView || isUserView;
     const showAsistenciaColumn = isGestorView;
@@ -115,7 +115,6 @@ const TurnoItem = ({
                         </button>
                     )}
 
-                    {/* La condición se cambió a isAdminView para que el profesional no vea el botón */}
                     {isAdminView && ( 
                         <button
                             className="btn-editar"
