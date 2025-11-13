@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import "./TurnoItem.css";
 
@@ -12,7 +10,7 @@ const TurnoItem = ({
     usuarioDisplay,
     profesionalDisplay,
     dniusuario,
-    asistio,
+    asistio, 
     observaciones,
     onEliminar,
     onVerHistorial,
@@ -24,7 +22,7 @@ const TurnoItem = ({
     isUserView,
 }) => {
     
-    const now = new Date(); 
+    const now = new Date();
     const turnoDateTime = new Date(`${fecha}T${hora}`);
 
     const todayISO = now.toISOString().split("T")[0];
@@ -58,7 +56,6 @@ const TurnoItem = ({
                 <td className="asistencia-cell">
                     {!isProfesionalView ? (
                         <>
-                           
                             {esTurnoDeHoy || esTurnoPasado ? (
                                 <>
                                     <input
@@ -132,8 +129,9 @@ const TurnoItem = ({
                                     observaciones,
                                 })
                             }
-                            disabled={!esTurnoDeHoy || asistio}
-                            title={!esTurnoDeHoy ? "Solo se pueden editar turnos de hoy" : (asistio ? "No se puede editar un turno que ya asistió" : "")}
+                            
+                            disabled={(!esTurnoDeHoy && esTurnoPasado) || asistio}
+                            title={(!esTurnoDeHoy && esTurnoPasado) ? "No se puede editar un turno anterior a hoy" : (asistio ? "No se puede editar un turno que ya asistió" : "")}
                         >
                             Editar
                         </button>
