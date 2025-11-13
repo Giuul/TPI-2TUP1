@@ -129,7 +129,7 @@ const TurnoItem = ({
                                     observaciones,
                                 })
                             }
-                            
+                          
                             disabled={(!esTurnoDeHoy && esTurnoPasado) || asistio}
                             title={(!esTurnoDeHoy && esTurnoPasado) ? "No se puede editar un turno anterior a hoy" : (asistio ? "No se puede editar un turno que ya asistió" : "")}
                         >
@@ -141,8 +141,9 @@ const TurnoItem = ({
                         <button
                             className="btn-eliminar"
                             onClick={() => onEliminar(id)}
-                            disabled={!esTurnoDeHoy}
-                            title={!esTurnoDeHoy ? "Solo se pueden eliminar turnos de hoy" : ""}
+                            
+                            disabled={!esTurnoDeHoy && esTurnoPasado}
+                            title={(!esTurnoDeHoy && esTurnoPasado) ? "No se puede eliminar un turno anterior a hoy" : ""}
                         >
                             Eliminar
                         </button>
