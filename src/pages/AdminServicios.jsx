@@ -1,5 +1,4 @@
 import React from 'react';
-import "./pages.css";
 import AdminServices from '../components/AdminServices/AdminServices';
 import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
 

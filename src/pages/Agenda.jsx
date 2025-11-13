@@ -1,5 +1,4 @@
 import React from 'react'
-import "./pages.css";
 import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
 import Schedule from '../components/Schedule/Schedule';
 

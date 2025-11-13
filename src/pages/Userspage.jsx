@@ -1,5 +1,4 @@
 import React from 'react'
-import "./pages.css";
 import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
 import Users from '../components/Users/Users';
 

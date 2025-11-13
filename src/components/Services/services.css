@@ -1,15 +1,29 @@
 .contenedorServicios {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+  justify-items: center;
+  padding: 40px 60px;
 }
 
 .contenedorIndividual {
-  width: 33%;
-  margin: 20px;
+  width: 100%;
+  max-width: 370px;
   display: flex;
   align-items: center;
   flex-direction: column;
 }
+
+.image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 1000px;
+  justify-content: center;
+  align-items: center;
+}
+
 
 .img-servicios {
   width: 100%;
@@ -35,16 +49,6 @@
 
 .contenedorIndividual:hover {
   transform: translateY(-5px);
-}
-
-.image-container {
-  position: relative;
-  width: 370px;
-  height: 450px;
-  overflow: hidden;
-  border-radius: 1000px;
-  justify-content: center;
-  align-items: center;
 }
 
 .image-container img {
