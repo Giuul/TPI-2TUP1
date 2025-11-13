@@ -148,6 +148,8 @@ h1 {
     margin-top: 300px;
     background-color: rgba(255, 255, 255, 0.375) !important;
     padding: 2rem;
+    padding-top: 350px;
+    overflow: scroll;
     border-radius: 12px;
     display: flex;
     flex-direction: column;

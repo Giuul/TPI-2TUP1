@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../src/assets/styles/styles.css';
-
 import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes.jsx"
 import Home from "./pages/Home";
 import Nosotros from './pages/Nosotros.jsx';

@@ -84,7 +84,7 @@ const ListaSesiones = ({ sesiones, onObservacionGuardada }) => {
                                 onClick={() => openModal(session)}
                                 className="btn-observaciones"
                             >
-                                {session.observaciones ? "Editar observación" : "Agregar observación"}
+                                {session.observaciones ? "Editar " : "Agregar "}
                             </button>
                         </div>
                     </div>

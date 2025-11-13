@@ -37,7 +37,6 @@
     margin-right: 10px;
 }
 
-/* Hover principal */
 .acme-regular-navbar .nav-link:hover,
 .acme-regular-navbar .dropdown-toggle:hover {
     color: #635845 !important;
@@ -45,7 +44,6 @@
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-/* Hover del dropdown sin agrandarse */
 .acme-regular-navbar .dropdown-item:hover {
     background-color: rgba(231, 223, 223, 0.6);
     color: #635845 !important;
@@ -53,7 +51,6 @@
     text-shadow: none;
 }
 
-/* Ajuste del menú desplegable */
 .dropdown-menu {
     background-color: rgba(255, 255, 255, 0.9);
     border: none;

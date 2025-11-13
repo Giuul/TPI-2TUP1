@@ -6,7 +6,6 @@ const Footer = () => {
     <footer className="footer-clearis py-5 mt-5">
       <div className="container">
         <div className="row text-center text-md-start">
-          {/* Logo + Contacto */}
           <div className="col-md-4 mb-4">
             <h4 className="fw-bold mb-3">
               <i className="bi bi-stars me-2"></i>Clearis
@@ -20,7 +19,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Menú */}
           <div className="col-md-4 mb-4">
             <h6 className="text-uppercase fw-bold mb-3">Menú</h6>
             <ul className="list-unstyled footer-links">
@@ -32,7 +30,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Sucursales */}
           <div className="col-md-4 mb-4">
             <h6 className="text-uppercase fw-bold mb-3">Sucursal</h6>
             <p className="footer-branches">
