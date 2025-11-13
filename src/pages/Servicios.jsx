@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import "./pages.css";
 import ClearisFooter from '../components/ClearisFooter/ClearisFooter';
 import Service from '../components/Services/Services';
 
@@ -26,11 +25,7 @@ const Servicios = () => {
             <Service
               key={service.id}
               id={service.id}
-              img={
-                base64Image
-                  ? `data:image/${imageType};base64,${base64Image}`
-                  : '/img/placeholder.png'
-              }
+              img={service.imagen || '/img/placeholder.png'}
               title={service.nombre}
               desc={service.descripcion}
             />

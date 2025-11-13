@@ -5,6 +5,7 @@ import axios from "axios";
 const AdminServices = () => {
     const [services, setServices] = useState([]);
     const [form, setForm] = useState({ nombre: "", descripcion: "", duracion: "", imagen: "" });
+    const [preview, setPreview] = useState(null);
     const [editingId, setEditingId] = useState(null);
     const [message, setMessage] = useState("");
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -66,6 +67,19 @@ const AdminServices = () => {
         setIsFormModalOpen(true);
     };
 
+    const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+        setForm({ ...form, imagen: reader.result });
+        setPreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+    }
+    };
+
+
     const openDeleteModal = (id) => {
         setDeleteId(id);
         setIsDeleteModalOpen(true);
@@ -90,6 +104,7 @@ const AdminServices = () => {
         setIsDeleteModalOpen(false);
         setEditingId(null);
         setForm({ nombre: "", descripcion: "", duracion: "", imagen: "" });
+        setPreview(null);
     };
 
     return (
@@ -130,12 +145,25 @@ const AdminServices = () => {
                                 value={form.duracion}
                                 onChange={(e) => setForm({ ...form, duracion: e.target.value })}
                             />
-                            <input
-                                placeholder="URL o base64 de imagen"
-                                value={form.imagen}
-                                onChange={(e) => setForm({ ...form, imagen: e.target.value })}
-                            />
-
+                            <div className="image-upload">
+                                <label htmlFor="imagen" className="image-label">
+                                    {preview ? "Cambiar imagen" : "Seleccionar imagen"}
+                                </label>
+                                <input
+                                    id="imagen"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    style={{ display: "none" }}
+                                />
+                                </div>
+                                {preview && (
+                                <img
+                                    src={preview}
+                                    alt="Vista previa"
+                                    className="preview-img"
+                                />
+                                )}
                             <div className="form-buttons">
                                 <button type="submit" className="create-btn">
                                     {editingId ? "Guardar Cambios" : "Crear Servicio"}
@@ -190,7 +218,16 @@ const AdminServices = () => {
                 {services.map((s) => (
                     <li key={s.id}>
                         <div className="service-info">
-                            {s.imagen && <img src={s.imagen} alt={s.nombre} />}
+                            {s.imagen && (
+                                <img
+                                    src={
+                                    s.imagen.startsWith("data:image")
+                                        ? s.imagen
+                                        : `data:image/jpeg;base64,${s.imagen}`
+                                    }
+                                    alt={s.nombre}
+                                />
+                                )}
                             <div className="col"><strong>{s.nombre}</strong></div>
                             <div className="col">{s.descripcion}</div>
                             <div className="col">{s.duracion} min</div>
