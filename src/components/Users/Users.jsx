@@ -195,7 +195,7 @@ const Users = () => {
 
             {editarUserId !== null && (
                 <div className="modal">
-                    <div className="modal-content">
+                    <div className="modal-content modal-editar-usuario">
                         <h3>Editar Usuario (DNI: {formData.id})</h3>
                         <label>DNI</label>
                         <input value={formData.id} disabled />
