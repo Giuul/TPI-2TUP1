@@ -68,7 +68,22 @@ const Users = () => {
             closeConfirmDeleteModal();
         } catch (err) {
             console.error("Error al eliminar usuario:", err);
-            setError('Error al eliminar el usuario. Por favor, intenta de nuevo.');
+            
+            
+            let errorMessage = 'Error al eliminar el usuario. Por favor, intenta de nuevo.';
+            
+            if (err.response) {
+                if (err.response.status === 409 || (err.response.status === 400 && err.response.data?.message.includes('turnos'))) {
+                    errorMessage = 'Este usuario tiene turnos programados asociados. Para proceder con la eliminación, debe cancelar o eliminar todos sus turnos primero.';
+                } 
+                else if (err.response.data?.message?.includes('foreign key constraint') || err.response.data?.message?.includes('turnos asociados')) {
+                    errorMessage = 'Este usuario tiene turnos programadas asociadas. Para proceder con la eliminación, debe cancelar o eliminar todos sus turnos primero.';
+                } else if (err.response.data?.message) {
+                    errorMessage = `Error al eliminar el usuario: ${err.response.data.message}`;
+                }
+            }
+
+            setError(errorMessage);
             closeConfirmDeleteModal();
         }
     };
